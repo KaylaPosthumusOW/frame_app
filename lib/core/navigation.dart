@@ -1,7 +1,12 @@
 import 'package:frameapp/constants/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frameapp/ui/screens/community_screen.dart';
+import 'package:frameapp/ui/screens/gallery_screen.dart';
 import 'package:frameapp/ui/screens/home_screen.dart';
+import 'package:frameapp/ui/screens/profile/edit_profile_screen.dart';
+import 'package:frameapp/ui/screens/profile/profile_screen.dart';
+import 'package:frameapp/ui/screens/settings_screen.dart';
 
 
 abstract class Navigation {
@@ -15,6 +20,17 @@ abstract class Navigation {
     switch (settings.name) {
       case HOME_SCREEN:
         return _routeEndPoint(const HomeScreen(), settings);
+      case GALLERY_SCREEN:
+        return _routeEndPoint(const GalleryScreen(), settings);
+      case COMMUNITY_SCREEN:
+        return _routeEndPoint(const CommunityScreen(), settings);
+      case SETTINGS_SCREEN:
+        return _routeEndPoint(const SettingsScreen(), settings);
+      case PROFILE_SCREEN:
+        return _routeEndPoint(const ProfileScreen(), settings);
+      case EDIT_PROFILE_SCREEN:
+        return _routeEndPoint(const EditProfileScreen(), settings);
+
       default:
         return _errorRoute(settings.name);
     }

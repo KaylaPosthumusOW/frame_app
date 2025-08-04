@@ -169,8 +169,8 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 300,
             margin: const EdgeInsets.only(right: 15),
             decoration: BoxDecoration(
-              color: const Color(0xFF272727),
-              borderRadius: BorderRadius.circular(20),
+              color: AppColors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(35),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -179,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 20),
                 const Icon(
                   Icons.image,
-                  color: Colors.white38,
+                  color: Colors.white,
                   size: 100,
                 ),
                 Container(
@@ -264,9 +264,24 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 15.0),
             _dailyFrameContainer(),
             SizedBox(height: 10.0),
+            Text('Month: ${DateFormat('MMMM yyyy').format(_selectedDate)}', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
             _buildDateScroller(),
-            SizedBox(height: 15.0),
+            SizedBox(height: 10.0),
             _buildFrameGalleries(),
+            SizedBox(height: 10.0),
+            Column(
+              children: [
+                ElevatedButton(onPressed: () {
+                  Navigator.pushNamed(context, '/gallery');
+                }, child: Text('Gallery Screen')),
+                ElevatedButton(onPressed: () {
+                  Navigator.pushNamed(context, '/community');
+                }, child: Text('Community Screen')),
+                ElevatedButton(onPressed: () {
+                  Navigator.pushNamed(context, '/profile');
+                }, child: Text('Profile Screen')),
+              ],
+            ),
           ],
         )
       ),

@@ -8,7 +8,7 @@ const kDefaultThemeMode = ThemeMode.light;
 class FrameTheme {
   static TextTheme get textTheme {
     return GoogleFonts.robotoTextTheme().copyWith(
-      displayLarge: GoogleFonts.lexend(fontSize: 28, fontWeight: FontWeight.w700, color: Colors.white),
+      displayLarge: GoogleFonts.lexend(fontSize: 32, fontWeight: FontWeight.w600, color: Colors.white),
       displayMedium: GoogleFonts.lexend(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white),
       displaySmall: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
       headlineLarge: GoogleFonts.lexend(fontSize: 24, fontWeight: FontWeight.w700, color: Colors.white),
