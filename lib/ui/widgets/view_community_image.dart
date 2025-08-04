@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:frameapp/constants/themes.dart';
 
-class NewFrameModal extends StatefulWidget {
-  const NewFrameModal({super.key});
+class ViewCommunityImage extends StatefulWidget {
+  const ViewCommunityImage({super.key});
 
   @override
-  State<NewFrameModal> createState() => _NewFrameModalState();
+  State<ViewCommunityImage> createState() => _ViewCommunityImageState();
 }
 
-class _NewFrameModalState extends State<NewFrameModal> {
+class _ViewCommunityImageState extends State<ViewCommunityImage> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,25 +36,15 @@ class _NewFrameModalState extends State<NewFrameModal> {
             ),
           ),
           SizedBox(height: 10.0),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.black,
-            ),
-            onPressed: () {},
-            child: Text('Image Resizing?',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
-            ),
-          ),
-          SizedBox(height: 10.0),
           Text(
-            'Do you want to add any notes?',
+            'Want to leave a comment?',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black),
           ),
           SizedBox(height: 5.0),
           TextField(
             maxLines: 3,
             decoration: InputDecoration(
-              hintText: 'Add your notes here...',
+              hintText: 'Leave a comment here...',
               hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.slateGrey),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.0),
@@ -67,13 +57,16 @@ class _NewFrameModalState extends State<NewFrameModal> {
             children: [
               Expanded(
                 child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context, true);
-                    },
-                    child: Text(
-                      'Cancel',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black),
-                    ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.limeGreen,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                  child: Text(
+                    'Report Post',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.black),
+                  ),
                 ),
               ),
               SizedBox(width: 10.0),
@@ -86,7 +79,7 @@ class _NewFrameModalState extends State<NewFrameModal> {
                     backgroundColor: AppColors.framePurple,
                   ),
                   child: Text(
-                    'Save Note',
+                    'Save Comment',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
                   ),
                 ),

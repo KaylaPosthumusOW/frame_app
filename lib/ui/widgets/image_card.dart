@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:frameapp/constants/themes.dart';
+import 'package:frameapp/ui/widgets/view_community_image.dart';
 class ImageCard extends StatelessWidget {
   const ImageCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        showModalBottomSheet(
+            isScrollControlled: true,
+            context: context,
+            builder: (context) {
+              return ViewCommunityImage();
+            }
+        );
+      },
       borderRadius: BorderRadius.circular(20),
       child: Card(
         color: Colors.white,
