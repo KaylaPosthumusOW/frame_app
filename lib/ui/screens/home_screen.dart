@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
+import 'package:frameapp/ui/widgets/new_frame_modal.dart';
 import 'package:intl/intl.dart';
 
 class DateItem {
@@ -160,63 +161,74 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildFrameGalleries() {
     return SizedBox(
-      height: 400,
+      height: 380,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: 5,
         itemBuilder: (context, index) {
           return Container(
-            width: 300,
+            width: 250,
             margin: const EdgeInsets.only(right: 15),
             decoration: BoxDecoration(
               color: AppColors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(35),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(height: 20),
-                const Icon(
-                  Icons.image,
-                  color: Colors.white,
-                  size: 100,
-                ),
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.only(top: 8, bottom: 8, left: 15, right: 8),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(35),
+            child: GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) {
+                      return NewFrameModal();
+                    }
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(height: 20),
+                  const Icon(
+                    Icons.image,
+                    color: Colors.white,
+                    size: 100,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Capture Frame',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.only(top: 8, bottom: 8, left: 15, right: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(35),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Capture Frame',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.limeGreen,
-                        ),
-                        padding: const EdgeInsets.all(8),
-                        child: Icon(
-                          Icons.arrow_forward,
-                          color: Colors.black,
-                          size: 30,
-                        ),
-                      )
-                    ],
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.limeGreen,
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          child: Icon(
+                            Icons.arrow_forward,
+                            color: Colors.black,
+                            size: 30,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
