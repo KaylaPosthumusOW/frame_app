@@ -50,4 +50,7 @@ dependency_overrides:
 
 flutter:
   uses-material-design: true
-  default-flavor: production
+  assets:
+    - assets/
+    - assets/svg/
+    - assets/pngs/
