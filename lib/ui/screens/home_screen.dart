@@ -252,7 +252,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             child: IconButton(
               icon: const Icon(Icons.person_outline_rounded, color: Colors.black54, size: 40),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/profile');
+              },
             ),
           ),
         ],
