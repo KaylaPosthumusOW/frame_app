@@ -17,11 +17,11 @@ class FrameTheme {
       titleLarge: GoogleFonts.lexend(fontSize: 24, fontWeight: FontWeight.w400, color: Colors.white),
       titleMedium: GoogleFonts.lexend(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.white),
       titleSmall: GoogleFonts.lexend(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.white),
-      labelLarge: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
+      labelLarge: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
       labelMedium: GoogleFonts.lexend(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.white),
       labelSmall: GoogleFonts.lexend(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.white),
-      bodyLarge: GoogleFonts.lexend(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.white),
-      bodyMedium: GoogleFonts.lexend(fontSize: 12, fontWeight: FontWeight.w300, color: Colors.white),
+      bodyLarge: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w300, color: Colors.white),
+      bodyMedium: GoogleFonts.lexend(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.white),
       bodySmall: GoogleFonts.lexend(fontSize: 10, fontWeight: FontWeight.w300, color: Colors.white),
     );
   }
@@ -40,7 +40,7 @@ class FrameTheme {
         foregroundColor: Colors.black,
         actionsPadding: EdgeInsets.symmetric(horizontal: 16),
         titleTextStyle: GoogleFonts.lexend(fontSize: 28, fontWeight: FontWeight.w700, color: Colors.white),
-        iconTheme: IconThemeData(color: Colors.black, size: 33),
+        iconTheme: IconThemeData(color: Colors.white, size: 33),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       iconTheme: IconThemeData(color: Colors.black, size: 33),
