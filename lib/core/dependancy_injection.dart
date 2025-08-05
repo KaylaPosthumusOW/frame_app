@@ -3,10 +3,12 @@ import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/cubits/general/general_cubit.dart';
 import 'package:frameapp/stores/firebase/app_user_profile_firebase_repository.dart';
 import 'package:frameapp/stores/firebase/main_firebase_repository.dart';
+import 'package:frameapp/firebase_options.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sp_firebase/sp_firebase.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
 import 'package:sp_utilities/utilities.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class DependencyInjection {
   static Future<void> init() async {
