@@ -2,6 +2,7 @@ import 'package:frameapp/core/navigation.dart';
 import 'package:frameapp/ui/screens/home_screen.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:flutter/material.dart';
+import 'package:frameapp/ui/screens/register/register_screen.dart';
 
 class FrameApp extends StatelessWidget {
   const FrameApp({super.key});
