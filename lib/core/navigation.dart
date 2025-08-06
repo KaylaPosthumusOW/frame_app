@@ -1,6 +1,7 @@
 import 'package:frameapp/constants/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frameapp/ui/screens/admin/prompt_management.dart';
 import 'package:frameapp/ui/screens/community_screen.dart';
 import 'package:frameapp/ui/screens/gallery_screen.dart';
 import 'package:frameapp/ui/screens/home_screen.dart';
@@ -30,6 +31,8 @@ abstract class Navigation {
         return _routeEndPoint(const ProfileScreen(), settings);
       case EDIT_PROFILE_SCREEN:
         return _routeEndPoint(const EditProfileScreen(), settings);
+      case PROMPT_MANAGEMENT_SCREEN:
+        return _routeEndPoint(const PromptManagement(), settings);
 
       default:
         return _errorRoute(settings.name);
