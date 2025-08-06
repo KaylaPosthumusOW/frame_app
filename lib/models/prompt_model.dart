@@ -8,12 +8,13 @@ class PromptModel extends Equatable{
   final Timestamp? createdAt;
   final Timestamp? usedAt;
   final bool? isUsed;
+  final bool? currentPrompt;
   final AppUserProfile? owner;
 
-  const PromptModel({this.uid, this.promptText, this.createdAt, this.usedAt, this.isUsed = false, this.owner});
+  const PromptModel({this.uid, this.promptText, this.createdAt, this.usedAt, this.isUsed = false, this.owner, this.currentPrompt = false});
 
   @override
-  List<Object?> get props => [uid, promptText, createdAt, usedAt, isUsed, owner];
+  List<Object?> get props => [uid, promptText, createdAt, usedAt, isUsed, owner, currentPrompt];
 
   PromptModel copyWith({
     String? uid,
@@ -22,6 +23,7 @@ class PromptModel extends Equatable{
     Timestamp? usedAt,
     bool? isUsed,
     AppUserProfile? owner,
+    bool? currentPrompt,
   }) {
     return PromptModel(
       uid: uid ?? this.uid,
@@ -30,6 +32,7 @@ class PromptModel extends Equatable{
       usedAt: usedAt ?? this.usedAt,
       isUsed: isUsed ?? this.isUsed,
       owner: owner ?? this.owner,
+      currentPrompt: currentPrompt ?? this.currentPrompt,
     );
   }
 
@@ -41,6 +44,7 @@ class PromptModel extends Equatable{
       'usedAt': usedAt,
       'isUsed': isUsed,
       'owner': owner?.toMap(),
+      'currentPrompt': currentPrompt,
     };
   }
   factory PromptModel.fromMap(Map<String, dynamic> map) {
@@ -51,6 +55,7 @@ class PromptModel extends Equatable{
       usedAt: map['usedAt'],
       isUsed: map['isUsed'],
       owner: map['owner'] != null ? AppUserProfile.fromMap(map['owner']) : null,
+      currentPrompt: map['currentPrompt'],
     );
   }
 

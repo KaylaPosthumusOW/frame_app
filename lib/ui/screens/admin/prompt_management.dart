@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frameapp/constants/constants.dart';
+import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/cubits/prompt/prompt_cubit.dart';
 import 'package:frameapp/models/prompt_model.dart';
@@ -28,13 +29,14 @@ class _PromptManagementState extends State<PromptManagement> {
 
   Widget _createNewPromptDialoq() {
     return AlertDialog(
+      backgroundColor: AppColors.framePurple,
       title: Text('Create New Prompt'),
       content: SingleChildScrollView(
         child: ListBody(
           children: [
             TextField(
               controller: _promptTextController,
-              maxLines: 3,
+              style: TextStyle(color: AppColors.white),
               decoration: InputDecoration(labelText: 'Prompt Text', hintText: 'Enter your prompt here'),
             ),
           ],
