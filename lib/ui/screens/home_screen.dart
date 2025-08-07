@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
+import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:frameapp/ui/widgets/new_frame_modal.dart';
 import 'package:intl/intl.dart';
@@ -24,6 +26,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
+
   final PageController _pageController = PageController();
   DateTime _selectedDate = DateTime.now();
   int _currentPage = 1000;
@@ -245,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Hello, User',
+              'Hello, ${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.name ?? 'Name'}',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
             ),
             SizedBox(height: 4),

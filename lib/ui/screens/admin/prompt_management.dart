@@ -54,7 +54,7 @@ class _PromptManagementState extends State<PromptManagement> {
           onPressed: () {
             _promptCubit.createNewPrompt(
               PromptModel(
-                owner: _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile,
+                owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
                 promptText: _promptTextController.text,
                 createdAt: Timestamp.now(),
               ),

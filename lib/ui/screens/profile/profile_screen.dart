@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
+import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -10,6 +12,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
 
   Widget _buildProfilePicture() {
     return CircleAvatar(
@@ -46,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               SizedBox(height: 30),
               Text(
-                'Name Surname',
+                '${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.name} ${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.surname} ' ,
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
               ),
               SizedBox(height: 20),
