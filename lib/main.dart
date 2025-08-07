@@ -3,7 +3,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frameapp/frame_app.dart';
-import 'package:sp_utilities/utilities.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +15,5 @@ void main() async {
     };
   }
 
-  DiscordLogging.initializeDiscord(userId: '', userDisplayName: '');
   runApp(FrameApp());
 }

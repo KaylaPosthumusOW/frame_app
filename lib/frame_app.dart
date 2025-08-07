@@ -1,5 +1,6 @@
 import 'package:frameapp/core/navigation.dart';
 import 'package:frameapp/constants/themes.dart';
+import 'package:frameapp/ui/screens/main_frame_app_screen.dart';
 import 'package:flutter/material.dart';
 
 class FrameApp extends StatelessWidget {
@@ -14,6 +15,7 @@ class FrameApp extends StatelessWidget {
         }
       },
       child: MaterialApp(
+        home: const MainFrameAppScreen(),
         onGenerateRoute: Navigation.generateRoute,
         debugShowCheckedModeBanner: false,
         themeMode: kDefaultThemeMode,

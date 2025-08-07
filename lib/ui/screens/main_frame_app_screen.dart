@@ -6,16 +6,15 @@ import 'package:frameapp/ui/screens/home_screen.dart';
 import 'package:frameapp/ui/screens/login/login_screen.dart';
 import 'package:frameapp/ui/screens/splash_screen.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
-import 'package:sp_utilities/utilities.dart';
 
-class MinFrameAppScreem extends StatefulWidget {
-  const MinFrameAppScreem({super.key});
+class MainFrameAppScreen extends StatefulWidget {
+  const MainFrameAppScreen({super.key});
 
   @override
-  State<MinFrameAppScreem> createState() => _MinFrameAppScreemState();
+  State<MainFrameAppScreen> createState() => _MainFrameAppScreenState();
 }
 
-class _MinFrameAppScreemState extends State<MinFrameAppScreem> {
+class _MainFrameAppScreenState extends State<MainFrameAppScreen> {
   final AuthenticationCubit _authenticationCubit = sl<AuthenticationCubit>()..appStarted(verifyEmail: false);
   final GeneralCubit _generalCubit = sl<GeneralCubit>();
 
@@ -34,12 +33,6 @@ class _MinFrameAppScreemState extends State<MinFrameAppScreem> {
                 ..showSnackBar(SnackBar(content: Row(children: [Expanded(child: Text(state.mainAuthenticationState.errorMessage ?? state.mainAuthenticationState.message ?? '', style: const TextStyle(color: Colors.white))), const Icon(Icons.error)]), backgroundColor: Colors.red));
             }
             if (state is Authenticated) {
-              DiscordLogging.initializeDiscord(
-                userId: state.mainAuthenticationState.user!.uid!,
-                userDisplayName: state.mainAuthenticationState.user?.displayName ?? state.mainAuthenticationState.user?.name ?? state.mainAuthenticationState.user?.email ?? '',
-                kDiscordDebugWebhookURL: 'https://discord.com/api/webhooks/1394305360722137320/5lPPQMXgiUKc_ZzmMjTOIW8c-F3U9tKVs5Vq-D2XBRDJ7YZFHb1K3aSM8KvF6c0DnSEk',
-                kDiscordReleaseWebhookURL: 'https://discord.com/api/webhooks/1394305360722137320/5lPPQMXgiUKc_ZzmMjTOIW8c-F3U9tKVs5Vq-D2XBRDJ7YZFHb1K3aSM8KvF6c0DnSEk',
-              );
             }
           },
           builder: (context, state) {

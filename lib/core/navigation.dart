@@ -5,9 +5,12 @@ import 'package:frameapp/ui/screens/admin/prompt_management.dart';
 import 'package:frameapp/ui/screens/community_screen.dart';
 import 'package:frameapp/ui/screens/gallery_screen.dart';
 import 'package:frameapp/ui/screens/home_screen.dart';
+import 'package:frameapp/ui/screens/login/login_screen.dart';
 import 'package:frameapp/ui/screens/profile/edit_profile_screen.dart';
 import 'package:frameapp/ui/screens/profile/profile_screen.dart';
+import 'package:frameapp/ui/screens/register/register_screen.dart';
 import 'package:frameapp/ui/screens/settings_screen.dart';
+import 'package:frameapp/ui/screens/splash_screen.dart';
 
 
 abstract class Navigation {
@@ -31,6 +34,12 @@ abstract class Navigation {
         return _routeEndPoint(const ProfileScreen(), settings);
       case EDIT_PROFILE_SCREEN:
         return _routeEndPoint(const EditProfileScreen(), settings);
+      case LOGIN_SCREEN:
+        return _routeEndPoint(const LoginScreen(), settings);
+      case REGISTER_SCREEN:
+        return _routeEndPoint(const RegisterScreen(), settings);
+      case SPLASH_SCREEN:
+        return _routeEndPoint(const SplashScreen(), settings);
       case PROMPT_MANAGEMENT_SCREEN:
         return _routeEndPoint(const PromptManagement(), settings);
 

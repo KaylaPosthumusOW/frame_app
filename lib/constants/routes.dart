@@ -5,5 +5,10 @@ const PROFILE_SCREEN = '/profile';
 const EDIT_PROFILE_SCREEN = '/profile/edit';
 const SETTINGS_SCREEN = '/settings';
 
+// AUTH ROUTES
+const LOGIN_SCREEN = '/login';
+const REGISTER_SCREEN = '/register';
+const SPLASH_SCREEN = '/splash';
+
 //ADMIN ROUTES
 const PROMPT_MANAGEMENT_SCREEN = '/admin/prompt_management';

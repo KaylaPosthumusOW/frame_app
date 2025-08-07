@@ -81,6 +81,5 @@ class GeneralError extends GeneralState {
       log('ERROR: ${mainGeneralState.errorMessage!}');
       log('ERROR: $stackTrace');
     }
-    DiscordLogging.logMessage(mainGeneralState.errorMessage, stackTrace: stackTrace);
   }
 }

@@ -198,7 +198,6 @@ class ProfileError extends AppUserProfileState {
       log('ERROR: ${mainProfileState.errorMessage!}');
       log('ERROR: $stackTrace');
     }
-    DiscordLogging.logMessage(mainProfileState.errorMessage!, stackTrace: stackTrace);
   }
 }
 
@@ -210,6 +209,5 @@ class ProfilePermissionsError extends AppUserProfileState {
       log('ERROR: ${mainProfileState.errorMessage!}');
       log('ERROR: $stackTrace');
     }
-    DiscordLogging.logMessage(mainProfileState.errorMessage!, stackTrace: stackTrace);
   }
 }
