@@ -10,25 +10,39 @@ class FrameNavigation extends StatefulWidget {
 }
 
 class _FrameNavigationState extends State<FrameNavigation> {
-  int _currentIndex = 0;
+  int _getCurrentIndex() {
+    final String? currentRoute = ModalRoute.of(context)?.settings.name;
+    switch (currentRoute) {
+      case HOME_SCREEN:
+        return 0;
+      case GALLERY_SCREEN:
+        return 1;
+      case COMMUNITY_SCREEN:
+        return 2;
+      case PROFILE_SCREEN:
+        return 3;
+      default:
+        return 0;
+    }
+  }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+    // Only navigate if we're not already on the selected screen
+    final currentIndex = _getCurrentIndex();
+    if (index == currentIndex) return;
 
     switch (index) {
       case 0:
         Navigator.pushNamedAndRemoveUntil(context, HOME_SCREEN, (route) => false);
         break;
       case 1:
-        Navigator.pushNamed(context, GALLERY_SCREEN);
+        Navigator.pushNamedAndRemoveUntil(context, GALLERY_SCREEN, (route) => false);
         break;
       case 2:
-        Navigator.pushNamed(context, COMMUNITY_SCREEN);
+        Navigator.pushNamedAndRemoveUntil(context, COMMUNITY_SCREEN, (route) => false);
         break;
       case 3:
-        Navigator.pushNamed(context, PROFILE_SCREEN);
+        Navigator.pushNamedAndRemoveUntil(context, PROFILE_SCREEN, (route) => false);
         break;
     }
   }
@@ -53,7 +67,7 @@ class _FrameNavigationState extends State<FrameNavigation> {
         selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
         unselectedFontSize: 14,
         iconSize: 35,
-        currentIndex: _currentIndex,
+        currentIndex: _getCurrentIndex(),
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),

@@ -287,20 +287,6 @@ class _HomeScreenState extends State<HomeScreen> {
             _buildDateScroller(),
             SizedBox(height: 10.0),
             _buildFrameGalleries(),
-            SizedBox(height: 10.0),
-            Column(
-              children: [
-                ElevatedButton(onPressed: () {
-                  Navigator.pushNamed(context, '/gallery');
-                }, child: Text('Gallery Screen')),
-                ElevatedButton(onPressed: () {
-                  Navigator.pushNamed(context, '/community');
-                }, child: Text('Community Screen')),
-                ElevatedButton(onPressed: () {
-                  Navigator.pushNamed(context, '/profile');
-                }, child: Text('Profile Screen')),
-              ],
-            ),
           ],
         )
       ),
