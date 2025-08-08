@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:frameapp/models/app_user_profile.dart';
 import 'package:frameapp/ui/widgets/frame_alert_dialoq.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
@@ -36,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildProfilePicture() {
     return CircleAvatar(
-      radius: 120,
+      radius: 100,
       backgroundImage: AssetImage('assets/pngs/blank_profile_image.png'),
     );
   }
@@ -56,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Center(
           child: Column(
             children: [
-              SizedBox(height: 50),
+              SizedBox(height: 30),
               Stack(
                 children: [
                   _buildProfilePicture(),
@@ -79,30 +80,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 '${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.name?.isNotEmpty == true ? _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.name : 'User'} ${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.surname ?? ''}',
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 30),
               Container(
-                margin: const EdgeInsets.all(16.0),
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: AppColors.lightPink,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('ADMIN FUNCTIONS', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black)),
-                      ListTile(
-                          leading: Icon(Icons.note_add, color: AppColors.black),
-                          title: Text('Prompt Management', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black)),
-                          onTap: () {
-                            Navigator.pushNamed(context, '/admin/prompt_management');
-                          }
-                      ),
-                    ]
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(16.0),
+                margin: const EdgeInsets.symmetric(horizontal: 16.0),
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   color: AppColors.lightPink,
@@ -131,6 +111,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                       ),
                     ]
+                ),
+              ),
+              Offstage(
+                offstage: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.role != UserRole.user,
+                child: Container(
+                  margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: AppColors.limeGreen,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('ADMIN FUNCTIONS', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black)),
+                        ListTile(
+                            leading: Icon(Icons.note_add, color: AppColors.black),
+                            title: Text('Prompt Management', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black)),
+                            onTap: () {
+                              Navigator.pushNamed(context, '/admin/prompt_management');
+                            }
+                        ),
+                      ]
+                  ),
                 ),
               ),
             ],
