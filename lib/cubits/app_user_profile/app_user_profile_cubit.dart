@@ -35,6 +35,7 @@ class AppUserProfileCubit extends Cubit<AppUserProfileState> {
           name: state.mainAppUserProfileState.registerDetails!.name,
           surname: state.mainAppUserProfileState.registerDetails!.surname,
           phoneNumber: state.mainAppUserProfileState.registerDetails!.phoneNumber,
+          role: state.mainAppUserProfileState.registerDetails!.role,
         ));
 
         await _unSaveDetailsFromState();

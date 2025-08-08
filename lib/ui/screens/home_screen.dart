@@ -245,12 +245,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         actionsPadding: const EdgeInsets.only(right: 20.0),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Hello, ${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.name ?? 'Name'}',
+              'Hello, ${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.name?.isNotEmpty == true ? _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.name : 'User'}',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
             ),
             SizedBox(height: 4),

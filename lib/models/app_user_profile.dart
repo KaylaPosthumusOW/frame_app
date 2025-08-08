@@ -29,6 +29,7 @@ class AppUserProfile extends Equatable {
         name: authProviderUserDetails.name,
         surname: authProviderUserDetails.surname,
         createdAt: authProviderUserDetails.createdAt,
+        role: UserRole.user,
       );
 
   AppUserProfile copyWith({

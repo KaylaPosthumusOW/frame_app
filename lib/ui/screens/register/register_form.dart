@@ -1,4 +1,6 @@
 import 'package:frameapp/constants/constants.dart';
+import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:frameapp/models/app_user_profile.dart';
 import 'package:frameapp/ui/screens/register/register_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,16 +14,19 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   final RegisterCubit _registerCubit = sl<RegisterCubit>();
   final AuthenticationCubit _authenticationCubit = sl<AuthenticationCubit>();
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
 
   bool _passwordVisible = false;
+  bool _nameFieldTouched = false;
 
-  bool get isPopulated => _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty && _confirmPasswordController.text.isNotEmpty;
+  bool get isPopulated => _nameController.text.isNotEmpty && _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty && _confirmPasswordController.text.isNotEmpty;
 
   bool isRegisterButtonEnabled(RegisterState state) {
     return isPopulated && !state.isInProgress;
@@ -39,6 +44,14 @@ class _RegisterFormState extends State<RegisterForm> {
         }
 
         if (state.isSuccess) {
+          // Save the name to the app user profile state
+          _appUserProfileCubit.saveAppUserProfileDetailsToState(
+            appUserProfile: AppUserProfile(
+              name: _nameController.text.trim(),
+              role: UserRole.user,
+            ),
+          );
+
           _authenticationCubit.sendVerificationEmail();
           Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
         }
@@ -67,6 +80,22 @@ class _RegisterFormState extends State<RegisterForm> {
             child: Form(
               child: ListView(
                 children: <Widget>[
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      icon: const Icon(Icons.person),
+                      labelText: 'Display Name',
+                      errorText: _nameFieldTouched && _nameController.text.isEmpty ? 'Name is required' : null,
+                    ),
+                    keyboardType: TextInputType.text,
+                    keyboardAppearance: Brightness.dark,
+                    autocorrect: false,
+                    onChanged: (value) {
+                      setState(() {
+                        _nameFieldTouched = true;
+                      });
+                    },
+                  ),
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
@@ -123,8 +152,10 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 

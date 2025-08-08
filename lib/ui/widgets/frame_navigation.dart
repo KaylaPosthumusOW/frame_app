@@ -33,16 +33,16 @@ class _FrameNavigationState extends State<FrameNavigation> {
 
     switch (index) {
       case 0:
-        Navigator.pushNamedAndRemoveUntil(context, HOME_SCREEN, (route) => false);
+        Navigator.pushReplacementNamed(context, HOME_SCREEN);
         break;
       case 1:
-        Navigator.pushNamedAndRemoveUntil(context, GALLERY_SCREEN, (route) => false);
+        Navigator.pushReplacementNamed(context, GALLERY_SCREEN);
         break;
       case 2:
-        Navigator.pushNamedAndRemoveUntil(context, COMMUNITY_SCREEN, (route) => false);
+        Navigator.pushReplacementNamed(context, COMMUNITY_SCREEN);
         break;
       case 3:
-        Navigator.pushNamedAndRemoveUntil(context, PROFILE_SCREEN, (route) => false);
+        Navigator.pushReplacementNamed(context, PROFILE_SCREEN);
         break;
     }
   }

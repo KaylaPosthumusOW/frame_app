@@ -48,11 +48,12 @@ abstract class Navigation {
     }
   }
 
-  static Route<RouteSettings> _routeEndPoint(Widget builder, RouteSettings settings, {bool fullScreenDialog = false}) {
-    return CupertinoPageRoute(
+  static Route<RouteSettings> _routeEndPoint(Widget builder, RouteSettings settings) {
+    return PageRouteBuilder(
       settings: settings,
-      fullscreenDialog: fullScreenDialog,
-      builder: (_) => builder,
+      pageBuilder: (context, animation, secondaryAnimation) => builder,
+      transitionDuration: Duration.zero,
+      reverseTransitionDuration: Duration.zero,
     );
   }
 
