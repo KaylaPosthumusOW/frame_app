@@ -1,9 +1,11 @@
 import 'package:frameapp/constants/constants.dart';
+import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/models/app_user_profile.dart';
 import 'package:frameapp/ui/screens/register/register_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frameapp/ui/widgets/frame_text_field.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -80,67 +82,90 @@ class _RegisterFormState extends State<RegisterForm> {
             child: Form(
               child: ListView(
                 children: <Widget>[
-                  TextFormField(
+                  SizedBox(height: 60),
+                  Text('Create Your Account!', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: AppColors.framePurple)),
+                  SizedBox(height: 20),
+                  FrameTextField(
+                    label: 'Name & Surname',
                     controller: _nameController,
-                    decoration: InputDecoration(
-                      icon: const Icon(Icons.person),
-                      labelText: 'Display Name',
-                      errorText: _nameFieldTouched && _nameController.text.isEmpty ? 'Name is required' : null,
-                    ),
                     keyboardType: TextInputType.text,
-                    keyboardAppearance: Brightness.dark,
-                    autocorrect: false,
                     onChanged: (value) {
                       setState(() {
                         _nameFieldTouched = true;
                       });
                     },
                   ),
-                  TextFormField(
+                  SizedBox(height: 10),
+                  FrameTextField(
+                    label: 'Email',
                     controller: _emailController,
-                    decoration: InputDecoration(
-                      icon: const Icon(Icons.email),
-                      labelText: 'Email',
-                      errorText: state.emailError ? 'Invalid email' : null,
-                    ),
                     keyboardType: TextInputType.emailAddress,
-                    keyboardAppearance: Brightness.dark,
-                    autocorrect: false,
                     onChanged: (value) => _registerCubit.emailChanged(value),
                   ),
-                  TextFormField(
-                    keyboardAppearance: Brightness.dark,
+                  SizedBox(height: 10),
+                  FrameTextField(
+                    label: 'Password',
                     controller: _passwordController,
-                    decoration: InputDecoration(
-                      icon: const Icon(Icons.lock),
-                      labelText: 'Password',
-                      errorText: state.passwordError ? 'Invalid password' : null,
-                      suffixIcon: IconButton(
-                        icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off),
-                        onPressed: () => setState(() => _passwordVisible = !_passwordVisible),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                      child: Icon(
+                        _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.grey,
                       ),
                     ),
                     obscureText: !_passwordVisible,
-                    autocorrect: false,
                     onChanged: (value) => _registerCubit.passwordChanged(value),
                   ),
-                  TextFormField(
-                    keyboardAppearance: Brightness.dark,
+                  SizedBox(height: 10),
+                  FrameTextField(
+                    label: 'Confirm Password',
                     controller: _confirmPasswordController,
-                    decoration: InputDecoration(
-                      icon: const Icon(Icons.lock),
-                      labelText: 'Confirm Password',
-                      errorText: state.confirmPasswordError ? 'Invalid password / Passwords doesnt match' : null,
-                      suffixIcon: IconButton(
-                        icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off),
-                        onPressed: () => setState(() => _passwordVisible = !_passwordVisible),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                      child: Icon(
+                        _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.grey,
                       ),
                     ),
                     obscureText: !_passwordVisible,
-                    autocorrect: false,
                     onChanged: (value) => _registerCubit.confirmPasswordChanged(value),
                   ),
-                  RegisterButton(onPressed: isRegisterButtonEnabled(state) ? _onFormSubmitted : () {}),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        RegisterButton(onPressed: isRegisterButtonEnabled(state) ? _onFormSubmitted : () {}),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Already Have an Account?'),
+                            ButtonTheme(
+                              minWidth: 220.0,
+                              child: TextButton(
+                                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Login',
+                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.limeGreen,),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

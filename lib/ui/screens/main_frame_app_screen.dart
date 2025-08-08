@@ -37,6 +37,7 @@ class _MainFrameAppScreenState extends State<MainFrameAppScreen> {
           },
           builder: (context, state) {
             if (state is Uninitialized) {
+              _appUserProfileCubit.loadProfile();
               return const SplashScreen();
             }
 

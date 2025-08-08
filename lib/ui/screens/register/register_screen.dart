@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'register_form.dart';
 
@@ -8,7 +9,14 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: SvgPicture.asset(
+          'assets/svg/frame_logo.svg',
+          height: 32,
+        ),
+        centerTitle: true,
+      ),
       body: const RegisterForm(),
     );
   }

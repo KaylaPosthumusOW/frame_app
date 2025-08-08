@@ -1,6 +1,7 @@
 import 'package:frameapp/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frameapp/constants/themes.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
 
 class AppleLoginButton extends StatelessWidget {
@@ -10,13 +11,16 @@ class AppleLoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ButtonTheme(
       minWidth: 220.0,
-      child: ElevatedButton.icon(
-        style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
-        icon: const Icon(FontAwesomeIcons.apple),
-        onPressed: () => sl<LoginCubit>().loginWithApplePressed(),
-        label: const Padding(
-          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-          child: Text('Sign in with Apple'),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.white.withValues(alpha: 0.6), width: 2.0),
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: IconButton(
+          style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+          icon: Icon(FontAwesomeIcons.apple, color: AppColors.white,),
+          onPressed: () => sl<LoginCubit>().loginWithApplePressed(),
         ),
       ),
     );

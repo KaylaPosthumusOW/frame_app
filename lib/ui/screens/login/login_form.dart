@@ -1,4 +1,5 @@
 import 'package:frameapp/constants/constants.dart';
+import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/ui/screens/login/anon_button.dart';
 import 'package:frameapp/ui/screens/login/apple_login_button.dart';
 import 'package:frameapp/ui/screens/login/create_account_button.dart';
@@ -10,6 +11,7 @@ import 'package:frameapp/ui/screens/register/forgot_password_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frameapp/ui/widgets/frame_text_field.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
 
 class LoginForm extends StatefulWidget {
@@ -132,29 +134,19 @@ class _LoginFormState extends State<LoginForm> {
             child: Form(
               child: ListView(
                 children: <Widget>[
-                  TextFormField(
+                  SizedBox(height: 60),
+                  Text('Welcome Back!', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: AppColors.limeGreen)),
+                  SizedBox(height: 20),
+                  FrameTextField(
+                    label: 'Email',
                     controller: _emailController,
-                    decoration: InputDecoration(
-                      icon: const Icon(Icons.email),
-                      labelText: 'Email',
-                      errorText: state.emailError ? 'Invalid email' : null,
-                    ),
-                    keyboardAppearance: Brightness.dark,
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) => _loginCubit.emailChanged(value),
                   ),
-                  TextFormField(
-                    keyboardAppearance: Brightness.dark,
+                  SizedBox(height: 10),
+                  FrameTextField(
+                    label: 'Password',
                     controller: _passwordController,
-                    decoration: InputDecoration(
-                      icon: const Icon(Icons.lock),
-                      labelText: 'Password',
-                      errorText: state.passwordError ? 'Invalid password' : null,
-                      suffixIcon: IconButton(
-                        icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off),
-                        onPressed: () => setState(() => _passwordVisible = !_passwordVisible),
-                      ),
-                    ),
                     obscureText: !_passwordVisible,
                     onChanged: (value) => _loginCubit.passwordChanged(value),
                   ),
@@ -164,16 +156,26 @@ class _LoginFormState extends State<LoginForm> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         LoginButton(onPressed: isLoginButtonEnabled(state) ? _onFormSubmitted : () => print('Login button failed')),
-                        const GoogleLoginButton(),
-                        const AppleLoginButton(),
-                        const AnonLoginButton(),
-                        const PhoneLoginButton(),
-                        const CreateAccountButton(),
-                        const MicrosoftLoginButton(),
+                        SizedBox(height: 60),
+                        Center(
+                          child: Text(
+                            '—  Or log in with  —',
+                            style: TextStyle(color: AppColors.white),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GoogleLoginButton(),
+                            SizedBox(width: 15),
+                            AppleLoginButton(),
+                          ],
+                        ),
+                        CreateAccountButton(),
                       ],
                     ),
                   ),
-                  ForgotPasswordButton(onPressed: _emailController.text.isNotEmpty ? () => _onResetSubmitted() : () => print('ForgotPasswordButton executed null function')),
                 ],
               ),
             ),

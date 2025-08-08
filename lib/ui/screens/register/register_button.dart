@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frameapp/ui/widgets/frame_button.dart';
 
 class RegisterButton extends StatelessWidget {
   final VoidCallback _onPressed;
@@ -7,10 +8,10 @@ class RegisterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+    return FrameButton(
+      type: ButtonType.primary,
       onPressed: _onPressed,
-      child: const Text('Register'),
+      label: 'Register',
     );
   }
 }

@@ -62,11 +62,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   _buildProfilePicture(),
                   Positioned(
-                    bottom: 12,
-                    right: 12,
+                    bottom: 8,
+                    right: 8,
                     child: CircleAvatar(
                       radius: 25,
-                      backgroundColor: AppColors.limeGreen,
+                      backgroundColor: AppColors.white,
                       child: IconButton(
                         icon: Icon(Icons.edit, color: AppColors.black),
                         onPressed: () {},
@@ -114,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               Offstage(
-                offstage: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.role != UserRole.user,
+                offstage: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.role != UserRole.admin,
                 child: Container(
                   margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
                   padding: const EdgeInsets.all(16.0),
@@ -125,10 +125,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('ADMIN FUNCTIONS', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black)),
+                        Text('ADMIN FUNCTIONS', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black, fontWeight: FontWeight.bold)),
                         ListTile(
                             leading: Icon(Icons.note_add, color: AppColors.black),
                             title: Text('Prompt Management', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black)),
+                            onTap: () {
+                              Navigator.pushNamed(context, '/admin/prompt_management');
+                            }
+                        ),
+                        ListTile(
+                            leading: Icon(Icons.report, color: AppColors.black),
+                            title: Text('Reported Posts', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black)),
                             onTap: () {
                               Navigator.pushNamed(context, '/admin/prompt_management');
                             }
