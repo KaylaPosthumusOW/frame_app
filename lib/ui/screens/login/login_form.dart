@@ -1,13 +1,9 @@
 import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
-import 'package:frameapp/ui/screens/login/anon_button.dart';
 import 'package:frameapp/ui/screens/login/apple_login_button.dart';
 import 'package:frameapp/ui/screens/login/create_account_button.dart';
 import 'package:frameapp/ui/screens/login/google_login_button.dart';
 import 'package:frameapp/ui/screens/login/login_button.dart';
-import 'package:frameapp/ui/screens/login/microsoft_login_button.dart';
-import 'package:frameapp/ui/screens/login/phone_login_button.dart';
-import 'package:frameapp/ui/screens/register/forgot_password_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
