@@ -55,7 +55,6 @@ class _NewFrameModalState extends State<NewFrameModal> {
       final userId = user!.uid!;
       String? downloadUrl;
       
-      // Upload image to Firebase Storage if path exists
       if (widget.capturedImage!.path != null) {
         final file = File(widget.capturedImage!.path!);
         final fileName = 'post_${DateTime.now().millisecondsSinceEpoch}.jpg';
@@ -69,7 +68,6 @@ class _NewFrameModalState extends State<NewFrameModal> {
         final snapshot = await uploadTask;
         downloadUrl = await snapshot.ref.getDownloadURL();
       } else if (widget.capturedImage!.bytes != null) {
-        // Upload from bytes if no path (web/mobile differences)
         final fileName = 'post_${DateTime.now().millisecondsSinceEpoch}.jpg';
         final storageRef = FirebaseStorage.instance
             .ref()
@@ -86,7 +84,6 @@ class _NewFrameModalState extends State<NewFrameModal> {
         throw Exception('Failed to upload image to Firebase Storage');
       }
 
-      // Create the post with the Firebase Storage URL
       await _postCubit.createNewPost(
         PostModel(
           owner: user,

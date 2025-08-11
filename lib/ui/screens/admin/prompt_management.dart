@@ -6,6 +6,9 @@ import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/cubits/prompt/prompt_cubit.dart';
 import 'package:frameapp/models/prompt_model.dart';
+import 'package:frameapp/ui/widgets/frame_button.dart';
+import 'package:frameapp/ui/widgets/frame_text_field.dart';
+import 'package:sp_utilities/utilities.dart';
 
 class PromptManagement extends StatefulWidget {
   const PromptManagement({super.key});
@@ -23,46 +26,179 @@ class _PromptManagementState extends State<PromptManagement> {
   @override
   initState() {
     super.initState();
-    _promptCubit.loadAllPrompts(ownerUid: _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile?.uid ?? '');
-    _promptTextController.text = _promptCubit.state.mainPromptState.selectedPrompt?.promptText ?? '';
+    _promptCubit.loadAllPrompts(ownerUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
   }
 
-  Widget _createNewPromptDialoq() {
+  Widget _createEditPromptDialoq() {
     return AlertDialog(
-      backgroundColor: AppColors.framePurple,
-      title: Text('Create New Prompt'),
+      backgroundColor: AppColors.slateGrey,
+      title: Text(
+        _promptCubit.state.mainPromptState.selectedPrompt == null ? 'Create New Prompt' : 'Edit Prompt',
+        style: TextStyle(color: AppColors.white),
+      ),
       content: SingleChildScrollView(
         child: ListBody(
           children: [
-            TextField(
+            FrameTextField(
               controller: _promptTextController,
-              style: TextStyle(color: AppColors.white),
-              decoration: InputDecoration(labelText: 'Prompt Text', hintText: 'Enter your prompt here'),
+              label: 'Prompt Text',
+              maxLines: 3,
             ),
           ],
         ),
       ),
       actions: <Widget>[
-        ElevatedButton(
-          child: const Text('Cancel'),
+        FrameButton(
+          type: ButtonType.outline,
+          label: ('Cancel'),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        ElevatedButton(
-          child: const Text('Create'),
-          onPressed: () {
-            _promptCubit.createNewPrompt(
-              PromptModel(
-                owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
-                promptText: _promptTextController.text,
-                createdAt: Timestamp.now(),
-              ),
-            );
-            Navigator.of(context).pop();
-          },
-        ),
+        if (_promptCubit.state.mainPromptState.selectedPrompt != null)
+          FrameButton(
+            type: ButtonType.primary,
+            label: ('Update'),
+            onPressed: () {
+              _promptCubit.updatePrompt(
+                _promptCubit.state.mainPromptState.selectedPrompt!.copyWith(promptText: _promptTextController.text),
+              );
+              _promptTextController.clear();
+              Navigator.of(context).pop();
+            },
+          ),
+        if (_promptCubit.state.mainPromptState.selectedPrompt == null)
+          FrameButton(
+            type: ButtonType.primary,
+            label: ('Create'),
+            onPressed: () {
+              _promptCubit.createNewPrompt(
+                PromptModel(
+                  owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
+                  promptText: _promptTextController.text,
+                  createdAt: Timestamp.now(),
+                ),
+              );
+              _promptTextController.clear();
+              Navigator.of(context).pop();
+            },
+          ),
       ],
+    );
+  }
+
+  Widget _promptList() {
+    return BlocBuilder<PromptCubit, PromptState>(
+      bloc: _promptCubit,
+      builder: (context, state) {
+        if (state is PromptLoading) {
+          return Center(
+            child: CircularProgressIndicator(color: AppColors.framePurple),
+          );
+        }
+
+        if (state is PromptError) {
+          return Center(
+            child: Column(
+              children: [
+                Icon(Icons.error, color: Colors.red, size: 48),
+                SizedBox(height: 16),
+                Text(
+                  'Error loading prompts',
+                  style: TextStyle(color: Colors.red, fontSize: 16),
+                ),
+                Text(
+                  state.mainPromptState.errorMessage ?? 'Unknown error',
+                  style: TextStyle(color: Colors.red),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final uid = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '';
+                    _promptCubit.loadAllPrompts(ownerUid: uid);
+                  },
+                  child: Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (state.mainPromptState.prompts != null && state.mainPromptState.prompts!.isNotEmpty) {
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: state.mainPromptState.prompts!.length,
+            itemBuilder: (context, index) {
+              final prompt = state.mainPromptState.prompts![index];
+              return Container(
+                margin: const EdgeInsets.only(bottom: 10.0),
+                padding: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: AppColors.slateGrey,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: Column(
+                        children: [
+                          Text(prompt.promptText ?? '', style: TextStyle(color: AppColors.white)),
+                          SizedBox(height: 5.0),
+                        ],
+                      ),
+                      subtitle: Text('Created: ${StringHelpers.printFirebaseTimeStamp(state.mainPromptState.prompts![index].createdAt)}', style: TextStyle(color: AppColors.white)),
+                      trailing: IconButton(
+                        icon: Icon(Icons.edit, color: AppColors.limeGreen),
+                        onPressed: () {
+                          _promptCubit.setSelectedPrompt(prompt);
+                          _promptTextController.text = prompt.promptText ?? '';
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return _createEditPromptDialoq();
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    Divider(color: AppColors.slateGrey , height: 1),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+
+        return Center(child: Text('No prompts available', style: TextStyle(color: AppColors.white)));
+      },
+    );
+  }
+
+  Widget _dailyFrameContainer() {
+    return Container(
+      padding: const EdgeInsets.only(top: 20.0, bottom: 25.0, left: 20.0, right: 20.0),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColors.lightPink,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Today´s Frame',
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.black),
+          ),
+          SizedBox(height: 10.0),
+          Center(
+            child: Text(
+              '"Find something red that tells a story."',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black),
+              textAlign: TextAlign.center,
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -73,21 +209,39 @@ class _PromptManagementState extends State<PromptManagement> {
         title: const Text('Prompt Management'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 30.0),
-        child: Center(
-          child: ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return _createNewPromptDialoq();
+        padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 20),
+        child: Column(
+          children: [
+            SizedBox(height: 20.0),
+            _dailyFrameContainer(),
+            SizedBox(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('All Prompts', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.white)),
+                FrameButton(
+                  type: ButtonType.outline,
+                  onPressed: () {
+                    _promptCubit.unSelectPrompt();
+                    // Clear the controller when creating a new prompt
+                    _promptTextController.clear();
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return _createEditPromptDialoq();
+                      },
+                    );
                   },
-                );
-              }, 
-              child: Text('Create a New Prompt')
+                  label: ('Create Prompt'),
+                  icon: Icon(Icons.add, color: AppColors.framePurple, size: 20.0),
+                ),
+              ],
             ),
-        )
-      )
+            SizedBox(height: 20.0),
+            _promptList(),
+          ],
+        ),
+      ),
     );
   }
 }
