@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
-import 'package:frameapp/cubits/prompt/prompt_cubit.dart';
 import 'package:frameapp/models/post_model.dart';
-import 'package:frameapp/models/prompt_model.dart';
 import 'dart:io';
 
 import 'package:frameapp/ui/widgets/frame_button.dart';
@@ -32,11 +31,86 @@ class _NewFrameModalState extends State<NewFrameModal> {
   final PostCubit _postCubit = sl<PostCubit>();
 
   final TextEditingController _notesController = TextEditingController();
+  bool _isUploading = false;
 
   @override
   void dispose() {
     _notesController.dispose();
     super.dispose();
+  }
+
+  Future<void> _saveImageAndCreatePost() async {
+    if (widget.capturedImage == null) return;
+
+    setState(() {
+      _isUploading = true;
+    });
+
+    try {
+      final user = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile;
+      if (user?.uid == null) {
+        throw Exception('User not authenticated');
+      }
+
+      final userId = user!.uid!;
+      String? downloadUrl;
+      
+      // Upload image to Firebase Storage if path exists
+      if (widget.capturedImage!.path != null) {
+        final file = File(widget.capturedImage!.path!);
+        final fileName = 'post_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('posts')
+            .child(userId)
+            .child(fileName);
+
+        final uploadTask = storageRef.putFile(file);
+        final snapshot = await uploadTask;
+        downloadUrl = await snapshot.ref.getDownloadURL();
+      } else if (widget.capturedImage!.bytes != null) {
+        // Upload from bytes if no path (web/mobile differences)
+        final fileName = 'post_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('posts')
+            .child(userId)
+            .child(fileName);
+
+        final uploadTask = storageRef.putData(widget.capturedImage!.bytes!);
+        final snapshot = await uploadTask;
+        downloadUrl = await snapshot.ref.getDownloadURL();
+      }
+      
+      if (downloadUrl == null) {
+        throw Exception('Failed to upload image to Firebase Storage');
+      }
+
+      // Create the post with the Firebase Storage URL
+      await _postCubit.createNewPost(
+        PostModel(
+          owner: user,
+          imageUrl: downloadUrl,
+          note: _notesController.text,
+          createdAt: Timestamp.now(),
+        ),
+      );
+
+      Navigator.pop(context, {'saved': true, 'notes': _notesController.text});
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to save image: ${error.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isUploading = false;
+        });
+      }
+    }
   }
 
   Widget _buildImageDisplay() {
@@ -47,6 +121,7 @@ class _NewFrameModalState extends State<NewFrameModal> {
           child: Image.file(
             File(widget.capturedImage!.path!),
             fit: BoxFit.cover,
+            height: 280,
           ),
         );
       } else if (widget.capturedImage!.bytes != null) {
@@ -75,7 +150,13 @@ class _NewFrameModalState extends State<NewFrameModal> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        color: AppColors.slateGrey,
+        decoration: BoxDecoration(
+          color: AppColors.slateGrey,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+        ),
         padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -131,19 +212,9 @@ class _NewFrameModalState extends State<NewFrameModal> {
                 Expanded(
                   child: FrameButton(
                     type: ButtonType.primary,
-                    label: 'Save Image',
-                    onPressed: () {
-                      _postCubit.createNewPost(
-                        PostModel(
-                          owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
-                          imageUrl: widget.capturedImage?.path ?? '',
-                          note: _notesController.text,
-                          createdAt: Timestamp.now(),
-                        ),
-                      );
-
-                      _notesController.clear();
-                      Navigator.pop(context);
+                    label: _isUploading ? 'Uploading...' : 'Save Image',
+                    onPressed: _isUploading ? null : () {
+                      _saveImageAndCreatePost();
                     },
                   ),
                 )
