@@ -10,6 +10,7 @@ import 'package:frameapp/stores/firebase/post_firebase_repository.dart';
 import 'package:frameapp/stores/firebase/prompt_firebase_repository.dart';
 import 'package:sp_firebase/sp_firebase.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
+import 'package:sp_utilities/utilities.dart';
 
 class DependencyInjection {
   static init() async {
@@ -38,5 +39,6 @@ class DependencyInjection {
   static _packages() async {
     await SPFirebaseInitialiser.initialiseDI(name: '[DEFAULT]', options: DefaultFirebaseOptions.currentPlatform);
     await UserRepoInitialiser.initialiseDI();
+    await SPUtilitiesInitialiser.initialiseDI();
   }
 }

@@ -55,7 +55,7 @@ class _FrameButtonState extends State<FrameButton> {
       case ButtonType.secondary:
         return FilledButton.styleFrom(backgroundColor: isDisabled ? AppColors.limeGreen.withValues(alpha: 0.4) : widget.buttonColor ?? AppColors.limeGreen, foregroundColor: AppColors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
       case ButtonType.outline:
-        return OutlinedButton.styleFrom(backgroundColor: AppColors.white, side: BorderSide(color: isDisabled ? AppColors.framePurple : widget.outlineColor ?? AppColors.framePurple), foregroundColor: isDisabled ? AppColors.framePurple : AppColors.framePurple, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
+        return OutlinedButton.styleFrom(backgroundColor: Colors.transparent, side: BorderSide(color: isDisabled ? AppColors.framePurple : widget.outlineColor ?? AppColors.framePurple), foregroundColor: isDisabled ? AppColors.framePurple : AppColors.framePurple, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
     }
   }
 

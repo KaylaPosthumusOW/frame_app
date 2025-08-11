@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:frameapp/models/app_user_profile.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:frameapp/ui/widgets/new_frame_modal.dart';
 import 'package:intl/intl.dart';
+import 'package:sp_utilities/utilities.dart';
 
 class DateItem {
   final DateTime date;
@@ -28,10 +31,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
+  final SPFileUploaderCubit _imageUploaderCubit = sl<SPFileUploaderCubit>();
 
   final PageController _pageController = PageController();
   DateTime _selectedDate = DateTime.now();
   int _currentPage = 1000;
+  String? _downloadUrl;
   List<DateItem> _generateWeek(DateTime date) {
     DateTime startOfWeek = date.subtract(Duration(days: date.weekday - 1));
     return List.generate(7, (index) {
@@ -180,13 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             child: GestureDetector(
               onTap: () {
-                showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (context) {
-                      return NewFrameModal();
-                    }
-                );
+                _takePictureFromCamera();
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -241,9 +240,237 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _takenPictureDisplay() {
+    return BlocConsumer<SPFileUploaderCubit, SPFileUploaderState>(
+        bloc: _imageUploaderCubit,
+        listener: (context, state) {
+          if (state is SPFileUploaderAllUploadTaskCompleted) {
+            _downloadUrl = state.mainSPFileUploadState.downloadUrls?.first;
+            if (_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile != null) {
+              final AppUserProfile appUserProfile = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.copyWith(profilePicture: _downloadUrl);
+              _appUserProfileCubit.updateProfile(appUserProfile);
+            }
+            setState(() {});
+          }
+
+          if (state is SPFileUploaderErrorState) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(state.mainSPFileUploadState.errorMessage ?? state.mainSPFileUploadState.message ?? 'Upload failed'),
+            ));
+          }
+        },
+        builder: (context, state) {
+          if (state.mainSPFileUploadState.uploadTasks != null && state.mainSPFileUploadState.uploadTasks!.isNotEmpty) {
+            return Container(
+              width: 200,
+              height: 200,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey[300],
+              ),
+              child: CircularProgressIndicator(color: AppColors.white),
+            );
+          }
+
+          if (state is ProfileLoading) {
+            return Container(
+              width: 200,
+              height: 200,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey[300],
+              ),
+              child: CircularProgressIndicator(color: AppColors.white),
+            );
+          }
+
+          if (_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.profilePicture != null && _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.profilePicture!.isNotEmpty && _downloadUrl == null) {
+            final String? profileUrl = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.profilePicture != null ? _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.profilePicture : null;
+
+            return Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                profileUrl != null
+                    ? SizedBox(
+                  width: 200,
+                  height: 200,
+                  child: ClipRRect(borderRadius: BorderRadius.circular(100), child: Image.network(profileUrl, fit: BoxFit.cover)),
+                )
+                    : Container(),
+                Positioned(
+                  bottom: 10,
+                  right: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.framePurple,
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.white, size: 30),
+                      onPressed: () {
+                        _addProfilePhoto();
+                      },
+                    ),
+                  ),
+                )
+              ],
+            );
+          } else if (_downloadUrl != null) {
+            return Stack(
+              clipBehavior: Clip.none,
+              children: [
+                CircleAvatar(
+                  radius: 100,
+                  backgroundColor: Colors.grey[300],
+                  backgroundImage: NetworkImage(_downloadUrl!),
+                ),
+                Positioned(
+                  bottom: 10,
+                  right: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.framePurple,
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.white, size: 30),
+                      onPressed: () {
+                        _addProfilePhoto();
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Stack(
+              clipBehavior: Clip.none,
+              children: [
+                CircleAvatar(
+                  radius: 100,
+                  backgroundColor: Colors.grey[300],
+                  child: Icon(Icons.person, size: 120, color: Colors.white),
+                ),
+                Positioned(
+                  bottom: 10,
+                  right: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.framePurple,
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.white, size: 30),
+                      onPressed: () {
+                        _addProfilePhoto();
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+        });
+  }
+
+  void _addProfilePhoto() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Select Photo Source'),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _takePictureFromCamera();
+                  },
+                  child: Text('Camera'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _takePictureFromGallery();
+                  },
+                  child: Text('Gallery'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _takePictureFromCamera() {
+    _imageUploaderCubit.singleSelectImageFromCameraToUploadToReference(
+      storageRef: null,
+      skipUploadToFirebase: true,
+    );
+  }
+
+  void _takePictureFromGallery() {
+    _imageUploaderCubit.singleSelectImageFromGalleryToUploadToReference(
+      storageRef: null,
+      skipUploadToFirebase: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<SPFileUploaderCubit, SPFileUploaderState>(
+      bloc: _imageUploaderCubit,
+      listener: (context, state) {
+        print('SPFileUploaderCubit state change: ${state.runtimeType}');
+        
+        if (state is SPFileUploaderAllUploadTaskCompleted) {
+          if (state.mainSPFileUploadState.files != null && state.mainSPFileUploadState.files!.isNotEmpty) {
+            print('Image captured successfully, showing modal');
+            final capturedFile = state.mainSPFileUploadState.files!.first;
+            
+            // Show modal with captured image
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) => Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: NewFrameModal(
+                  capturedImage: capturedFile,
+                  onRetake: () {
+                    _takePictureFromCamera();
+                  },
+                ),
+              ),
+            ).then((result) {
+              if (result != null && result['saved'] == true) {
+                print('Frame saved with notes: ${result['notes']}');
+                // Handle saved frame here
+              }
+            });
+          }
+        }
+        
+        if (state is SPFileUploaderErrorState) {
+          print('Error occurred: ${state.mainSPFileUploadState.errorMessage}');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.mainSPFileUploadState.errorMessage ?? 'Upload failed'),
+            ),
+          );
+        }
+      },
+      child: Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actionsPadding: const EdgeInsets.only(right: 20.0),
@@ -283,6 +510,8 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             SizedBox(height: 15.0),
             _dailyFrameContainer(),
+            SizedBox(height: 20.0),
+            // _takenPictureDisplay(),
             SizedBox(height: 10.0),
             Text('Month: ${DateFormat('MMMM yyyy').format(_selectedDate)}', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
             _buildDateScroller(),
@@ -292,6 +521,7 @@ class _HomeScreenState extends State<HomeScreen> {
         )
       ),
       bottomNavigationBar: FrameNavigation(),
+    ),
     );
   }
 }
