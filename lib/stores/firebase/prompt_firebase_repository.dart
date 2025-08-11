@@ -28,6 +28,15 @@ class PromptFirebaseRepository implements PromptStore {
     }
     return prompts;
   }
+  @override
+  Future<PromptModel> getCurrentPrompt() async {
+    QuerySnapshot<PromptModel> querySnapshot = await _promptCollection.where('isUsed', isEqualTo: true).get();
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs.first.data();
+    } else {
+      throw Exception('No current post found');
+    }
+  }
 
   @override
   Future<PromptModel> updatePrompt(PromptModel prompt) async {

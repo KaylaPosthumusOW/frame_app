@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:frameapp/cubits/prompt/prompt_cubit.dart';
 import 'package:frameapp/models/app_user_profile.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:frameapp/ui/widgets/new_frame_modal.dart';
@@ -30,8 +31,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+  final PromptCubit _promptCubit = sl<PromptCubit>();
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
   final SPFileUploaderCubit _imageUploaderCubit = sl<SPFileUploaderCubit>();
+
+  @override
+  void initState() {
+    super.initState();
+    _promptCubit.loadCurrentPrompt();
+  }
 
   final PageController _pageController = PageController();
   DateTime _selectedDate = DateTime.now();
@@ -76,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: 10.0),
           Center(
             child: Text(
-              '"Find something red that tells a story."',
+              '"${_promptCubit.state.mainPromptState.currentPrompt?.promptText ?? ''}"',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black),
               textAlign: TextAlign.center,
             ),

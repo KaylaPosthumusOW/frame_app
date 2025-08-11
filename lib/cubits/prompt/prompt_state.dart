@@ -6,23 +6,26 @@ class MainPromptState extends Equatable {
   final String? errorMessage;
   final List<PromptModel>? prompts;
   final PromptModel? selectedPrompt;
+  final PromptModel? currentPrompt;
 
-  const MainPromptState({this.message, this.errorMessage, this.prompts, this.selectedPrompt});
+  const MainPromptState({this.message, this.errorMessage, this.prompts, this.selectedPrompt, this.currentPrompt});
 
   @override
-  List<Object?> get props => [message, errorMessage, prompts, selectedPrompt];
+  List<Object?> get props => [message, errorMessage, prompts, selectedPrompt, currentPrompt];
 
   MainPromptState copyWith({
     String? message,
     String? errorMessage,
     List<PromptModel>? prompts,
     PromptModel? selectedPrompt,
+    PromptModel? currentPrompt,
   }) {
     return MainPromptState(
       message: message ?? this.message,
       errorMessage: errorMessage ?? this.errorMessage,
       prompts: prompts ?? this.prompts,
       selectedPrompt: selectedPrompt ?? this.selectedPrompt,
+      currentPrompt: currentPrompt ?? this.currentPrompt,
     );
   }
 

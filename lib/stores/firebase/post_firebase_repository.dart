@@ -21,12 +21,14 @@ class PostFirebaseRepository implements PostStore {
   @override
   Future<List<PostModel>> loadPostsForUser({required String ownerUid}) async {
     List<PostModel> posts = [];
-    QuerySnapshot<PostModel> query = await _postCollection.where('owner.uid', isEqualTo: ownerUid).orderBy('createdAt').get();
+    QuerySnapshot<PostModel> query = await _postCollection.where('owner.uid', isEqualTo: ownerUid).orderBy('createdAt', descending: true).get();
     for (var doc in query.docs) {
       posts.add(doc.data());
     }
     return posts;
   }
+
+
 
   @override
   Future<PostModel> updatePost(PostModel post) async {

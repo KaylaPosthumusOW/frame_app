@@ -21,6 +21,16 @@ class PromptCubit extends Cubit<PromptState> {
     }
   }
 
+  Future<void> loadCurrentPrompt() async {
+    emit(PromptLoading(state.mainPromptState.copyWith(message: 'Loading current prompt')));
+    try {
+      PromptModel currentPrompt = await _promptRepository.getCurrentPrompt();
+      emit(PromptLoaded(state.mainPromptState.copyWith(currentPrompt: currentPrompt, message: 'Current prompt loaded')));
+    } catch (error, stackTrace) {
+      emit(PromptError(state.mainPromptState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+    }
+  }
+
   Future<void> createNewPrompt(PromptModel newPrompt) async {
     emit(CreatingPrompt(state.mainPromptState.copyWith(message: 'Adding new prompt')));
     try {

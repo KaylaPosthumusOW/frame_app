@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frameapp/constants/themes.dart';
 
-enum ButtonType { primary, secondary, outline }
+enum ButtonType { primary, secondary, outline, whiteOutline }
 
 class FrameButton extends StatefulWidget {
   final VoidCallback? onPressed;
@@ -56,6 +56,8 @@ class _FrameButtonState extends State<FrameButton> {
         return FilledButton.styleFrom(backgroundColor: isDisabled ? AppColors.limeGreen.withValues(alpha: 0.4) : widget.buttonColor ?? AppColors.limeGreen, foregroundColor: AppColors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
       case ButtonType.outline:
         return OutlinedButton.styleFrom(backgroundColor: Colors.transparent, side: BorderSide(color: isDisabled ? AppColors.framePurple : widget.outlineColor ?? AppColors.framePurple), foregroundColor: isDisabled ? AppColors.framePurple : AppColors.framePurple, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
+      case ButtonType.whiteOutline:
+        return OutlinedButton.styleFrom(backgroundColor: Colors.transparent, side: BorderSide(color: isDisabled ? AppColors.white : widget.outlineColor ?? AppColors.white), foregroundColor: isDisabled ? AppColors.white : AppColors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
     }
   }
 
@@ -66,6 +68,8 @@ class _FrameButtonState extends State<FrameButton> {
       case ButtonType.secondary:
         return FilledButton.icon(onPressed: onPressed, icon: icon ?? const SizedBox.shrink(), label: label, style: style);
       case ButtonType.outline:
+        return OutlinedButton.icon(onPressed: onPressed, icon: icon ?? const SizedBox.shrink(), label: label, style: style);
+      case ButtonType.whiteOutline:
         return OutlinedButton.icon(onPressed: onPressed, icon: icon ?? const SizedBox.shrink(), label: label, style: style);
     }
   }

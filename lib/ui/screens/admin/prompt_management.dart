@@ -34,7 +34,7 @@ class _PromptManagementState extends State<PromptManagement> {
       backgroundColor: AppColors.slateGrey,
       title: Text(
         _promptCubit.state.mainPromptState.selectedPrompt == null ? 'Create New Prompt' : 'Edit Prompt',
-        style: TextStyle(color: AppColors.white),
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.white),
       ),
       content: SingleChildScrollView(
         child: ListBody(
@@ -97,32 +97,6 @@ class _PromptManagementState extends State<PromptManagement> {
           );
         }
 
-        if (state is PromptError) {
-          return Center(
-            child: Column(
-              children: [
-                Icon(Icons.error, color: Colors.red, size: 48),
-                SizedBox(height: 16),
-                Text(
-                  'Error loading prompts',
-                  style: TextStyle(color: Colors.red, fontSize: 16),
-                ),
-                Text(
-                  state.mainPromptState.errorMessage ?? 'Unknown error',
-                  style: TextStyle(color: Colors.red),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    final uid = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '';
-                    _promptCubit.loadAllPrompts(ownerUid: uid);
-                  },
-                  child: Text('Retry'),
-                ),
-              ],
-            ),
-          );
-        }
-
         if (state.mainPromptState.prompts != null && state.mainPromptState.prompts!.isNotEmpty) {
           return ListView.builder(
             shrinkWrap: true,
@@ -130,39 +104,51 @@ class _PromptManagementState extends State<PromptManagement> {
             itemCount: state.mainPromptState.prompts!.length,
             itemBuilder: (context, index) {
               final prompt = state.mainPromptState.prompts![index];
-              return Container(
-                margin: const EdgeInsets.only(bottom: 10.0),
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: AppColors.slateGrey,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: Column(
-                        children: [
-                          Text(prompt.promptText ?? '', style: TextStyle(color: AppColors.white)),
-                          SizedBox(height: 5.0),
-                        ],
+              return GestureDetector(
+                onTap: () {
+                  _promptCubit.setSelectedPrompt(prompt);
+                  _promptTextController.text = prompt.promptText ?? '';
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return _createEditPromptDialoq();
+                    },
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 10.0),
+                  padding: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    color: AppColors.slateGrey,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        title: Column(
+                          children: [
+                            Text(prompt.promptText ?? '', style: TextStyle(color: AppColors.white)),
+                            SizedBox(height: 5.0),
+                          ],
+                        ),
+                        subtitle: Text('Created: ${StringHelpers.printFirebaseTimeStamp(state.mainPromptState.prompts![index].createdAt)}', style: TextStyle(color: AppColors.white)),
+                        trailing: IconButton(
+                          icon: Icon(Icons.edit, color: AppColors.limeGreen),
+                          onPressed: () {
+                            _promptCubit.setSelectedPrompt(prompt);
+                            _promptTextController.text = prompt.promptText ?? '';
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return _createEditPromptDialoq();
+                              },
+                            );
+                          },
+                        ),
                       ),
-                      subtitle: Text('Created: ${StringHelpers.printFirebaseTimeStamp(state.mainPromptState.prompts![index].createdAt)}', style: TextStyle(color: AppColors.white)),
-                      trailing: IconButton(
-                        icon: Icon(Icons.edit, color: AppColors.limeGreen),
-                        onPressed: () {
-                          _promptCubit.setSelectedPrompt(prompt);
-                          _promptTextController.text = prompt.promptText ?? '';
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return _createEditPromptDialoq();
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                    Divider(color: AppColors.slateGrey , height: 1),
-                  ],
+                      Divider(color: AppColors.slateGrey , height: 1),
+                    ],
+                  ),
                 ),
               );
             },
@@ -220,10 +206,9 @@ class _PromptManagementState extends State<PromptManagement> {
               children: [
                 Text('All Prompts', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.white)),
                 FrameButton(
-                  type: ButtonType.outline,
+                  type: ButtonType.whiteOutline,
                   onPressed: () {
                     _promptCubit.unSelectPrompt();
-                    // Clear the controller when creating a new prompt
                     _promptTextController.clear();
                     showDialog(
                       context: context,
@@ -233,7 +218,7 @@ class _PromptManagementState extends State<PromptManagement> {
                     );
                   },
                   label: ('Create Prompt'),
-                  icon: Icon(Icons.add, color: AppColors.framePurple, size: 20.0),
+                  icon: Icon(Icons.add, color: AppColors.white, size: 20.0),
                 ),
               ],
             ),
