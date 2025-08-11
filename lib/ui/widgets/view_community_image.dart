@@ -12,6 +12,13 @@ class _ViewCommunityImageState extends State<ViewCommunityImage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        color: AppColors.slateGrey,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
       padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 30.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -24,7 +24,6 @@ class _FrameExtendedimageState extends State<FrameExtendedimage> {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.grey[300],
       ),
       child: CircularProgressIndicator(color: AppColors.white),
     );

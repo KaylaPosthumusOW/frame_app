@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/models/post_model.dart';
-import 'package:frameapp/ui/widgets/view_community_image.dart';
-import 'package:frameapp/ui/widgets/frame_extended_image.dart';
-import 'package:sp_utilities/utilities.dart';
+import 'package:frameapp/ui/widgets/view_post_dialoq.dart';
 class PostCard extends StatefulWidget {
   final PostModel? post;
   final Function? onTap;
@@ -17,18 +15,14 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        if (widget.onTap != null) {
-          widget.onTap!();
-        } else {
-          showModalBottomSheet(
+      onTap: widget.post != null ? () {
+       showModalBottomSheet(
             context: context,
             isScrollControlled: true,
             backgroundColor: Colors.transparent,
-            builder: (context) => ViewCommunityImage(),
+            builder: (context) => ViewPostDialoq(post: widget.post!),
           );
-        }
-      },
+      } : null,
       borderRadius: BorderRadius.circular(20),
       child: Card(
         color: Colors.white,

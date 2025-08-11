@@ -58,12 +58,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 return PostCard(
                   post: post,
                   onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => ViewCommunityImage(),
-                    );
+                    _postCubit.setSelectedPost(post);
                   },
                 );
               },

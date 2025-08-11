@@ -116,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Offstage(
                 offstage: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.role != UserRole.admin,
                 child: Container(
-                  margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                  margin: EdgeInsets.all(16),
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
                     color: AppColors.limeGreen,
