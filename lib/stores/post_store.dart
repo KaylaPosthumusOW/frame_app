@@ -6,4 +6,6 @@ abstract class PostStore {
   Future<List<PostModel>> loadPostsForUser({required String ownerUid});
   Future<PostModel> updatePost(PostModel post);
   Future<void> deletePost(PostModel post);
+  Future<List<PostModel>> loadPostsWithUsedPrompt();
+  Future<List<PostModel>> loadPostsWithUsedPromptForUser({required String ownerUid});
 }

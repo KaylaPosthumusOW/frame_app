@@ -22,12 +22,17 @@ class PromptFirebaseRepository implements PromptStore {
   @override
   Future<List<PromptModel>> loadPrompts({required String ownerUid}) async {
     List<PromptModel> prompts = [];
-    QuerySnapshot<PromptModel> query = await _promptCollection.where('owner.uid', isEqualTo: ownerUid).orderBy('createdAt', descending: true).get();
+    QuerySnapshot<PromptModel> query = await _promptCollection
+        .where('owner.uid', isEqualTo: ownerUid)
+        .where('isArchived', isEqualTo: false)
+        .orderBy('createdAt', descending: true)
+        .get();
     for (var doc in query.docs) {
       prompts.add(doc.data());
     }
     return prompts;
   }
+
   @override
   Future<PromptModel> getCurrentPrompt() async {
     QuerySnapshot<PromptModel> querySnapshot = await _promptCollection.where('isUsed', isEqualTo: true).get();

@@ -23,6 +23,9 @@ class _PromptManagementState extends State<PromptManagement> {
 
   final TextEditingController _promptTextController = TextEditingController();
 
+  bool isToggled = false;
+  PromptModel? currentUsedPrompt;
+
   @override
   initState() {
     super.initState();
@@ -30,11 +33,28 @@ class _PromptManagementState extends State<PromptManagement> {
   }
 
   Widget _createEditPromptDialoq() {
+    final selectedPrompt = _promptCubit.state.mainPromptState.selectedPrompt;
+    final bool isCurrentlyUsed = selectedPrompt?.isUsed ?? false;
+    final bool hasCurrentPrompt = currentUsedPrompt != null && currentUsedPrompt!.uid != selectedPrompt?.uid;
+    
     return AlertDialog(
       backgroundColor: AppColors.slateGrey,
-      title: Text(
-        _promptCubit.state.mainPromptState.selectedPrompt == null ? 'Create New Prompt' : 'Edit Prompt',
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.white),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            selectedPrompt == null ? 'Create New Prompt' : 'Edit Prompt',
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.white),
+          ),
+          IconButton(
+            onPressed: () {
+              _promptCubit.updatePrompt(
+                selectedPrompt?.copyWith(isArchived: true) ?? PromptModel(isArchived: true, owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile),
+              );
+            },
+            icon: Icon(Icons.archive, color: AppColors.white)
+          ),
+        ],
       ),
       content: SingleChildScrollView(
         child: ListBody(
@@ -44,6 +64,50 @@ class _PromptManagementState extends State<PromptManagement> {
               label: 'Prompt Text',
               maxLines: 3,
             ),
+            SizedBox(height: 10.0),
+            if (selectedPrompt != null) ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Set as Current Prompt',
+                      style: TextStyle(color: AppColors.white),
+                    ),
+                  ),
+                  Switch(
+                    activeColor: AppColors.lightPink,
+                    activeTrackColor: AppColors.white.withValues(alpha: 0.4),
+                    inactiveTrackColor: AppColors.white.withValues(alpha: 0.5),
+                    inactiveThumbColor: AppColors.lightPink,
+                    trackOutlineColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+                      if (states.contains(WidgetState.selected)) {
+                        return Colors.transparent;
+                      }
+                      return Colors.transparent;
+                    }),
+                    value: isCurrentlyUsed,
+                    onChanged: (value) async {
+                      if (value && hasCurrentPrompt) {
+                        bool? shouldProceed = await _showCurrentPromptWarning();
+                        if (shouldProceed == true) {
+                          await _handleToggleCurrentPrompt(selectedPrompt, value);
+                        }
+                      } else {
+                        await _handleToggleCurrentPrompt(selectedPrompt, value);
+                      }
+                    },
+                  ),
+                ]
+              ),
+              if (hasCurrentPrompt && !isCurrentlyUsed)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    'Note: There is already a current prompt active. Setting this as current will deactivate the previous one.',
+                    style: TextStyle(color: AppColors.white.withOpacity(0.7), fontSize: 12),
+                  ),
+                ),
+            ]
           ],
         ),
       ),
@@ -87,6 +151,72 @@ class _PromptManagementState extends State<PromptManagement> {
     );
   }
 
+  Future<bool?> _showCurrentPromptWarning() async {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.slateGrey,
+          title: Text(
+            'Current Prompt Active',
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.white),
+          ),
+          content: Text(
+            'There is already an active current prompt. Setting this prompt as current will deactivate the previous one. Do you want to continue?',
+            style: TextStyle(color: AppColors.white),
+          ),
+          actions: [
+            FrameButton(
+              type: ButtonType.outline,
+              label: 'Cancel',
+              onPressed: () => Navigator.of(context).pop(false),
+            ),
+            FrameButton(
+              type: ButtonType.primary,
+              label: 'Continue',
+              onPressed: () => Navigator.of(context).pop(true),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _handleToggleCurrentPrompt(PromptModel prompt, bool isUsed) async {
+    try {
+      if (isUsed) {
+        if (currentUsedPrompt != null) {
+          await _promptCubit.updatePrompt(
+            currentUsedPrompt!.copyWith(isUsed: false)
+          );
+        }
+        await _promptCubit.updatePrompt(
+          prompt.copyWith(isUsed: true, usedAt: Timestamp.now())
+        );
+        currentUsedPrompt = prompt.copyWith(isUsed: true, usedAt: Timestamp.now());
+      } else {
+        await _promptCubit.updatePrompt(
+          prompt.copyWith(isUsed: false)
+        );
+        
+        if (currentUsedPrompt?.uid == prompt.uid) {
+          currentUsedPrompt = null;
+        }
+      }
+      
+      setState(() {});
+      Navigator.of(context).pop();
+      
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating prompt: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   Widget _promptList() {
     return BlocBuilder<PromptCubit, PromptState>(
       bloc: _promptCubit,
@@ -104,51 +234,40 @@ class _PromptManagementState extends State<PromptManagement> {
             itemCount: state.mainPromptState.prompts!.length,
             itemBuilder: (context, index) {
               final prompt = state.mainPromptState.prompts![index];
-              return GestureDetector(
-                onTap: () {
-                  _promptCubit.setSelectedPrompt(prompt);
-                  _promptTextController.text = prompt.promptText ?? '';
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return _createEditPromptDialoq();
-                    },
-                  );
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 10.0),
-                  padding: const EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    color: AppColors.slateGrey,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    children: [
-                      ListTile(
-                        title: Column(
-                          children: [
-                            Text(prompt.promptText ?? '', style: TextStyle(color: AppColors.white)),
-                            SizedBox(height: 5.0),
-                          ],
-                        ),
-                        subtitle: Text('Created: ${StringHelpers.printFirebaseTimeStamp(state.mainPromptState.prompts![index].createdAt)}', style: TextStyle(color: AppColors.white)),
-                        trailing: IconButton(
-                          icon: Icon(Icons.edit, color: AppColors.limeGreen),
-                          onPressed: () {
-                            _promptCubit.setSelectedPrompt(prompt);
-                            _promptTextController.text = prompt.promptText ?? '';
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return _createEditPromptDialoq();
-                              },
-                            );
-                          },
-                        ),
+              return Container(
+                margin: const EdgeInsets.only(bottom: 10.0),
+                padding: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: prompt.isUsed == true ? AppColors.framePurple.withValues(alpha: 0.3) : AppColors.slateGrey,
+                  borderRadius: BorderRadius.circular(10),
+                  border: prompt.isUsed == true ? Border.all(color: AppColors.framePurple, width: 2) : null,
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(prompt.promptText ?? '', style: TextStyle(color: AppColors.white)),
+                          SizedBox(height: 5.0),
+                        ],
                       ),
-                      Divider(color: AppColors.slateGrey , height: 1),
-                    ],
-                  ),
+                      subtitle: Text('Created: ${StringHelpers.printFirebaseTimeStamp(state.mainPromptState.prompts![index].createdAt)}', style: TextStyle(color: AppColors.white)),
+                      trailing: IconButton(
+                        icon: Icon(Icons.edit, color: AppColors.limeGreen),
+                        onPressed: () {
+                          _promptCubit.setSelectedPrompt(prompt);
+                          _promptTextController.text = prompt.promptText ?? '';
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return _createEditPromptDialoq();
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               );
             },
@@ -157,34 +276,6 @@ class _PromptManagementState extends State<PromptManagement> {
 
         return Center(child: Text('No prompts available', style: TextStyle(color: AppColors.white)));
       },
-    );
-  }
-
-  Widget _dailyFrameContainer() {
-    return Container(
-      padding: const EdgeInsets.only(top: 20.0, bottom: 25.0, left: 20.0, right: 20.0),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.lightPink,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Today´s Frame',
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.black),
-          ),
-          SizedBox(height: 10.0),
-          Center(
-            child: Text(
-              '"Find something red that tells a story."',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black),
-              textAlign: TextAlign.center,
-            ),
-          )
-        ],
-      ),
     );
   }
 
@@ -198,8 +289,6 @@ class _PromptManagementState extends State<PromptManagement> {
         padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 20),
         child: Column(
           children: [
-            SizedBox(height: 20.0),
-            _dailyFrameContainer(),
             SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

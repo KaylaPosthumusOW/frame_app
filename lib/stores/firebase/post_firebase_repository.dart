@@ -48,4 +48,30 @@ class PostFirebaseRepository implements PostStore {
       throw Exception('Post UID is null or empty');
     }
   }
+
+  /// Get posts where the associated prompt has isUsed = true
+  @override
+  Future<List<PostModel>> loadPostsWithUsedPrompt() async {
+    List<PostModel> posts = [];
+    QuerySnapshot<PostModel> query = await _postCollection.where('prompt.isUsed', isEqualTo: true).orderBy('createdAt', descending: true).get();
+    for (var doc in query.docs) {
+      posts.add(doc.data());
+    }
+    return posts;
+  }
+
+  /// Get posts for a specific user where the associated prompt has isUsed = true
+  @override
+  Future<List<PostModel>> loadPostsWithUsedPromptForUser({required String ownerUid}) async {
+    List<PostModel> posts = [];
+    QuerySnapshot<PostModel> query = await _postCollection
+        .where('owner.uid', isEqualTo: ownerUid)
+        .where('prompt.isUsed', isEqualTo: true)
+        .orderBy('createdAt', descending: true)
+        .get();
+    for (var doc in query.docs) {
+      posts.add(doc.data());
+    }
+    return posts;
+  }
 }
