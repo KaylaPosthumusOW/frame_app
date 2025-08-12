@@ -56,7 +56,7 @@ class _NewFrameModalState extends State<NewFrameModal> {
 
       final userId = user!.uid!;
       String? downloadUrl;
-      
+
       if (widget.capturedImage!.path != null) {
         final file = File(widget.capturedImage!.path!);
         final fileName = 'post_${DateTime.now().millisecondsSinceEpoch}.jpg';
@@ -81,14 +81,14 @@ class _NewFrameModalState extends State<NewFrameModal> {
         final snapshot = await uploadTask;
         downloadUrl = await snapshot.ref.getDownloadURL();
       }
-      
+
       if (downloadUrl == null) {
         throw Exception('Failed to upload image to Firebase Storage');
       }
 
       await _postCubit.createNewPost(
         PostModel(
-          owner: user,
+          owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
           imageUrl: downloadUrl,
           note: _notesController.text,
           createdAt: Timestamp.now(),

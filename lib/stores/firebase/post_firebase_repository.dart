@@ -28,7 +28,15 @@ class PostFirebaseRepository implements PostStore {
     return posts;
   }
 
-
+  @override
+  Future<List<PostModel>> loadReportedPosts() async {
+    List<PostModel> reportedPosts = [];
+    QuerySnapshot<PostModel> query = await _postCollection.where('isReported', isEqualTo: true).orderBy('createdAt', descending: true).get();
+    for (var doc in query.docs) {
+      reportedPosts.add(doc.data());
+    }
+    return reportedPosts;
+  }
 
   @override
   Future<PostModel> updatePost(PostModel post) async {
@@ -49,7 +57,6 @@ class PostFirebaseRepository implements PostStore {
     }
   }
 
-  /// Get posts where the associated prompt has isUsed = true
   @override
   Future<List<PostModel>> loadPostsWithUsedPrompt() async {
     List<PostModel> posts = [];
@@ -60,7 +67,6 @@ class PostFirebaseRepository implements PostStore {
     return posts;
   }
 
-  /// Get posts for a specific user where the associated prompt has isUsed = true
   @override
   Future<List<PostModel>> loadPostsWithUsedPromptForUser({required String ownerUid}) async {
     List<PostModel> posts = [];

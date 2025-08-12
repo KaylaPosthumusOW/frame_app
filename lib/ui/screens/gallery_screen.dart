@@ -7,7 +7,6 @@ import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:frameapp/ui/widgets/post_card.dart';
-import 'package:frameapp/ui/widgets/view_community_image.dart';
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});

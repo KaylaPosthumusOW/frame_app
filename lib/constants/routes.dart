@@ -12,3 +12,4 @@ const SPLASH_SCREEN = '/splash';
 
 //ADMIN ROUTES
 const PROMPT_MANAGEMENT_SCREEN = '/admin/prompt_management';
+const REPORTED_POSTS_SCREEN = '/admin/reported_posts';

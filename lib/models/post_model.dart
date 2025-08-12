@@ -10,11 +10,12 @@ class PostModel extends Equatable {
   final String? imageUrl;
   final String? note;
   final Timestamp? createdAt;
+  final bool? isReported;
 
-  const PostModel({this.uid, this.owner, this.prompt, this.imageUrl, this.note, this.createdAt});
+  const PostModel({this.uid, this.owner, this.prompt, this.imageUrl, this.note, this.createdAt, this.isReported = false});
 
   @override
-  List<Object?> get props => [uid, owner, prompt, imageUrl, note, createdAt];
+  List<Object?> get props => [uid, owner, prompt, imageUrl, note, createdAt, isReported];
 
   PostModel copyWith({
     String? uid,
@@ -23,6 +24,7 @@ class PostModel extends Equatable {
     String? imageUrl,
     String? note,
     Timestamp? createdAt,
+    bool? isReported,
   }) {
     return PostModel(
       uid: uid ?? this.uid,
@@ -31,6 +33,7 @@ class PostModel extends Equatable {
       imageUrl: imageUrl ?? this.imageUrl,
       note: note ?? this.note,
       createdAt: createdAt ?? this.createdAt,
+      isReported: isReported ?? this.isReported,
     );
   }
 
@@ -42,6 +45,7 @@ class PostModel extends Equatable {
       'imageUrl': imageUrl,
       'note': note,
       'createdAt': createdAt,
+      'isReported': isReported ?? false,
     };
   }
   factory PostModel.fromMap(Map<String, dynamic> map) {
@@ -52,6 +56,7 @@ class PostModel extends Equatable {
       imageUrl: map['imageUrl'],
       note: map['note'],
       createdAt: map['createdAt'],
+      isReported: map['isReported'] ?? false,
     );
   }
 }

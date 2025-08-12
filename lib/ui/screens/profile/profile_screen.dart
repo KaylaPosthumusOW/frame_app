@@ -137,7 +137,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             leading: Icon(Icons.report, color: AppColors.black),
                             title: Text('Reported Posts', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black)),
                             onTap: () {
-                              Navigator.pushNamed(context, '/admin/prompt_management');
+                              Navigator.pushNamed(context, '/admin/reported_posts');
                             }
                         ),
                       ]

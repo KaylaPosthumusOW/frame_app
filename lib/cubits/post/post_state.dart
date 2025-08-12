@@ -6,23 +6,26 @@ class MainPostState extends Equatable {
   final String? errorMessage;
   final List<PostModel>? posts;
   final PostModel? selectedPost;
+  final List<PostModel>? reportedPosts;
 
-  const MainPostState({this.message, this.errorMessage, this.posts, this.selectedPost});
+  const MainPostState({this.message, this.errorMessage, this.posts, this.selectedPost, this.reportedPosts});
 
   @override
-  List<Object?> get props => [message, errorMessage, posts, selectedPost];
+  List<Object?> get props => [message, errorMessage, posts, selectedPost, reportedPosts];
 
   MainPostState copyWith({
     String? message,
     String? errorMessage,
     List<PostModel>? posts,
     PostModel? selectedPost,
+    List<PostModel>? reportedPosts,
   }) {
     return MainPostState(
       message: message ?? this.message,
       errorMessage: errorMessage ?? this.errorMessage,
       posts: posts ?? this.posts,
       selectedPost: selectedPost ?? this.selectedPost,
+      reportedPosts: reportedPosts ?? this.reportedPosts,
     );
   }
 
@@ -31,12 +34,14 @@ class MainPostState extends Equatable {
     String? errorMessage,
     List<PostModel>? posts,
     PostModel? selectedPost,
+    List<PostModel>? reportedPosts,
   }) {
     return MainPostState(
       message: message ?? this.message,
       errorMessage: errorMessage ?? this.errorMessage,
       posts: posts ?? this.posts,
       selectedPost: selectedPost ?? this.selectedPost,
+      reportedPosts: reportedPosts ?? this.reportedPosts,
     );
   }
 }
@@ -64,6 +69,14 @@ class CreatedPost extends PostState {
 
 class LoadingPost extends PostState {
   const LoadingPost(MainPostState mainPostState) : super(mainPostState);
+}
+
+class LoadingReportedPosts extends PostState {
+  const LoadingReportedPosts(MainPostState mainPostState) : super(mainPostState);
+}
+
+class LoadedReportedPosts extends PostState {
+  const LoadedReportedPosts(MainPostState mainPostState) : super(mainPostState);
 }
 
 class LoadedPost extends PostState {
