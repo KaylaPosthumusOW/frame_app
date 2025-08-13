@@ -12,6 +12,7 @@ import 'package:frameapp/ui/screens/profile/profile_screen.dart';
 import 'package:frameapp/ui/screens/register/register_screen.dart';
 import 'package:frameapp/ui/screens/settings_screen.dart';
 import 'package:frameapp/ui/screens/splash_screen.dart';
+import 'package:frameapp/ui/widgets/community_view_post_dialoq.dart';
 
 
 abstract class Navigation {
@@ -45,6 +46,8 @@ abstract class Navigation {
         return _routeEndPoint(const PromptManagement(), settings);
       case REPORTED_POSTS_SCREEN:
         return _routeEndPoint(const ReportedPostsManagement(), settings);
+      case COMMUNITY_VIEW_POST:
+        return _routeEndPoint(const CommunityViewPostDialoq(), settings);
 
       default:
         return _errorRoute(settings.name);

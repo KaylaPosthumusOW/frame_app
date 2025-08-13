@@ -20,10 +20,13 @@ class _ViewPostDialoqState extends State<ViewPostDialoq> {
   final PostCubit _postCubit = sl<PostCubit>();
   late final TextEditingController _noteController;
 
+  bool isCommunityPost = false;
+
   @override
   void initState() {
     super.initState();
     _noteController = TextEditingController(text: widget.post.note ?? '');
+    bool isCommunityPost = widget.post.isCommunityPost ?? false;
   }
 
   @override
@@ -37,7 +40,7 @@ class _ViewPostDialoqState extends State<ViewPostDialoq> {
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.slateGrey,
+          color: AppColors.white,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
@@ -48,26 +51,15 @@ class _ViewPostDialoqState extends State<ViewPostDialoq> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Center(
-              child: Container(
-                width: 60.0,
-                height: 4.0,
-                decoration: BoxDecoration(
-                  color: Colors.grey.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(2.0),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16.0),
-      
+            const SizedBox(height: 40.0),
             if (widget.post.prompt?.promptText != null)
               Container(
                 padding: const EdgeInsets.all(12.0),
                 margin: const EdgeInsets.only(bottom: 16.0),
                 decoration: BoxDecoration(
-                  color: AppColors.framePurple.withOpacity(0.1),
+                  color: AppColors.framePurple.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(color: AppColors.framePurple.withOpacity(0.3)),
+                  border: Border.all(color: AppColors.framePurple.withValues(alpha: 0.3)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +74,7 @@ class _ViewPostDialoqState extends State<ViewPostDialoq> {
                     const SizedBox(height: 4.0),
                     Text(
                       widget.post.prompt!.promptText!,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.white),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.black),
                     ),
                   ],
                 ),
@@ -114,6 +106,22 @@ class _ViewPostDialoqState extends State<ViewPostDialoq> {
               controller: _noteController,
               maxLines: 3,
               label: 'Your Note',
+              isLight: true,
+            ),
+            Text(
+              'Do you want to post this to the community?',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black),
+            ),
+            SizedBox(height: 10.0),
+            FrameButton(
+              type: ButtonType.secondary,
+              label: 'Post to Community',
+              icon: isCommunityPost ? Icon(Icons.check, color: AppColors.black) : Icon(Icons.close, color: AppColors.black),
+              onPressed: () {
+                setState(() {
+                  isCommunityPost = !isCommunityPost;
+                });
+              },
             ),
             const SizedBox(height: 16.0),
             Row(
@@ -134,6 +142,7 @@ class _ViewPostDialoqState extends State<ViewPostDialoq> {
                     onPressed: () {
                       PostModel updatedPost = widget.post.copyWith(
                         note: _noteController.text.isEmpty ? null : _noteController.text,
+                        isCommunityPost: isCommunityPost,
                       );
                       _postCubit.updatePost(updatedPost);
                       Navigator.pop(context, true);

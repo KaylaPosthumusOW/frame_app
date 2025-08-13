@@ -1,31 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/models/post_model.dart';
+import 'package:frameapp/ui/widgets/community_view_post_dialoq.dart';
 import 'package:frameapp/ui/widgets/view_post_dialoq.dart';
 
-class PostCard extends StatefulWidget {
+class CommunityPostCard extends StatefulWidget {
   final PostModel? post;
-  final Function? onTap;
-  const PostCard({super.key, this.post, this.onTap});
+  const CommunityPostCard({super.key, this.post});
 
   @override
-  State<PostCard> createState() => _PostCardState();
+  State<CommunityPostCard> createState() => _CommunityPostCardState();
 }
 
-class _PostCardState extends State<PostCard> {
+class _CommunityPostCardState extends State<CommunityPostCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: widget.post != null
-          ? () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                builder: (context) => ViewPostDialoq(post: widget.post!),
-              );
-            }
-          : null,
       borderRadius: BorderRadius.circular(20),
       child: Card(
         color: Colors.white,

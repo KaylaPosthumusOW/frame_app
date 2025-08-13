@@ -11,13 +11,15 @@ class PostModel extends Equatable {
   final String? note;
   final Timestamp? createdAt;
   final bool? isReported;
+  final AppUserProfile? isReportedBy;
+  final String? isReportedReason;
   final bool? isCommunityPost;
   final bool? isArchived;
 
-  const PostModel({this.uid, this.owner, this.prompt, this.imageUrl, this.note, this.createdAt, this.isReported = false, this.isCommunityPost = false, this.isArchived = false});
+  const PostModel({this.uid, this.owner, this.prompt, this.imageUrl, this.note, this.createdAt, this.isReported = false, this.isCommunityPost = false, this.isArchived = false, this.isReportedBy, this.isReportedReason});
 
   @override
-  List<Object?> get props => [uid, owner, prompt, imageUrl, note, createdAt, isReported, isCommunityPost, isArchived];
+  List<Object?> get props => [uid, owner, prompt, imageUrl, note, createdAt, isReported, isCommunityPost, isArchived, isReportedBy, isReportedReason];
 
   PostModel copyWith({
     String? uid,
@@ -29,6 +31,8 @@ class PostModel extends Equatable {
     bool? isReported,
     bool? isCommunityPost,
     bool? isArchived,
+    AppUserProfile? isReportedBy,
+    String? isReportedReason,
   }) {
     return PostModel(
       uid: uid ?? this.uid,
@@ -40,6 +44,8 @@ class PostModel extends Equatable {
       isReported: isReported ?? this.isReported,
       isCommunityPost: isCommunityPost ?? this.isCommunityPost,
       isArchived: isArchived ?? this.isArchived,
+      isReportedBy: isReportedBy ?? this.isReportedBy,
+      isReportedReason: isReportedReason ?? this.isReportedReason,
     );
   }
 
@@ -54,6 +60,8 @@ class PostModel extends Equatable {
       'isReported': isReported ?? false,
       'isCommunityPost': isCommunityPost ?? false,
       'isArchived': isArchived ?? false,
+      'isReportedBy': isReportedBy?.toMap(),
+      'isReportedReason': isReportedReason,
     };
   }
   factory PostModel.fromMap(Map<String, dynamic> map) {
@@ -67,6 +75,8 @@ class PostModel extends Equatable {
       isReported: map['isReported'] ?? false,
       isCommunityPost: map['isCommunityPost'] ?? false,
       isArchived: map['isArchived'] ?? false,
+      isReportedBy: map['isReportedBy'] != null ? AppUserProfile.fromMap(map['isReportedBy']) : null,
+      isReportedReason: map['isReportedReason'],
     );
   }
 }

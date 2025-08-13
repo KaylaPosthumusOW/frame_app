@@ -4,10 +4,12 @@ import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/cubits/prompt/prompt_cubit.dart';
+import 'package:frameapp/ui/widgets/community_post_card.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:frameapp/ui/widgets/image_card.dart';
 import 'package:frameapp/ui/widgets/post_card.dart';
+import 'package:frameapp/ui/widgets/view_post_dialoq.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -64,11 +66,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 itemCount: state.mainPostState.communityPosts!.length,
                 itemBuilder: (context, index) {
                   final post = state.mainPostState.communityPosts![index];
-                  return PostCard(
-                    post: post,
+                  return GestureDetector(
                     onTap: () {
                       _postCubit.setSelectedPost(post);
+                      Navigator.pushNamed(context, '/community/view_post');
                     },
+                    child: CommunityPostCard(post: post),
                   );
                 },
               );
