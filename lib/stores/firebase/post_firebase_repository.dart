@@ -31,7 +31,7 @@ class PostFirebaseRepository implements PostStore {
   @override
   Future<List<PostModel>> loadReportedPosts() async {
     List<PostModel> reportedPosts = [];
-    QuerySnapshot<PostModel> query = await _postCollection.where('isReported', isEqualTo: true).orderBy('createdAt', descending: true).get();
+    QuerySnapshot<PostModel> query = await _postCollection.where('isReported', isEqualTo: true).where('isArchived', isEqualTo: false).orderBy('createdAt', descending: true).get();
     for (var doc in query.docs) {
       reportedPosts.add(doc.data());
     }

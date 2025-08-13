@@ -26,7 +26,7 @@ class _ViewPostDialoqState extends State<ViewPostDialoq> {
   void initState() {
     super.initState();
     _noteController = TextEditingController(text: widget.post.note ?? '');
-    bool isCommunityPost = widget.post.isCommunityPost ?? false;
+    isCommunityPost = widget.post.isCommunityPost ?? false;
   }
 
   @override

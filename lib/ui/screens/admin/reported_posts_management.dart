@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
+import 'package:frameapp/ui/widgets/post_card.dart';
 import 'package:frameapp/ui/widgets/reported_post_card.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -11,7 +12,7 @@ class ReportedPostsManagement extends StatefulWidget {
 
   @override
   State<ReportedPostsManagement> createState() => _ReportedPostsManagementState();
-}
+} 
 
 class _ReportedPostsManagementState extends State<ReportedPostsManagement> {
   final PostCubit _postCubit = sl<PostCubit>();
