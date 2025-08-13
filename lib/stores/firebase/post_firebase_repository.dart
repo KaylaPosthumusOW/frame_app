@@ -7,9 +7,9 @@ class PostFirebaseRepository implements PostStore {
   static final FirebaseFirestore _firebaseFirestore = GetIt.instance<FirebaseFirestore>();
 
   final CollectionReference<PostModel> _postCollection = _firebaseFirestore.collection('posts').withConverter<PostModel>(
-    fromFirestore: (snapshot, _) => PostModel.fromMap(snapshot.data() ?? {}),
-    toFirestore: (map, _) => map.toMap(),
-  );
+        fromFirestore: (snapshot, _) => PostModel.fromMap(snapshot.data() ?? {}),
+        toFirestore: (map, _) => map.toMap(),
+      );
 
   @override
   Future<PostModel> createPost(PostModel newPost) async {
@@ -36,6 +36,16 @@ class PostFirebaseRepository implements PostStore {
       reportedPosts.add(doc.data());
     }
     return reportedPosts;
+  }
+
+  @override
+  Future<List<PostModel>> loadCommunityPosts() async {
+    List<PostModel> communityPosts = [];
+    QuerySnapshot<PostModel> query = await _postCollection.where('isCommunityPost', isEqualTo: true).where('isArchived', isEqualTo: false).where('isReported', isEqualTo: false).orderBy('createdAt', descending: true).get();
+    for (var doc in query.docs) {
+      communityPosts.add(doc.data());
+    }
+    return communityPosts;
   }
 
   @override
@@ -70,11 +80,7 @@ class PostFirebaseRepository implements PostStore {
   @override
   Future<List<PostModel>> loadPostsWithUsedPromptForUser({required String ownerUid}) async {
     List<PostModel> posts = [];
-    QuerySnapshot<PostModel> query = await _postCollection
-        .where('owner.uid', isEqualTo: ownerUid)
-        .where('prompt.isUsed', isEqualTo: true)
-        .orderBy('createdAt', descending: true)
-        .get();
+    QuerySnapshot<PostModel> query = await _postCollection.where('owner.uid', isEqualTo: ownerUid).where('prompt.isUsed', isEqualTo: true).orderBy('createdAt', descending: true).get();
     for (var doc in query.docs) {
       posts.add(doc.data());
     }

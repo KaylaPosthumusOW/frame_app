@@ -40,8 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _promptCubit.loadCurrentPrompt();
   }
 
-  String? _downloadUrl;
-
   Widget _dailyFrameContainer() {
     return BlocBuilder<PromptCubit, PromptState>(
         bloc: _promptCubit,

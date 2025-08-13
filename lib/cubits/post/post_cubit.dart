@@ -31,6 +31,16 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
+  Future<void> loadCommunityPosts() async {
+    emit(LoadingCommunityPosts(state.mainPostState.copyWith(message: 'Loading community prompts')));
+    try {
+      List<PostModel> communityPosts = await _postFirebaseRepository.loadCommunityPosts();
+      emit(LoadedCommunityPosts(state.mainPostState.copyWith(communityPosts: communityPosts, message: 'Loaded ${communityPosts.length} community prompts')));
+    } catch (error, stackTrace) {
+      emit(PostError(state.mainPostState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+    }
+  }
+
   Future<void> createNewPost(PostModel newPost) async {
     emit(CreatingPost(state.mainPostState.copyWith(message: 'Adding new prompt')));
     try {
