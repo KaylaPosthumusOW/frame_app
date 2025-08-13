@@ -1,4 +1,3 @@
-
 import 'package:frameapp/models/post_model.dart';
 
 abstract class PostStore {

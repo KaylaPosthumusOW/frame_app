@@ -69,17 +69,6 @@ class _NewFrameModalState extends State<NewFrameModal> {
         final uploadTask = storageRef.putFile(file);
         final snapshot = await uploadTask;
         downloadUrl = await snapshot.ref.getDownloadURL();
-      } else if (widget.capturedImage!.bytes != null) {
-        final fileName = 'post_${DateTime.now().millisecondsSinceEpoch}.jpg';
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('posts')
-            .child(userId)
-            .child(fileName);
-
-        final uploadTask = storageRef.putData(widget.capturedImage!.bytes!);
-        final snapshot = await uploadTask;
-        downloadUrl = await snapshot.ref.getDownloadURL();
       }
 
       if (downloadUrl == null) {
@@ -121,16 +110,6 @@ class _NewFrameModalState extends State<NewFrameModal> {
           child: Image.file(
             File(widget.capturedImage!.path!),
             fit: BoxFit.cover,
-            height: 280,
-          ),
-        );
-      } else if (widget.capturedImage!.bytes != null) {
-        return ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          child: Image.memory(
-            widget.capturedImage!.bytes!,
-            fit: BoxFit.cover,
-            height: 250,
           ),
         );
       }
@@ -151,7 +130,7 @@ class _NewFrameModalState extends State<NewFrameModal> {
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.slateGrey,
+          color: AppColors.white,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20.0),
             topRight: Radius.circular(20.0),
@@ -188,13 +167,14 @@ class _NewFrameModalState extends State<NewFrameModal> {
             ],
             Text(
               'Do you want to add any notes?',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.white),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black),
             ),
             SizedBox(height: 5.0),
             FrameTextField(
               controller: _notesController,
               maxLines: 3,
               label: 'Add Your Notes Here',
+              isLight: true,
             ),
             SizedBox(height: 10.0),
             Row(

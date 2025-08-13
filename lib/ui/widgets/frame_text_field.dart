@@ -26,8 +26,9 @@ class FrameTextField extends StatefulWidget {
   final bool? applyToAll;
   final List<TextInputFormatter>? inputFormatters;
   final bool readOnly;
+  final bool isLight;
 
-  const FrameTextField({super.key, required this.controller, this.label, this.supportingText, this.enabled, this.isDense, this.errorText, this.onFieldSubmitted, this.onChanged, this.onCleared, this.obscureText = false, this.isLoading = false, this.leadingIcon, this.keyboardType, this.textInputAction = TextInputAction.done, this.autofocus, this.maxLines, this.focusNode, this.expands, this.maxLength, this.suffixIcon, this.applyToAll, this.inputFormatters, this.readOnly = false});
+  const FrameTextField({super.key, required this.controller, this.label, this.supportingText, this.enabled, this.isDense, this.errorText, this.onFieldSubmitted, this.onChanged, this.onCleared, this.obscureText = false, this.isLoading = false, this.leadingIcon, this.keyboardType, this.textInputAction = TextInputAction.done, this.autofocus, this.maxLines, this.focusNode, this.expands, this.maxLength, this.suffixIcon, this.applyToAll, this.inputFormatters, this.readOnly = false, this.isLight = false});
 
   @override
   FrameTextFieldState createState() => FrameTextFieldState();
@@ -39,12 +40,16 @@ class FrameTextFieldState extends State<FrameTextField> {
     final theme = Theme.of(context);
     final isErrorState = widget.errorText != null && widget.errorText!.isNotEmpty;
 
+    final textColor = widget.isLight ? AppColors.black : AppColors.white;
+    final borderColor = widget.isLight ? AppColors.black : AppColors.white;
+    final iconColor = widget.isLight ? AppColors.black : AppColors.white;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 4),
-          child: Text(widget.label ?? '', style: theme.textTheme.labelMedium?.copyWith(color: isErrorState ? AppColors.errorRed : AppColors.white)),
+          child: Text(widget.label ?? '', style: theme.textTheme.labelMedium?.copyWith(color: isErrorState ? AppColors.errorRed : textColor)),
         ),
         TextField(
           inputFormatters: widget.inputFormatters ?? [],
@@ -69,11 +74,11 @@ class FrameTextFieldState extends State<FrameTextField> {
             widget.onChanged!(value);
           }
               : null,
-          style: theme.textTheme.labelLarge,
+          style: theme.textTheme.labelLarge?.copyWith(color: textColor),
           decoration: InputDecoration(
             isDense: widget.isDense,
             filled: false,
-            prefixIcon: widget.leadingIcon != null ? Icon(widget.leadingIcon, color: Colors.black, size: 20) : null,
+            prefixIcon: widget.leadingIcon != null ? Icon(widget.leadingIcon, color: iconColor, size: 20) : null,
             suffixIcon: !widget.readOnly && widget.controller.text.isNotEmpty && widget.suffixIcon == null
                 ? GestureDetector(
               onTap: () {
@@ -81,20 +86,20 @@ class FrameTextFieldState extends State<FrameTextField> {
                 widget.focusNode?.requestFocus();
                 widget.onCleared != null ? widget.onCleared!() : null;
               },
-              child: Icon(Icons.clear, color: Colors.black, size: 16),
+              child: Icon(Icons.clear, color: iconColor, size: 16),
             )
                 : widget.suffixIcon,
             labelText: widget.label,
             hintText: widget.supportingText,
-            labelStyle: theme.textTheme.labelMedium?.copyWith(color: isErrorState ? AppColors.errorRed : AppColors.white.withValues(alpha: 0.7)),
-            hintStyle: theme.textTheme.labelLarge?.copyWith(color: isErrorState ? AppColors.errorRed : AppColors.white),
+            labelStyle: theme.textTheme.labelMedium?.copyWith(color: isErrorState ? AppColors.errorRed : textColor.withValues(alpha: 0.7)),
+            hintStyle: theme.textTheme.labelLarge?.copyWith(color: isErrorState ? AppColors.errorRed : textColor),
             errorText: widget.errorText != '' ? widget.errorText : null,
             errorStyle: theme.textTheme.labelLarge?.copyWith(color: AppColors.errorRed),
             counterText: "",
             floatingLabelBehavior: FloatingLabelBehavior.never,
-            disabledBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)), borderSide: BorderSide(color: AppColors.white)),
-            enabledBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)), borderSide: BorderSide(color: AppColors.white)),
-            focusedBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)), borderSide: BorderSide(color: AppColors.white, width: 1.5)),
+            disabledBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)), borderSide: BorderSide(color: borderColor)),
+            enabledBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)), borderSide: BorderSide(color: borderColor)),
+            focusedBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)), borderSide: BorderSide(color: borderColor, width: 1.5)),
             errorBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)), borderSide: BorderSide(color: AppColors.errorRed, width: 1.5)),
             focusedErrorBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)), borderSide: BorderSide(color: AppColors.errorRed, width: 1.5)),
           ),

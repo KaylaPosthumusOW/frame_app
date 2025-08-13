@@ -14,54 +14,19 @@ class ReportedPostsManagement extends StatefulWidget {
 }
 
 class _ReportedPostsManagementState extends State<ReportedPostsManagement> {
+  final PostCubit _postCubit = sl<PostCubit>();
+
   @override
   void initState() {
     super.initState();
     _postCubit.loadReportedPosts();
   }
 
-  final PostCubit _postCubit = sl<PostCubit>();
-
-  // Widget _buildReportedPostsList() {
-  //   return BlocBuilder<PostCubit, PostState>(
-  //     bloc: _postCubit,
-  //     builder: (context, state) {
-  //       if (state is LoadingReportedPosts) {
-  //         return Center(
-  //           child: CircularProgressIndicator(color: AppColors.framePurple),
-  //         );
-  //       }
-  //
-  //       if (state is LoadedReportedPosts && state.mainPostState.reportedPosts != null && state.mainPostState.reportedPosts!.isNotEmpty) {
-  //         return MasonryGridView.count(
-  //           padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-  //           crossAxisCount: 2,
-  //           mainAxisSpacing: 2.0,
-  //           crossAxisSpacing: 2.0,
-  //           itemCount: state.mainPostState.reportedPosts!.length,
-  //           itemBuilder: (context, index) {
-  //             final post = state.mainPostState.reportedPosts![index];
-  //             return ReportedPostCard(post: post);
-  //           },
-  //         );
-  //       }
-  //
-  //       return Center(
-  //         child: Text(
-  //           'No reported posts found.',
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Reported Posts',
-        ),
+        title: const Text('Reported Posts'),
       ),
       body: BlocBuilder<PostCubit, PostState>(
         bloc: _postCubit,
@@ -81,15 +46,15 @@ class _ReportedPostsManagementState extends State<ReportedPostsManagement> {
               itemCount: state.mainPostState.reportedPosts!.length,
               itemBuilder: (context, index) {
                 final post = state.mainPostState.reportedPosts![index];
-                return ReportedPostCard(post: post);
+                return ReportedPostCard(
+                  post: post,
+                );
               },
             );
           }
 
-          return Center(
-            child: Text(
-              'No reported posts found.',
-            ),
+          return const Center(
+            child: Text('No reported posts found.'),
           );
         },
       ),
