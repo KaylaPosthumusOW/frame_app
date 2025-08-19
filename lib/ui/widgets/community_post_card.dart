@@ -16,7 +16,6 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      borderRadius: BorderRadius.circular(20),
       child: Card(
         color: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -31,7 +30,9 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
                       widget.post!.imageUrl!,
-                      fit: BoxFit.fitWidth,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 520,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
                         return AspectRatio(
@@ -73,30 +74,22 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                     ),
                   ),
                 ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Text(
-                      widget.post?.prompt?.promptText ?? 'Prompt Text',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.black),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: widget.post?.owner?.profilePicture != null
+                        ? NetworkImage(widget.post!.owner!.profilePicture!)
+                        : const AssetImage('assets/pngs/blank_profile_image.png') as ImageProvider,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: AppColors.limeGreen,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.arrow_forward, size: 28),
+                  const SizedBox(width: 10),
+                  Text(
+                    '${widget.post?.owner?.name} ${widget.post?.owner?.surname}',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.slateGrey),
                   ),
                 ],
               ),
-              // SizedBox(height: 8),
-              // Center(child: Text(StringHelpers.printFirebaseTimeStamp(widget.post?.createdAt), style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.slateGrey))),
             ],
           ),
         ),

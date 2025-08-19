@@ -73,10 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildTodaysFrame() {
     return Container(
+      padding: const EdgeInsets.all(16),
       width: double.infinity,
       height: 500,
       decoration: BoxDecoration(
-        color: Colors.grey.withValues(alpha: 0.4),
+        color: AppColors.black,
         borderRadius: BorderRadius.circular(35),
       ),
       child: GestureDetector(
@@ -88,10 +89,22 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const SizedBox(height: 20),
-            const Icon(
-              Icons.image,
-              color: Colors.white,
-              size: 100,
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Text(
+                    'Today`s Frame',
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.white),
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    '"${_promptCubit.state.mainPromptState.currentPrompt?.promptText ?? ''}"',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.lightPink),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
             Container(
               width: double.infinity,
@@ -145,7 +158,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocListener<SPFileUploaderCubit, SPFileUploaderState>(
       bloc: _imageUploaderCubit,
       listener: (context, state) {
-
         if (state is CreatedPost) {
           if (state.mainSPFileUploadState.files != null && state.mainSPFileUploadState.files!.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(

@@ -164,16 +164,11 @@ class _NewFrameModalState extends State<NewFrameModal> {
             ),
             SizedBox(height: 20.0),
             _buildImageDisplay(),
-            SizedBox(height: 10.0),
-            Text(
-              'Do you want to add any notes?',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black),
-            ),
-            SizedBox(height: 5.0),
+            SizedBox(height: 16),
             FrameTextField(
               controller: _notesController,
               maxLines: 3,
-              label: 'Add Your Notes Here',
+              label: 'Caption your frame',
               isLight: true,
             ),
             SizedBox(height: 15.0),

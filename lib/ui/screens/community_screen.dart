@@ -3,13 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
-import 'package:frameapp/cubits/prompt/prompt_cubit.dart';
 import 'package:frameapp/ui/widgets/community_post_card.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:frameapp/ui/widgets/image_card.dart';
-import 'package:frameapp/ui/widgets/post_card.dart';
-import 'package:frameapp/ui/widgets/view_post_dialoq.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -32,18 +27,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        centerTitle: false,
+        centerTitle: true,
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               'From the Community',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             SizedBox(height: 4),
             Text(
               'See how others interpreted today’s prompt.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),
@@ -58,22 +53,29 @@ class _CommunityScreenState extends State<CommunityScreen> {
             }
 
             if (state.mainPostState.communityPosts != null && state.mainPostState.communityPosts!.isNotEmpty) {
-              return MasonryGridView.count(
-                padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                crossAxisCount: 2,
-                mainAxisSpacing: 2.0,
-                crossAxisSpacing: 2.0,
-                itemCount: state.mainPostState.communityPosts!.length,
-                itemBuilder: (context, index) {
-                  final post = state.mainPostState.communityPosts![index];
-                  return GestureDetector(
-                    onTap: () {
-                      _postCubit.setSelectedPost(post);
-                      Navigator.pushNamed(context, '/community/view_post');
-                    },
-                    child: CommunityPostCard(post: post),
-                  );
-                },
+              return Container(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: PageView.builder(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  controller: PageController(
+                    viewportFraction: 0.9,
+                  ),
+                  itemCount: state.mainPostState.communityPosts!.length,
+                  itemBuilder: (context, index) {
+                    final post = state.mainPostState.communityPosts![index];
+                    return GestureDetector(
+                      onTap: () {
+                        _postCubit.setSelectedPost(post);
+                        Navigator.pushNamed(context, '/community/view_post');
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0), // space between pages
+                        child: CommunityPostCard(post: post),
+                      ),
+                    );
+                  },
+                ),
               );
             }
 

@@ -30,10 +30,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        centerTitle: false,
+        centerTitle: true,
         title: Text(
           'Your Gallery',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
+          style: Theme.of(context).textTheme.headlineLarge,
         ),
       ),
       body: BlocBuilder<PostCubit, PostState>(
@@ -48,9 +48,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           if (state.mainPostState.posts != null && state.mainPostState.posts!.isNotEmpty) {
             return MasonryGridView.count(
               padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-              crossAxisCount: 2,
-              mainAxisSpacing: 2.0,
-              crossAxisSpacing: 2.0,
+              crossAxisCount: 3,
               itemCount: state.mainPostState.posts!.length,
               itemBuilder: (context, index) {
                 final post = state.mainPostState.posts![index];
