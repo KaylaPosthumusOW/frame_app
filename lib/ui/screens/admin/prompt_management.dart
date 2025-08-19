@@ -238,7 +238,7 @@ class _PromptManagementState extends State<PromptManagement> {
                 margin: const EdgeInsets.only(bottom: 10.0),
                 padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
-                  color: prompt.isUsed == true ? AppColors.framePurple : AppColors.slateGrey,
+                  color: prompt.isUsed == true ? AppColors.framePurple : Colors.grey[400],
                   borderRadius: BorderRadius.circular(10),
                   border: prompt.isUsed == true ? Border.all(color: AppColors.framePurple, width: 2) : null,
                 ),

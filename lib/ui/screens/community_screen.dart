@@ -33,7 +33,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
           children: [
             Text(
               'From the Community',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.headlineLarge,
             ),
             SizedBox(height: 4),
             Text(
