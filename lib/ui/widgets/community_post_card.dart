@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/models/post_model.dart';
-import 'package:frameapp/ui/widgets/community_view_post_dialoq.dart';
-import 'package:frameapp/ui/widgets/view_post_dialoq.dart';
 
 class CommunityPostCard extends StatefulWidget {
   final PostModel? post;

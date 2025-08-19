@@ -18,7 +18,10 @@ class CommunityViewPostDialoq extends StatefulWidget {
 class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
   final PostCubit _postCubit = sl<PostCubit>();
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
+  final CommentCubit _commentCubit = sl<CommentCubit>();
+
   final TextEditingController _noteController = TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
   final TextEditingController _reportedReasonController = TextEditingController();
 
   bool isCommunityPost = false;
@@ -82,15 +85,36 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: Text(
-          'Community Post',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
+        title: Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundImage: _postCubit.state.mainPostState.selectedPost?.owner?.profilePicture != null ? NetworkImage(_postCubit.state.mainPostState.selectedPost?.owner!.profilePicture! ?? '') : const AssetImage('assets/pngs/blank_profile_image.png') as ImageProvider,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              '${_postCubit.state.mainPostState.selectedPost?.owner?.name} ${_postCubit.state.mainPostState.selectedPost?.owner?.surname}',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.slateGrey),
+            ),
+          ],
         ),
+        iconTheme: IconThemeData(color: AppColors.black),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.report, color: AppColors.lightPink),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => _reportPostDialoq(),
+              );
+            },
+          ),
+        ],
       ),
       body: BlocBuilder<PostCubit, PostState>(
         bloc: _postCubit,
         builder: (context, state) {
-          if(state.mainPostState.selectedPost == null) {
+          if (state.mainPostState.selectedPost == null) {
             return Center(
               child: Text(
                 'No post selected',
@@ -106,54 +130,6 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(12.0),
-                      margin: const EdgeInsets.only(bottom: 16.0),
-                      decoration: BoxDecoration(
-                        color: AppColors.limeGreen,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'User:',
-                            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                              color: AppColors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4.0),
-                          Text(
-                            '${state.mainPostState.selectedPost?.owner?.name?.isNotEmpty == true ? state.mainPostState.selectedPost?.owner?.name : 'User'} ${state.mainPostState.selectedPost?.owner?.surname ?? ''}',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (state.mainPostState.selectedPost?.prompt?.promptText != null)
-                      Container(
-                        padding: const EdgeInsets.all(12.0),
-                        margin: const EdgeInsets.only(bottom: 16.0),
-                        decoration: BoxDecoration(
-                          color: AppColors.framePurple,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Prompt:',
-                              style: Theme.of(context).textTheme.labelMedium?.copyWith(color: AppColors.black, fontWeight: FontWeight.bold,),
-                            ),
-                            const SizedBox(height: 4.0),
-                            Text(
-                              state.mainPostState.selectedPost!.prompt!.promptText!,
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.black),
-                            ),
-                          ],
-                        ),
-                      ),
                     if (state.mainPostState.selectedPost?.imageUrl != null)
                       Container(
                         padding: const EdgeInsets.all(2.0),
@@ -181,44 +157,64 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
                           child: Icon(Icons.image, size: 50, color: Colors.grey),
                         ),
                       ),
-                    const SizedBox(height: 16.0),
-                    FrameTextField(
-                      controller: _noteController,
-                      maxLines: 3,
-                      label: 'Your Note',
+                    Text(state.mainPostState.selectedPost?.prompt?.promptText ?? '', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.black), textAlign: TextAlign.center),
+                    Offstage(
+                      offstage: state.mainPostState.selectedPost!.note == null || state.mainPostState.selectedPost!.note!.isEmpty,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Divider(color: Colors.grey[300], height: 30.0),
+                          Text(
+                            'Users Caption',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black),
+                          ),
+                          const SizedBox(height: 8.0),
+                          Text(
+                            state.mainPostState.selectedPost?.note ?? '',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.black),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 16.0),
-                    Row(
+                    Divider(color: Colors.grey[300], height: 30.0),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: FrameButton(
-                            type: ButtonType.secondary,
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => _reportPostDialoq(),
-                              );
-                            },
-                            label: 'Report',
-                          ),
+                        Text(
+                          'Comments',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black),
                         ),
-                        const SizedBox(width: 10.0),
-                        Expanded(
-                          child: FrameButton(
-                            type: ButtonType.primary,
-                            onPressed: () {
-                              final updatedPost = state.mainPostState.selectedPost!.copyWith(
-                                note: _noteController.text,
-                                isCommunityPost: isCommunityPost,
-                              );
-                              _postCubit.updatePost(updatedPost);
-                              Navigator.pop(context, true);
-                            },
-                            label: 'Update',
-                          ),
+                        const SizedBox(height: 8.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Expanded(
+                              child: FrameTextField(
+                                controller: _commentController,
+                                label: 'Add a comment',
+                                isLight: true,
+                              ),
+                            ),
+                            Container(
+                              height: MediaQuery.of(context).size.height * 0.06,
+                              margin: const EdgeInsets.only(left: 8.0),
+                              decoration: BoxDecoration(
+                                color: AppColors.framePurple,
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                onPressed: () {
+
+                                  _commentController.clear();
+                                },
+                                icon: Icon(Icons.send, color: AppColors.white),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
