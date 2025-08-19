@@ -27,12 +27,13 @@ class _ReportedPostsManagementState extends State<ReportedPostsManagement> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
           'Reported Posts',
           style: Theme.of(context).textTheme.headlineLarge,
         ),
+        iconTheme: IconThemeData(color: AppColors.black),
       ),
       body: BlocBuilder<PostCubit, PostState>(
         bloc: _postCubit,

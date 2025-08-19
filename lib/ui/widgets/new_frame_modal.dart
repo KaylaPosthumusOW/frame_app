@@ -208,12 +208,13 @@ class _NewFrameModalState extends State<NewFrameModal> {
                 Expanded(
                   child: FrameButton(
                     type: ButtonType.primary,
-                    label: _isUploading ? 'Uploading...' : 'Post Image',
+                    label: 'Post Image',
                     onPressed: _isUploading
                         ? null
                         : () {
                             _saveImageAndCreatePost();
                           },
+                    isLoading: _isUploading,
                   ),
                 )
               ],

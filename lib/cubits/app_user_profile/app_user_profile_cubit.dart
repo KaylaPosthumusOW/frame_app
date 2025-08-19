@@ -14,6 +14,35 @@ import 'package:sp_utilities/utilities.dart';
 part 'app_user_profile_state.dart';
 
 class AppUserProfileCubit extends Cubit<AppUserProfileState> {
+  Future<void> updateStreak() async {
+    final profile = state.mainAppUserProfileState.appUserProfile;
+    if (profile == null) return;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final lastSeen = profile.lastSeen?.toDate();
+    int activeDays = profile.activeDays;
+
+    if (lastSeen != null) {
+      final lastSeenDay = DateTime(lastSeen.year, lastSeen.month, lastSeen.day);
+      final diff = today.difference(lastSeenDay).inDays;
+      if (diff == 0) {
+        // Already updated today
+        return;
+      } else if (diff == 1) {
+        activeDays += 1;
+      } else {
+        activeDays = 1;
+      }
+    } else {
+      activeDays = 1;
+    }
+
+    final updatedProfile = profile.copyWith(
+      activeDays: activeDays,
+      lastSeen: Timestamp.fromDate(now),
+    );
+    await updateProfile(updatedProfile);
+  }
   final AppUserProfileFirebaseRepository _appUserProfileRepository = GetIt.instance<AppUserProfileFirebaseRepository>();
   final FirebaseAnalytics _firebaseAnalytics = GetIt.instance<FirebaseAnalytics>();
   final AuthenticationCubit _authenticationCubit = GetIt.instance<AuthenticationCubit>();

@@ -15,11 +15,13 @@ class AppUserProfile extends Equatable {
   final String? profilePicture;
   final Timestamp? createdAt;
   final UserRole? role;
+  final int activeDays;
+  final Timestamp? lastSeen;
 
-  const AppUserProfile({this.uid, this.name, this.surname, this.email, this.phoneNumber, this.pushToken, this.profilePicture, this.createdAt, this.role});
+  const AppUserProfile({this.uid, this.name, this.surname, this.email, this.phoneNumber, this.pushToken, this.profilePicture, this.createdAt, this.role, this.activeDays = 1, this.lastSeen});
 
   @override
-  List<Object?> get props => [uid, name, surname, email, phoneNumber, pushToken, profilePicture, createdAt, role];
+  List<Object?> get props => [uid, name, surname, email, phoneNumber, pushToken, profilePicture, createdAt, role, activeDays, lastSeen];
 
   bool get isProfileComplete => !StringHelpers.isNullOrEmpty(name) && !StringHelpers.isNullOrEmpty(surname) && !StringHelpers.isNullOrEmpty(email) && !StringHelpers.isNullOrEmpty(phoneNumber);
 
@@ -42,6 +44,8 @@ class AppUserProfile extends Equatable {
     String? profilePicture,
     Timestamp? createdAt,
     UserRole? role,
+    int? activeDays,
+    Timestamp? lastSeen,
   }) {
     return AppUserProfile(
       uid: uid ?? this.uid,
@@ -53,6 +57,8 @@ class AppUserProfile extends Equatable {
       profilePicture: profilePicture ?? this.profilePicture,
       createdAt: createdAt ?? this.createdAt,
       role: role ?? this.role,
+      activeDays: activeDays ?? this.activeDays,
+      lastSeen: lastSeen ?? this.lastSeen,
     );
   }
 
@@ -65,6 +71,9 @@ class AppUserProfile extends Equatable {
     String? pushToken,
     String? profilePicture,
     Timestamp? createdAt,
+    UserRole? role,
+    int? activeDays,
+    Timestamp? lastSeen,
   }) {
     return AppUserProfile(
       uid: uid ?? this.uid,
@@ -75,6 +84,9 @@ class AppUserProfile extends Equatable {
       pushToken: pushToken ?? this.pushToken,
       profilePicture: profilePicture,
       createdAt: createdAt ?? this.createdAt,
+      role: role ?? this.role,
+      activeDays: activeDays ?? this.activeDays,
+      lastSeen: lastSeen ?? this.lastSeen,
     );
   }
 
@@ -89,6 +101,13 @@ class AppUserProfile extends Equatable {
       'profilePicture': profilePicture,
       'createdAt': timeStampSafe ? createdAt?.toDate().toIso8601String() : createdAt,
       'role': role?.name,
+      'activeDays': activeDays,
+      'lastSeen': timeStampSafe ? lastSeen?.toDate().toIso8601String() : lastSeen,
+      'isProfileComplete': isProfileComplete,
+      'isAdmin': role == UserRole.admin,
+      'isUser': role == UserRole.user,
+      'isActive': activeDays > 0,
+
     };
   }
 
@@ -116,6 +135,8 @@ class AppUserProfile extends Equatable {
       profilePicture: map['profilePicture'],
       createdAt: createdAt,
       role: map['role'] != null ? UserRole.values.firstWhere((e) => e.name == map['role']) : null,
+      activeDays: map['activeDays'] ?? 1,
+      lastSeen: timeStampSafe && map['lastSeen'] != null ? Timestamp.fromDate(DateTime.parse(map['lastSeen'])) : map['lastSeen'],
     );
   }
 }

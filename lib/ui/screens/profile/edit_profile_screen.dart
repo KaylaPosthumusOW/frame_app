@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frameapp/constants/constants.dart';
+import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:frameapp/ui/widgets/frame_button.dart';
+import 'package:frameapp/ui/widgets/frame_text_field.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -13,24 +16,32 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
   
-  late TextEditingController _nameController;
-  late TextEditingController _surnameController;
-  late TextEditingController _phoneController;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _surnameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   
   @override
   void initState() {
     super.initState();
     final profile = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile;
-    _nameController = TextEditingController(text: profile?.name ?? '');
-    _surnameController = TextEditingController(text: profile?.surname ?? '');
-    _phoneController = TextEditingController(text: profile?.phoneNumber ?? '');
+    _nameController.text = profile?.name ?? '';
+    _surnameController.text = profile?.surname ?? '';
+    _phoneController.text = profile?.phoneNumber ?? '';
+    _emailController.text = profile?.email ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        automaticallyImplyLeading: true,
+        centerTitle: true,
+        title: Text(
+          'Edit Profile',
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
+        iconTheme: IconThemeData(color: AppColors.black),
       ),
       body: BlocListener<AppUserProfileCubit, AppUserProfileState>(
         bloc: _appUserProfileCubit,
@@ -42,7 +53,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 backgroundColor: Colors.green,
               ),
             );
-            Navigator.pop(context);
           } else if (state is ProfileError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -52,61 +62,57 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             );
           }
         },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'First Name',
-                  icon: Icon(Icons.person),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                FrameTextField(
+                  controller: _nameController,
+                  label: 'First Name',
+                  isLight: true,
                 ),
-                keyboardAppearance: Brightness.dark,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _surnameController,
-                decoration: const InputDecoration(
-                  labelText: 'Last Name',
-                  icon: Icon(Icons.person_outline),
+                const SizedBox(height: 16),
+                FrameTextField(
+                  controller: _surnameController,
+                  label: 'Last Name',
+                  isLight: true,
                 ),
-                keyboardAppearance: Brightness.dark,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _phoneController,
-                decoration: const InputDecoration(
-                  labelText: 'Phone Number',
-                  icon: Icon(Icons.phone),
+                const SizedBox(height: 16),
+                FrameTextField(
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
+                  label: 'Phone Number',
+                  isLight: true,
                 ),
-                keyboardType: TextInputType.phone,
-                keyboardAppearance: Brightness.dark,
-              ),
-              const SizedBox(height: 32),
-              BlocBuilder<AppUserProfileCubit, AppUserProfileState>(
-                bloc: _appUserProfileCubit,
-                builder: (context, state) {
-                  return ElevatedButton(
-                    onPressed: state is ProfileUpdating ? null : _saveProfile,
-                    child: state is ProfileUpdating
-                        ? const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              ),
-                              SizedBox(width: 8),
-                              Text('Saving...'),
-                            ],
-                          )
-                        : const Text('Save Changes'),
-                  );
-                },
-              ),
-            ],
+                const SizedBox(height: 16),
+                FrameTextField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.phone,
+                  label: 'Email Address',
+                  isLight: true,
+                  readOnly: true,
+                ),
+                const SizedBox(height: 20),
+                BlocBuilder<AppUserProfileCubit, AppUserProfileState>(
+                  bloc: _appUserProfileCubit,
+                  builder: (context, state) {
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: FrameButton(
+                            onPressed: state is ProfileUpdating ? null : _saveProfile,
+                            label: 'Save Changes',
+                            type: ButtonType.primary,
+                            isLoading: state is ProfileUpdating,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -39,6 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _promptCubit.loadCurrentPrompt();
     _postCubit.loadTodaysFrame();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _appUserProfileCubit.updateStreak();
+    });
   }
 
   Widget _dailyFrameContainer() {
@@ -99,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 500,
             decoration: BoxDecoration(
               color: AppColors.black,
-              borderRadius: BorderRadius.circular(35),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: GestureDetector(
               onTap: () {
@@ -172,13 +175,9 @@ class _HomeScreenState extends State<HomeScreen> {
           return Container(
             width: double.infinity,
             height: 500,
-            decoration: BoxDecoration(
-              color: AppColors.black,
-              borderRadius: BorderRadius.circular(35),
-            ),
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(35),
+                borderRadius: BorderRadius.circular(20),
                 image: DecorationImage(
                   image: NetworkImage(todaysFrame?.imageUrl ?? ''),
                   fit: BoxFit.cover,
@@ -252,19 +251,25 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           actionsPadding: const EdgeInsets.only(right: 20.0),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Hello, ${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.name ?? 'User'}',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.black),
-              ),
-              SizedBox(height: 4),
-              Text(
-                'Streak: 0 days 🔥',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black),
-              ),
-            ],
+          title: BlocBuilder<AppUserProfileCubit, AppUserProfileState>(
+            bloc: _appUserProfileCubit,
+            builder: (context, state) {
+              final streak = state.mainAppUserProfileState.appUserProfile?.activeDays ?? 0;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Hello, ${state.mainAppUserProfileState.appUserProfile?.name ?? 'User'}',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.black),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Streak: $streak days 🔥',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black),
+                  ),
+                ],
+              );
+            },
           ),
           centerTitle: false,
           actions: [
