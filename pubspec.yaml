@@ -21,7 +21,8 @@ dependencies:
   flutter_bloc: ^9.1.1
   flutter_cache_manager: ^3.4.1
   flutter_svg: ^2.2.0
-  font_awesome_flutter: ^10.9.0
+  flutter_sticky_header: ^0.8.0
+  font_awesome_flutter: ^10.10.0
   get_it: ^8.2.0
   google_fonts: ^6.3.0
   intl: ^0.20.2
@@ -44,7 +45,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
 dependency_overrides:
-  http: ^1.4.0
+  http: ^1.5.0
   intl: ^0.20.2
   timezone: ^0.10.1
 
