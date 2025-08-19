@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:frameapp/cubits/comment/comment_cubit.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
+import 'package:frameapp/models/comment_model.dart';
 import 'package:frameapp/ui/widgets/frame_button.dart';
 import 'package:frameapp/ui/widgets/frame_extended_image.dart';
 import 'package:frameapp/ui/widgets/frame_text_field.dart';
@@ -18,7 +21,7 @@ class CommunityViewPostDialoq extends StatefulWidget {
 class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
   final PostCubit _postCubit = sl<PostCubit>();
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
-  // final CommentCubit _commentCubit = sl<CommentCubit>();
+  final CommentCubit _commentCubit = sl<CommentCubit>();
 
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _commentController = TextEditingController();
@@ -30,6 +33,7 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
   void initState() {
     super.initState();
     _noteController.text = _postCubit.state.mainPostState.selectedPost?.note ?? '';
+    _commentCubit.getCommentsForPost(postUid: _postCubit.state.mainPostState.selectedPost?.uid ?? '');
   }
 
   @override
@@ -177,44 +181,7 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
                       ),
                     ),
                     Divider(color: Colors.grey[300], height: 30.0),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Comments',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black),
-                        ),
-                        const SizedBox(height: 8.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Expanded(
-                              child: FrameTextField(
-                                controller: _commentController,
-                                label: 'Add a comment',
-                                isLight: true,
-                              ),
-                            ),
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.06,
-                              margin: const EdgeInsets.only(left: 8.0),
-                              decoration: BoxDecoration(
-                                color: AppColors.framePurple,
-                                shape: BoxShape.circle,
-                              ),
-                              child: IconButton(
-                                onPressed: () {
-
-                                  _commentController.clear();
-                                },
-                                icon: Icon(Icons.send, color: AppColors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                    _buildCommentSection(),
                   ],
                 ),
               ),
@@ -223,6 +190,87 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
           return Container(child: Text('No post selected', style: Theme.of(context).textTheme.bodyLarge));
         },
       ),
+    );
+  }
+
+  Widget _buildCommentSection() {
+    return BlocConsumer<CommentCubit, CommentState>(
+      bloc: _commentCubit,
+      listener: (context, state) {},
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Comments',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black),
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: FrameTextField(
+                    controller: _commentController,
+                    label: 'Add a comment',
+                    isLight: true,
+                  ),
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  margin: const EdgeInsets.only(left: 8.0),
+                  decoration: BoxDecoration(
+                    color: AppColors.framePurple,
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    onPressed: () {
+                      _commentCubit.createNewComment(CommentModel(
+                        owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
+                        post: _postCubit.state.mainPostState.selectedPost,
+                        comment: _commentController.text,
+                        createdAt: Timestamp.now(),
+                      ));
+                      _commentController.clear();
+                    },
+                    icon: Icon(Icons.send, color: AppColors.white),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: state.mainCommentState.allCommentsForPost?.length ?? 0,
+              itemBuilder: (context, index) {
+                final comment = state.mainCommentState.allCommentsForPost![index];
+                return Column(
+                  children: [
+                    ListTile(
+                      leading: CircleAvatar(
+                        radius: 20,
+                        backgroundImage: comment.owner?.profilePicture != null ? NetworkImage(comment.owner!.profilePicture!) : const AssetImage('assets/pngs/blank_profile_image.png') as ImageProvider,
+                      ),
+                      title: Text(comment.comment ?? '', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.slateGrey)),
+                      subtitle: Text('${comment.owner?.name} ${comment.owner?.surname}', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.black)),
+                      trailing: Text(
+                        comment.createdAt != null ? '${comment.createdAt!.toDate().hour}:${comment.createdAt!.toDate().minute}' : '',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.slateGrey),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey[300],
+                      height: 1.0,
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+        );
+      }
     );
   }
 }
