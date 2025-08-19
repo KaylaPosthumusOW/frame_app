@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "369506326548",
+    "project_id": "frame-7cff9",
+    "storage_bucket": "frame-7cff9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369506326548:android:94ef3a286dbcd91773ef01",
+        "android_client_info": {
+          "package_name": "com.example.frame_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "369506326548-djosc5v9t4hdt6lnphkcmrt1bj339rs7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZtP9uZ_h6MJR9FGGutVuU8Dk7HQKitws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "369506326548-djosc5v9t4hdt6lnphkcmrt1bj339rs7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "369506326548-b19k7b7fc4u3l7hv611t03kfrgcl7clb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.frameApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
