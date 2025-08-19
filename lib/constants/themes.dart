@@ -8,21 +8,21 @@ const kDefaultThemeMode = ThemeMode.light;
 class FrameTheme {
   static TextTheme get textTheme {
     return GoogleFonts.robotoTextTheme().copyWith(
-      displayLarge: GoogleFonts.lexend(fontSize: 32, fontWeight: FontWeight.w600, color: Colors.white),
-      displayMedium: GoogleFonts.lexend(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white),
-      displaySmall: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
-      headlineLarge: GoogleFonts.lexend(fontSize: 24, fontWeight: FontWeight.w700, color: Colors.white),
-      headlineMedium: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
-      headlineSmall: GoogleFonts.lexend(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),
-      titleLarge: GoogleFonts.lexend(fontSize: 24, fontWeight: FontWeight.w400, color: Colors.white),
-      titleMedium: GoogleFonts.lexend(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.white),
-      titleSmall: GoogleFonts.lexend(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.white),
-      labelLarge: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
-      labelMedium: GoogleFonts.lexend(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.white),
-      labelSmall: GoogleFonts.lexend(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.white),
-      bodyLarge: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w300, color: Colors.white),
-      bodyMedium: GoogleFonts.lexend(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.white),
-      bodySmall: GoogleFonts.lexend(fontSize: 10, fontWeight: FontWeight.w300, color: Colors.white),
+      displayLarge: GoogleFonts.lexend(fontSize: 32, fontWeight: FontWeight.w600, color: Colors.black),
+      displayMedium: GoogleFonts.lexend(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black),
+      displaySmall: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
+      headlineLarge: GoogleFonts.lexend(fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black),
+      headlineMedium: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+      headlineSmall: GoogleFonts.lexend(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+      titleLarge: GoogleFonts.lexend(fontSize: 24, fontWeight: FontWeight.w400, color: Colors.black),
+      titleMedium: GoogleFonts.lexend(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.black),
+      titleSmall: GoogleFonts.lexend(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.black),
+      labelLarge: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+      labelMedium: GoogleFonts.lexend(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
+      labelSmall: GoogleFonts.lexend(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.black),
+      bodyLarge: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w300, color: Colors.black),
+      bodyMedium: GoogleFonts.lexend(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.black),
+      bodySmall: GoogleFonts.lexend(fontSize: 10, fontWeight: FontWeight.w300, color: Colors.black),
     );
   }
 
@@ -31,7 +31,7 @@ class FrameTheme {
       textTheme: textTheme,
       useMaterial3: useMaterial3,
       brightness: Brightness.light,
-      scaffoldBackgroundColor: AppColors.black,
+      scaffoldBackgroundColor: AppColors.white,
       appBarTheme: AppBarTheme(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -189,6 +189,7 @@ class AppColors {
   static Color lightPink = HexColor('#FCC2FB');
   static Color slateGrey = HexColor('#333333');
   static Color errorRed = HexColor('#FF4C4C');
+  static Color grey = HexColor('#F3EEE6');
 }
 
 List<BoxShadow> getBoxShadow(BuildContext context) {

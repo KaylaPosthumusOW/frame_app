@@ -53,16 +53,16 @@ class _FrameNavigationState extends State<FrameNavigation> {
       decoration: const BoxDecoration(
         border: Border(
           top: BorderSide(
-              color: Colors.white,
+              color: Colors.grey,
               width: 0.5
           ),
         ),
       ),
       child: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: AppColors.black,
-        selectedItemColor: AppColors.lightPink,
-        unselectedItemColor: AppColors.white,
+        backgroundColor: AppColors.white,
+        selectedItemColor: AppColors.framePurple,
+        unselectedItemColor: Colors.grey[600],
         selectedFontSize: 14,
         selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
         unselectedFontSize: 14,

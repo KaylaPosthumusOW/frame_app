@@ -78,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(height: 30),
               Text(
                 '${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.name?.isNotEmpty == true ? _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.name : 'User'} ${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.surname ?? ''}',
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
+                style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.black),
               ),
               SizedBox(height: 30),
               Container(

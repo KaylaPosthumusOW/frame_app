@@ -193,6 +193,11 @@ class _NewFrameModalState extends State<NewFrameModal> {
               },
             ),
             SizedBox(height: 10.0),
+            Divider(
+              color: Colors.grey,
+              thickness: 1.0,
+            ),
+            SizedBox(height: 10.0),
             Row(
               spacing: 10.0,
               children: [
@@ -208,7 +213,7 @@ class _NewFrameModalState extends State<NewFrameModal> {
                 Expanded(
                   child: FrameButton(
                     type: ButtonType.primary,
-                    label: _isUploading ? 'Uploading...' : 'Save Image',
+                    label: _isUploading ? 'Uploading...' : 'Post Image',
                     onPressed: _isUploading
                         ? null
                         : () {

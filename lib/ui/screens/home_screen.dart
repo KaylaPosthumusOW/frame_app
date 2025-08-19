@@ -3,11 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/cubits/prompt/prompt_cubit.dart';
-import 'package:frameapp/models/app_user_profile.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:frameapp/ui/widgets/new_frame_modal.dart';
-import 'package:intl/intl.dart';
 import 'package:sp_utilities/utilities.dart';
 
 class DateItem {
@@ -77,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
       width: double.infinity,
       height: 500,
       decoration: BoxDecoration(
-        color: AppColors.white.withValues(alpha: 0.2),
+        color: Colors.grey.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(35),
       ),
       child: GestureDetector(
@@ -147,6 +146,17 @@ class _HomeScreenState extends State<HomeScreen> {
       bloc: _imageUploaderCubit,
       listener: (context, state) {
 
+        if (state is CreatedPost) {
+          if (state.mainSPFileUploadState.files != null && state.mainSPFileUploadState.files!.isNotEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Post created successfully!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
+        }
+
         if (state is SPFileUploaderAllUploadTaskCompleted) {
           if (state.mainSPFileUploadState.files != null && state.mainSPFileUploadState.files!.isNotEmpty) {
             final capturedFile = state.mainSPFileUploadState.files!.first;
@@ -188,12 +198,12 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Text(
                 'Hello, ${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.name ?? 'User'}',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.black),
               ),
               SizedBox(height: 4),
               Text(
                 'Streak: 0 days 🔥',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black),
               ),
             ],
           ),
@@ -201,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.grey[300],
                 shape: BoxShape.circle,
               ),
               child: IconButton(
