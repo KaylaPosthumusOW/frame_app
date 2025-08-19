@@ -5,10 +5,8 @@ import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
-import 'package:frameapp/cubits/community_posts/community_posts_cubit.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/cubits/prompt/prompt_cubit.dart';
-import 'package:frameapp/models/community_post_model.dart';
 import 'package:frameapp/models/post_model.dart';
 import 'dart:io';
 
@@ -33,7 +31,6 @@ class _NewFrameModalState extends State<NewFrameModal> {
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
   final PostCubit _postCubit = sl<PostCubit>();
   final PromptCubit _promptCubit = sl<PromptCubit>();
-  final CommunityPostsCubit _communityPostsCubit = sl<CommunityPostsCubit>();
 
   bool isCommunityPost = false;
 
