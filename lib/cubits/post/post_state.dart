@@ -61,16 +61,16 @@ abstract class PostState extends Equatable {
   List<Object> get props => [mainPostState];
 }
 
+class PostInitial extends PostState {
+  const PostInitial() : super(const MainPostState());
+}
+
 class LoadingTodaysFrame extends PostState {
   const LoadingTodaysFrame(MainPostState mainPostState) : super(mainPostState);
 }
 
 class LoadedTodaysFrame extends PostState {
   const LoadedTodaysFrame(MainPostState mainPostState) : super(mainPostState);
-}
-
-class PostInitial extends PostState {
-  const PostInitial() : super(const MainPostState());
 }
 
 class CreatingPost extends PostState {

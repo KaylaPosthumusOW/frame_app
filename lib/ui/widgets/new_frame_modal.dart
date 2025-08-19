@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +10,6 @@ import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/cubits/prompt/prompt_cubit.dart';
 import 'package:frameapp/models/post_model.dart';
-import 'dart:io';
-
 import 'package:frameapp/ui/widgets/frame_button.dart';
 import 'package:frameapp/ui/widgets/frame_text_field.dart';
 
