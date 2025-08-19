@@ -14,12 +14,12 @@ class GoogleLoginButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.white.withValues(alpha: 0.5), width: 2.0),
+          border: Border.all(color: AppColors.black.withValues(alpha: 0.5), width: 2.0),
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: IconButton(
           style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
-          icon: Icon(FontAwesomeIcons.google, color: AppColors.white,),
+          icon: Icon(FontAwesomeIcons.google, color: AppColors.black,),
           onPressed: () => sl<LoginCubit>().loginWithGooglePressed(),
         ),
       ),

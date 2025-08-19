@@ -83,7 +83,7 @@ class _RegisterFormState extends State<RegisterForm> {
               child: ListView(
                 children: <Widget>[
                   SizedBox(height: 60),
-                  Text('Create Your Account!', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: AppColors.framePurple)),
+                  Text('Create Your Account!', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: AppColors.black)),
                   SizedBox(height: 20),
                   FrameTextField(
                     label: 'Name & Surname',
@@ -94,6 +94,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         _nameFieldTouched = true;
                       });
                     },
+                    isLight: true,
                   ),
                   SizedBox(height: 10),
                   FrameTextField(
@@ -101,6 +102,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) => _registerCubit.emailChanged(value),
+                    isLight: true,
                   ),
                   SizedBox(height: 10),
                   FrameTextField(
@@ -119,6 +121,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     ),
                     obscureText: !_passwordVisible,
                     onChanged: (value) => _registerCubit.passwordChanged(value),
+                    isLight: true,
                   ),
                   SizedBox(height: 10),
                   FrameTextField(
@@ -137,6 +140,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     ),
                     obscureText: !_passwordVisible,
                     onChanged: (value) => _registerCubit.confirmPasswordChanged(value),
+                    isLight: true,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
@@ -157,7 +161,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                   Navigator.pop(context);
                                 },
                                 child: Text('Login',
-                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.limeGreen,),
+                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.black,),
                                 ),
                               ),
                             ),

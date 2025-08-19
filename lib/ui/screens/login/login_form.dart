@@ -131,13 +131,14 @@ class _LoginFormState extends State<LoginForm> {
               child: ListView(
                 children: <Widget>[
                   SizedBox(height: 60),
-                  Text('Welcome Back!', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: AppColors.limeGreen)),
+                  Text('Welcome Back!', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: AppColors.black)),
                   SizedBox(height: 20),
                   FrameTextField(
                     label: 'Email',
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) => _loginCubit.emailChanged(value),
+                    isLight: true,
                   ),
                   SizedBox(height: 10),
                   FrameTextField(
@@ -145,6 +146,18 @@ class _LoginFormState extends State<LoginForm> {
                     controller: _passwordController,
                     obscureText: !_passwordVisible,
                     onChanged: (value) => _loginCubit.passwordChanged(value),
+                    isLight: true,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                        color: AppColors.black,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
@@ -156,7 +169,7 @@ class _LoginFormState extends State<LoginForm> {
                         Center(
                           child: Text(
                             '—  Or log in with  —',
-                            style: TextStyle(color: AppColors.white),
+                            style: TextStyle(color: AppColors.black),
                           ),
                         ),
                         SizedBox(height: 20),

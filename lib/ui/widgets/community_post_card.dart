@@ -72,11 +72,11 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                     ),
                   ),
                 ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               Row(
                 children: [
                   CircleAvatar(
-                    radius: 20,
+                    radius: 25,
                     backgroundImage: widget.post?.owner?.profilePicture != null
                         ? NetworkImage(widget.post!.owner!.profilePicture!)
                         : const AssetImage('assets/pngs/blank_profile_image.png') as ImageProvider,

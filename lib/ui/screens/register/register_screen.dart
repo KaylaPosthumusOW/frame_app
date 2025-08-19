@@ -12,7 +12,7 @@ class RegisterScreen extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: SvgPicture.asset(
-          'assets/svg/frame_logo.svg',
+          'assets/svg/frame_logo_dark.svg',
           height: 32,
         ),
         centerTitle: true,
