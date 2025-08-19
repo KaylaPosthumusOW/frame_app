@@ -238,7 +238,7 @@ class _PromptManagementState extends State<PromptManagement> {
                 margin: const EdgeInsets.only(bottom: 10.0),
                 padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
-                  color: prompt.isUsed == true ? AppColors.framePurple.withValues(alpha: 0.3) : AppColors.slateGrey,
+                  color: prompt.isUsed == true ? AppColors.framePurple : AppColors.slateGrey,
                   borderRadius: BorderRadius.circular(10),
                   border: prompt.isUsed == true ? Border.all(color: AppColors.framePurple, width: 2) : null,
                 ),
@@ -283,7 +283,13 @@ class _PromptManagementState extends State<PromptManagement> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Prompt Management'),
+        automaticallyImplyLeading: true,
+        centerTitle: true,
+        title: Text(
+          'Prompt Management',
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
+        iconTheme: IconThemeData(color: AppColors.black),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 20),
@@ -293,9 +299,9 @@ class _PromptManagementState extends State<PromptManagement> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('All Prompts', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.white)),
+                Text('All Prompts', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.black)),
                 FrameButton(
-                  type: ButtonType.whiteOutline,
+                  type: ButtonType.outline,
                   onPressed: () {
                     _promptCubit.unSelectPrompt();
                     _promptTextController.clear();
@@ -307,7 +313,7 @@ class _PromptManagementState extends State<PromptManagement> {
                     );
                   },
                   label: ('Create Prompt'),
-                  icon: Icon(Icons.add, color: AppColors.white, size: 20.0),
+                  icon: Icon(Icons.add_circle, color: AppColors.framePurple, size: 20.0),
                 ),
               ],
             ),

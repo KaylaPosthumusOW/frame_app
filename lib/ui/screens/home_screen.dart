@@ -32,117 +32,164 @@ class _HomeScreenState extends State<HomeScreen> {
   final PromptCubit _promptCubit = sl<PromptCubit>();
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
   final SPFileUploaderCubit _imageUploaderCubit = sl<SPFileUploaderCubit>();
+  final PostCubit _postCubit = sl<PostCubit>();
 
   @override
   void initState() {
     super.initState();
     _promptCubit.loadCurrentPrompt();
+    _postCubit.loadTodaysFrame();
   }
 
   Widget _dailyFrameContainer() {
     return BlocBuilder<PromptCubit, PromptState>(
-        bloc: _promptCubit,
-        builder: (context, state) {
-          return Container(
-            padding: const EdgeInsets.only(top: 20.0, bottom: 25.0, left: 20.0, right: 20.0),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: AppColors.lightPink,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Today´s Frame',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.black),
+      bloc: _promptCubit,
+      builder: (context, state) {
+        return Container(
+          padding: const EdgeInsets.only(top: 20.0, bottom: 25.0, left: 20.0, right: 20.0),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColors.lightPink,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Today´s Frame',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.black),
+              ),
+              SizedBox(height: 10.0),
+              Center(
+                child: Text(
+                  '"${_promptCubit.state.mainPromptState.currentPrompt?.promptText ?? ''}"',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black),
+                  textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 10.0),
-                Center(
-                  child: Text(
-                    '"${_promptCubit.state.mainPromptState.currentPrompt?.promptText ?? ''}"',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black),
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              ],
-            ),
-          );
-        });
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildTodaysFrame() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      width: double.infinity,
-      height: 500,
-      decoration: BoxDecoration(
-        color: AppColors.black,
-        borderRadius: BorderRadius.circular(35),
-      ),
-      child: GestureDetector(
-        onTap: () {
-          _takePictureFromCamera();
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Text(
-                    'Today`s Frame',
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.white),
-                  ),
-                  SizedBox(height: 15),
-                  Text(
-                    '"${_promptCubit.state.mainPromptState.currentPrompt?.promptText ?? ''}"',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.lightPink),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
+    return BlocBuilder<PostCubit, PostState>(
+      bloc: _postCubit,
+      builder: (context, state) {
+        if (state is LoadingTodaysFrame) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: AppColors.framePurple,
             ),
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.only(top: 8, bottom: 8, left: 15, right: 8),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(35),
-              ),
-              child: Row(
+          );
+        }
+
+        if (state is PostError) {
+          return Center(
+            child: Text('Error: ${state.mainPostState.errorMessage}', style: TextStyle(color: Colors.red)),
+          );
+        }
+
+        if (state.mainPostState.todaysFrame == null) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            width: double.infinity,
+            height: 500,
+            decoration: BoxDecoration(
+              color: AppColors.black,
+              borderRadius: BorderRadius.circular(35),
+            ),
+            child: GestureDetector(
+              onTap: () {
+                _takePictureFromCamera();
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Capture Frame',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Today`s Frame',
+                          style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.white),
+                        ),
+                        SizedBox(height: 15),
+                        Text(
+                          '"${_promptCubit.state.mainPromptState.currentPrompt?.promptText ?? ''}"',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.lightPink),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   ),
                   Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.only(top: 8, bottom: 8, left: 15, right: 8),
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.limeGreen,
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(35),
                     ),
-                    padding: const EdgeInsets.all(8),
-                    child: Icon(
-                      Icons.arrow_forward,
-                      color: Colors.black,
-                      size: 30,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Capture Frame',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.limeGreen,
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          child: Icon(
+                            Icons.arrow_forward,
+                            color: Colors.black,
+                            size: 30,
+                          ),
+                        )
+                      ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
+          );
+        }
+
+        if (state.mainPostState.todaysFrame != null) {
+          final todaysFrame = state.mainPostState.todaysFrame;
+          return Container(
+            width: double.infinity,
+            height: 500,
+            decoration: BoxDecoration(
+              color: AppColors.black,
+              borderRadius: BorderRadius.circular(35),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(35),
+                image: DecorationImage(
+                  image: NetworkImage(todaysFrame?.imageUrl ?? ''),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          );
+        }
+
+        return Container();
+      },
     );
   }
 

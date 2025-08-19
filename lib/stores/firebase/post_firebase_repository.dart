@@ -39,6 +39,23 @@ class PostFirebaseRepository implements PostStore {
   }
 
   @override
+  Future<PostModel?> loadTodaysFrame() async {
+    final today = DateTime.now();
+    final startOfDay = DateTime(today.year, today.month, today.day);
+    final endOfDay = startOfDay.add(Duration(days: 1));
+    QuerySnapshot<PostModel> query = await _postCollection
+      .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+      .where('createdAt', isLessThan: Timestamp.fromDate(endOfDay))
+      .orderBy('createdAt', descending: false)
+      .limit(1)
+      .get();
+    if (query.docs.isNotEmpty) {
+      return query.docs.first.data();
+    }
+    return null;
+  }
+
+  @override
   Future<List<PostModel>> loadCommunityPosts() async {
     List<PostModel> communityPosts = [];
     QuerySnapshot<PostModel> query = await _postCollection.where('isCommunityPost', isEqualTo: true).where('isArchived', isEqualTo: false).where('isReported', isEqualTo: false).orderBy('createdAt', descending: true).get();

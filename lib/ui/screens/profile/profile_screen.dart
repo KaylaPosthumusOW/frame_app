@@ -66,9 +66,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     right: 8,
                     child: CircleAvatar(
                       radius: 25,
-                      backgroundColor: AppColors.white,
+                      backgroundColor: AppColors.black,
                       child: IconButton(
-                        icon: Icon(Icons.edit, color: AppColors.black),
+                        icon: Icon(Icons.edit, color: AppColors.white),
                         onPressed: () {},
                       ),
                     ),
@@ -85,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 margin: const EdgeInsets.symmetric(horizontal: 16.0),
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: AppColors.lightPink,
+                  color: AppColors.limeGreen,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
@@ -119,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   margin: EdgeInsets.all(16),
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: AppColors.limeGreen,
+                    color: AppColors.lightPink,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(

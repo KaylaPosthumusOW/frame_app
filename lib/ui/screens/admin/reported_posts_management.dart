@@ -27,7 +27,12 @@ class _ReportedPostsManagementState extends State<ReportedPostsManagement> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reported Posts'),
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Text(
+          'Reported Posts',
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
       ),
       body: BlocBuilder<PostCubit, PostState>(
         bloc: _postCubit,

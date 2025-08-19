@@ -18,7 +18,7 @@ class CommunityViewPostDialoq extends StatefulWidget {
 class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
   final PostCubit _postCubit = sl<PostCubit>();
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
-  final CommentCubit _commentCubit = sl<CommentCubit>();
+  // final CommentCubit _commentCubit = sl<CommentCubit>();
 
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _commentController = TextEditingController();

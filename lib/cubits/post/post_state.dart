@@ -8,11 +8,12 @@ class MainPostState extends Equatable {
   final PostModel? selectedPost;
   final List<PostModel>? reportedPosts;
   final List<PostModel>? communityPosts;
+  final PostModel? todaysFrame;
 
-  const MainPostState({this.message, this.errorMessage, this.posts, this.selectedPost, this.reportedPosts, this.communityPosts});
+  const MainPostState({this.message, this.errorMessage, this.posts, this.selectedPost, this.reportedPosts, this.communityPosts, this.todaysFrame});
 
   @override
-  List<Object?> get props => [message, errorMessage, posts, selectedPost, reportedPosts, communityPosts];
+  List<Object?> get props => [message, errorMessage, posts, selectedPost, reportedPosts, communityPosts, todaysFrame];
 
   MainPostState copyWith({
     String? message,
@@ -21,6 +22,7 @@ class MainPostState extends Equatable {
     PostModel? selectedPost,
     List<PostModel>? reportedPosts,
     List<PostModel>? communityPosts,
+    PostModel? todaysFrame,
   }) {
     return MainPostState(
       message: message ?? this.message,
@@ -29,6 +31,7 @@ class MainPostState extends Equatable {
       selectedPost: selectedPost ?? this.selectedPost,
       reportedPosts: reportedPosts ?? this.reportedPosts,
       communityPosts: communityPosts ?? this.communityPosts,
+      todaysFrame: todaysFrame ?? this.todaysFrame,
     );
   }
 
@@ -56,6 +59,14 @@ abstract class PostState extends Equatable {
 
   @override
   List<Object> get props => [mainPostState];
+}
+
+class LoadingTodaysFrame extends PostState {
+  const LoadingTodaysFrame(MainPostState mainPostState) : super(mainPostState);
+}
+
+class LoadedTodaysFrame extends PostState {
+  const LoadedTodaysFrame(MainPostState mainPostState) : super(mainPostState);
 }
 
 class PostInitial extends PostState {
