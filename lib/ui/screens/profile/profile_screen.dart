@@ -28,12 +28,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String? _downloadUrl;
 
-  @override
-  void initState() {
-    super.initState();
-    _postCubit.loadReportedPosts();
-  }
-
   _logOut() {
     showDialog(
       context: context,
@@ -164,7 +158,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  /// ================== Screen Build ==================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,88 +171,86 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-              _buildProfilePicture(),
-              const SizedBox(height: 30),
-              Text(
-                '${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.name?.isNotEmpty == true ? _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.name : 'User'} ${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.surname ?? ''}',
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.black),
+        child: Column(
+          children: [
+            const SizedBox(height: 30),
+            _buildProfilePicture(),
+            const SizedBox(height: 30),
+            Text(
+              '${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.name?.isNotEmpty == true ? _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.name : 'User'} ${_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.surname ?? ''}',
+              style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.black),
+            ),
+            const SizedBox(height: 30),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: AppColors.limeGreen,
+                borderRadius: BorderRadius.circular(20),
               ),
-              const SizedBox(height: 30),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.edit, color: Colors.black),
+                    title: Text('Edit Profile Data', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
+                    onTap: () {
+                      context.pushNamed(EDIT_PROFILE_SCREEN);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.notifications, color: Colors.black),
+                    title: Text('Notifications', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.settings, color: Colors.black),
+                    title: Text('Settings', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
+                    onTap: () {
+                      context.pushNamed(SETTINGS_SCREEN);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Offstage(
+              offstage: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.role != UserRole.admin,
+              child: Container(
+                margin: const EdgeInsets.all(16),
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: AppColors.limeGreen,
+                  color: AppColors.lightPink,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
                   children: [
+                    Text('ADMIN FUNCTIONS', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black, fontWeight: FontWeight.bold)),
                     ListTile(
-                      leading: const Icon(Icons.edit, color: Colors.black),
-                      title: Text('Edit Profile Data', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
+                      leading: const Icon(Icons.note_add, color: Colors.black),
+                      title: Text('Prompt Management', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
                       onTap: () {
-                        context.pushNamed(EDIT_PROFILE_SCREEN);
+                        context.pushNamed(PROMPT_MANAGEMENT_SCREEN);
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.notifications, color: Colors.black),
-                      title: Text('Notifications', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.settings, color: Colors.black),
-                      title: Text('Settings', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
+                      leading: const Icon(Icons.report, color: Colors.black),
+                      title: Text('Reported Posts', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
                       onTap: () {
-                        context.pushNamed(SETTINGS_SCREEN);
+                        context.pushNamed(REPORTED_POSTS_SCREEN);
                       },
+                      trailing: CircleAvatar(
+                        radius: 12,
+                        backgroundColor: Colors.white,
+                        child: Text(
+                          _postCubit.state.mainPostState.reportedPosts?.length.toString() ?? '0',
+                          style: const TextStyle(color: Colors.black, fontSize: 12),
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-              Offstage(
-                offstage: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.role != UserRole.admin,
-                child: Container(
-                  margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: AppColors.lightPink,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    children: [
-                      Text('ADMIN FUNCTIONS', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black, fontWeight: FontWeight.bold)),
-                      ListTile(
-                        leading: const Icon(Icons.note_add, color: Colors.black),
-                        title: Text('Prompt Management', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
-                        onTap: () {
-                          context.pushNamed(PROMPT_MANAGEMENT_SCREEN);
-                        },
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.report, color: Colors.black),
-                        title: Text('Reported Posts', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
-                        onTap: () {
-                          context.pushNamed(REPORTED_POSTS_SCREEN);
-                        },
-                        trailing: CircleAvatar(
-                          radius: 12,
-                          backgroundColor: Colors.white,
-                          child: Text(
-                            _postCubit.state.mainPostState.reportedPosts?.length.toString() ?? '0',
-                            style: const TextStyle(color: Colors.black, fontSize: 12),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: const FrameNavigation(),

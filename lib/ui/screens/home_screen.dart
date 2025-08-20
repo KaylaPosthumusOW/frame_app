@@ -8,6 +8,7 @@ import 'package:frameapp/cubits/prompt/prompt_cubit.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:frameapp/ui/widgets/new_frame_modal.dart';
 import 'package:sp_utilities/utilities.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool _isFrameUpload = false;
+
   final PromptCubit _promptCubit = sl<PromptCubit>();
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
   final SPFileUploaderCubit _imageUploaderCubit = sl<SPFileUploaderCubit>();
@@ -36,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocBuilder<PromptCubit, PromptState>(
       bloc: _promptCubit,
       builder: (context, state) {
+        final promptText = _promptCubit.state.mainPromptState.currentPrompt?.promptText ?? '';
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           width: double.infinity,
@@ -46,18 +49,15 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Today´s Frame',
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.black),
-              ),
-              const SizedBox(height: 10.0),
+              Text('Today´s Frame', style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.black)),
+              const SizedBox(height: 10),
               Center(
                 child: Text(
-                  '"${_promptCubit.state.mainPromptState.currentPrompt?.promptText ?? ''}"',
+                  '"$promptText"',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black),
                   textAlign: TextAlign.center,
                 ),
-              )
+              ),
             ],
           ),
         );
@@ -75,106 +75,72 @@ class _HomeScreenState extends State<HomeScreen> {
 
         if (state is PostError) {
           return Center(
-            child: Text(
-              'Error: ${state.mainPostState.errorMessage}',
-              style: const TextStyle(color: Colors.red),
-            ),
+            child: Text('Error: ${state.mainPostState.errorMessage}', style: const TextStyle(color: Colors.red)),
           );
         }
 
-        if (state.mainPostState.todaysFrame == null) {
-          return GestureDetector(
-            onTap: _takePictureFromCamera,
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              width: double.infinity,
-              height: 500,
-              decoration: BoxDecoration(
-                color: AppColors.black,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(height: 20),
-                  Column(
-                    children: [
-                      Text(
-                        'Today`s Frame',
-                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.white),
-                      ),
-                      const SizedBox(height: 15),
-                      Text(
-                        '"${_promptCubit.state.mainPromptState.currentPrompt?.promptText ?? ''}"',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.lightPink),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                  _captureButton(),
-                ],
-              ),
-            ),
-          );
+        final todaysFrame = state.mainPostState.todaysFrame;
+
+        if (todaysFrame == null) {
+          return _emptyFramePlaceholder();
         }
 
-        if (state.mainPostState.todaysFrame!.imageUrl != null) {
-          return GestureDetector(
-            onTap: _takePictureFromCamera,
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              width: double.infinity,
-              height: 500,
-              decoration: BoxDecoration(
-                color: AppColors.black,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(height: 20),
-                  Column(
-                    children: [
-                      Text(
-                        'Today`s Frame',
-                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.white),
-                      ),
-                      const SizedBox(height: 15),
-                      Text(
-                        '"${_promptCubit.state.mainPromptState.currentPrompt?.promptText ?? ''}"',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.lightPink),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                  _captureButton(),
-                ],
+        // Frame exists
+        return GestureDetector(
+          onTap: _takePictureFromCamera,
+          child: Container(
+            width: double.infinity,
+            height: 500,
+            decoration: BoxDecoration(
+              color: AppColors.black,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: CachedNetworkImage(
+                imageUrl: todaysFrame.imageUrl ?? '',
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Center(child: Icon(Icons.broken_image, size: 50, color: Colors.white)),
               ),
             ),
-          );
-        }
-
-        return Container(
-          padding: const EdgeInsets.all(16),
-          width: double.infinity,
-          height: 500,
-          decoration: BoxDecoration(
-            color: AppColors.black,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'No frame captured today',
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.white),
-              ),
-              const SizedBox(height: 20),
-              _captureButton(),
-            ],
           ),
         );
       },
+    );
+  }
+
+  Widget _emptyFramePlaceholder() {
+    final promptText = _promptCubit.state.mainPromptState.currentPrompt?.promptText ?? '';
+    return GestureDetector(
+      onTap: _takePictureFromCamera,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        width: double.infinity,
+        height: 500,
+        decoration: BoxDecoration(
+          color: AppColors.black,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                const SizedBox(height: 60),
+                Text('Today`s Frame', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.white)),
+                const SizedBox(height: 15),
+                Text(
+                  '"$promptText"',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.lightPink),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            _captureButton(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -190,14 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            'Capture Frame',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          Text('Capture Frame', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
           CircleAvatar(
             backgroundColor: AppColors.limeGreen,
             child: Icon(Icons.arrow_forward, color: Colors.black),
@@ -207,7 +166,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// --- Take picture using uploader cubit
   void _takePictureFromCamera() {
     _isFrameUpload = true;
     _imageUploaderCubit.singleSelectImageFromCameraToUploadToReference(
@@ -220,15 +178,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        /// --- Listen for upload events
         BlocListener<SPFileUploaderCubit, SPFileUploaderState>(
           bloc: _imageUploaderCubit,
           listener: (context, state) {
             if (state is SPFileUploaderAllUploadTaskCompleted && _isFrameUpload) {
-              if (state.mainSPFileUploadState.files != null &&
-                  state.mainSPFileUploadState.files!.isNotEmpty) {
+              if (state.mainSPFileUploadState.files != null && state.mainSPFileUploadState.files!.isNotEmpty) {
                 final capturedFile = state.mainSPFileUploadState.files!.first;
-
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
@@ -252,8 +207,6 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
         ),
-
-        /// --- Listen for post creation
         BlocListener<PostCubit, PostState>(
           bloc: _postCubit,
           listener: (context, state) {
@@ -271,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          actionsPadding: const EdgeInsets.only(right: 20.0),
+          actionsPadding: const EdgeInsets.only(right: 20),
           title: BlocBuilder<AppUserProfileCubit, AppUserProfileState>(
             bloc: _appUserProfileCubit,
             builder: (context, state) {
@@ -279,15 +232,10 @@ class _HomeScreenState extends State<HomeScreen> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Hello, ${state.mainAppUserProfileState.appUserProfile?.name ?? 'User'}',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.black),
-                  ),
+                  Text('Hello, ${state.mainAppUserProfileState.appUserProfile?.name ?? 'User'}',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.black)),
                   const SizedBox(height: 4),
-                  Text(
-                    'Streak: $streak days 🔥',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black),
-                  ),
+                  Text('Streak: $streak days 🔥', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black)),
                 ],
               );
             },
@@ -303,12 +251,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              const SizedBox(height: 15.0),
+              const SizedBox(height: 15),
               _dailyFrameContainer(),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 20),
               _buildTodaysFrame(),
             ],
           ),
