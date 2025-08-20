@@ -28,6 +28,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String? _downloadUrl;
 
+  initState() {
+    super.initState();
+    _postCubit.loadReportedPosts();
+  }
+
   _logOut() {
     showDialog(
       context: context,
@@ -181,6 +186,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.black),
             ),
             const SizedBox(height: 30),
+            Offstage(
+              offstage: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.role != UserRole.user,
+              child: SizedBox(
+                height: 150,
+              ),
+            ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16.0),
               padding: const EdgeInsets.all(16.0),
@@ -240,10 +251,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       trailing: CircleAvatar(
                         radius: 12,
                         backgroundColor: Colors.white,
-                        child: Text(
-                          _postCubit.state.mainPostState.reportedPosts?.length.toString() ?? '0',
-                          style: const TextStyle(color: Colors.black, fontSize: 12),
-                        ),
+                        child: _displayReportedPostAmount(),
                       ),
                     ),
                   ],
@@ -254,6 +262,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       bottomNavigationBar: const FrameNavigation(),
+    );
+  }
+
+  Widget _displayReportedPostAmount() {
+    return BlocBuilder<PostCubit, PostState>(
+      bloc: _postCubit,
+      builder: (context, state) {
+        final int reportedPostsCount = state.mainPostState.reportedPosts?.length ?? 0;
+        return CircleAvatar(
+          radius: 15,
+          backgroundColor: Colors.white,
+          child: Text(
+            reportedPostsCount.toString(),
+            style: const TextStyle(color: Colors.black, fontSize: 14),
+          ),
+        );
+      },
     );
   }
 }

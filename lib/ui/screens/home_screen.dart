@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frameapp/constants/constants.dart';
+import 'package:frameapp/constants/routes.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/cubits/prompt/prompt_cubit.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:frameapp/ui/widgets/new_frame_modal.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sp_utilities/utilities.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -242,11 +244,16 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           centerTitle: false,
           actions: [
-            CircleAvatar(
-              radius: 30,
-              backgroundImage: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.profilePicture != null
-                  ? NetworkImage(_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.profilePicture!)
-                  : const AssetImage('assets/pngs/blank_profile_image.png') as ImageProvider,
+            GestureDetector(
+              onTap: () {
+                context.pushNamed(PROFILE_SCREEN);
+              },
+              child: CircleAvatar(
+                radius: 30,
+                backgroundImage: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.profilePicture != null
+                    ? NetworkImage(_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.profilePicture!)
+                    : const AssetImage('assets/pngs/blank_profile_image.png') as ImageProvider,
+              ),
             ),
           ],
         ),
