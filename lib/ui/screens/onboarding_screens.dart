@@ -2,6 +2,7 @@ import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/models/app_user_profile.dart';
@@ -51,7 +52,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       mainAxisSize: MainAxisSize.min,
       children: [
         AnimatedSmoothIndicator(
-          activeIndex: _currentPage.ceil(),
+          activeIndex: _currentPage.toInt(),
           count: images.length,
           effect: ExpandingDotsEffect(activeDotColor: AppColors.framePurple, dotWidth: 12, dotHeight: 12),
         ),
@@ -79,18 +80,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     },
                   ),
                   Expanded(child: SizedBox()),
-                  TextButton(
-                    child: Row(
-                      children: [
-                        Text('Next', style: Theme.of(context).primaryTextTheme.titleLarge?.copyWith(color: AppColors.framePurple)),
-                        SizedBox(width: 8),
-                        Icon(Icons.arrow_forward, color: AppColors.framePurple, size: 20),
-                      ],
+                  Visibility(
+                    visible: _currentPage.toInt() != 2,
+                    child: TextButton(
+                      child: Row(
+                        children: [
+                          Text(
+                            'Next',
+                            style: Theme.of(context).primaryTextTheme.titleLarge
+                                ?.copyWith(color: AppColors.framePurple),
+                          ),
+                          const SizedBox(width: 8),
+                          Icon(Icons.arrow_forward, color: AppColors.framePurple, size: 20),
+                        ],
+                      ),
+                      onPressed: () {
+                        animateScroll(_currentPage.toInt() + 1);
+                      },
                     ),
-                    onPressed: () {
-                      animateScroll(_currentPage.toInt() + 1);
-                    },
                   ),
+
                 ],
               ),
             ),
@@ -128,10 +137,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           FrameButton(
             type: ButtonType.primary,
             label: 'Get Started',
-            onPressed: () {
-              AppUserProfile appUserProfile = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!;
-              _appUserProfileCubit.updateProfile(appUserProfile.copyWith(hasSeenOnboarding: true));
-              Navigator.of(context).pushNamed(HOME_SCREEN);
+            onPressed: () async {
+              final profile = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile;
+              if (profile != null) {
+                await _appUserProfileCubit.setHasSeenOnboarding();
+                if (context.mounted) {
+                  context.pushNamed(HOME_SCREEN);
+                }
+              }
             },
           ),
       ],

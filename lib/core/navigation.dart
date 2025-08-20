@@ -1,5 +1,4 @@
 import 'package:frameapp/constants/routes.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frameapp/ui/screens/admin/prompt_management.dart';
 import 'package:frameapp/ui/screens/admin/reported_posts_management.dart';
@@ -7,74 +6,96 @@ import 'package:frameapp/ui/screens/community_screen.dart';
 import 'package:frameapp/ui/screens/gallery_screen.dart';
 import 'package:frameapp/ui/screens/home_screen.dart';
 import 'package:frameapp/ui/screens/login/login_screen.dart';
+import 'package:frameapp/ui/screens/main_frame_app_screen.dart';
 import 'package:frameapp/ui/screens/profile/edit_profile_screen.dart';
 import 'package:frameapp/ui/screens/profile/profile_screen.dart';
 import 'package:frameapp/ui/screens/register/register_screen.dart';
 import 'package:frameapp/ui/screens/settings_screen.dart';
-import 'package:frameapp/ui/screens/splash_screen.dart';
 import 'package:frameapp/ui/widgets/community_view_post_dialoq.dart';
+import 'package:go_router/go_router.dart';
 
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
-abstract class Navigation {
-  static Future<T?> pushToReturn<T extends Object?>(BuildContext context, Widget pageBuilder) async {
-    T? obj = await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => pageBuilder));
-    return obj;
-  }
+class AppRouter {
+  static final GoRouter _router = GoRouter(
+    initialLocation: MAIN_SCREEN,
+    navigatorKey: rootNavigatorKey,
+    routes: <GoRoute>[
+      GoRoute(
+        path: MAIN_SCREEN,
+        name: MAIN_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => MainFrameAppScreen(),
+      ),
+      GoRoute(
+        path: HOME_SCREEN,
+        name: HOME_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => HomeScreen(),
+      ),
+      GoRoute(
+        path: SETTINGS_SCREEN,
+        name: SETTINGS_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => SettingsScreen(),
+      ),
+      GoRoute(
+        path: GALLERY_SCREEN,
+        name: GALLERY_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => GalleryScreen(),
+      ),
+      GoRoute(
+        path: COMMUNITY_SCREEN,
+        name: COMMUNITY_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => CommunityScreen(),
+      ),
+      GoRoute(
+        path: PROFILE_SCREEN,
+        name: PROFILE_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => ProfileScreen(),
+      ),
+      GoRoute(
+        path: EDIT_PROFILE_SCREEN,
+        name: EDIT_PROFILE_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => EditProfileScreen(),
+      ),
+      GoRoute(
+        path: COMMUNITY_VIEW_POST,
+        name: COMMUNITY_VIEW_POST,
+        builder: (BuildContext context, GoRouterState state) => CommunityViewPostDialoq(),
+      ),
+      GoRoute(
+        path: LOGIN_SCREEN,
+        name: LOGIN_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => LoginScreen(),
+      ),
+      GoRoute(
+        path: REGISTER_SCREEN,
+        name: REGISTER_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => RegisterScreen(),
+      ),
+      GoRoute(
+        path: PROMPT_MANAGEMENT_SCREEN,
+        name: PROMPT_MANAGEMENT_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => PromptManagement(),
+      ),
+      GoRoute(
+        path: REPORTED_POSTS_SCREEN,
+        name: REPORTED_POSTS_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => ReportedPostsManagement(),
+      ),
+    ],
+    redirect: (BuildContext context, GoRouterState state) async {
+      return null;
+    },
+    errorBuilder: (BuildContext context, GoRouterState state) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Route Error'),
+        ),
+        body: Center(
+          child: Text("This path doesn't exist: ${state.uri.toString()}"),
+        ),
+      );
+    },
+  );
 
-  static Route<RouteSettings> generateRoute(RouteSettings settings) {
-    Map<String, dynamic>? args = settings.arguments as Map<String, dynamic>?;
-    switch (settings.name) {
-      case HOME_SCREEN:
-        return _routeEndPoint(const HomeScreen(), settings);
-      case GALLERY_SCREEN:
-        return _routeEndPoint(const GalleryScreen(), settings);
-      case COMMUNITY_SCREEN:
-        return _routeEndPoint(const CommunityScreen(), settings);
-      case SETTINGS_SCREEN:
-        return _routeEndPoint(const SettingsScreen(), settings);
-      case PROFILE_SCREEN:
-        return _routeEndPoint(const ProfileScreen(), settings);
-      case EDIT_PROFILE_SCREEN:
-        return _routeEndPoint(const EditProfileScreen(), settings);
-      case LOGIN_SCREEN:
-        return _routeEndPoint(const LoginScreen(), settings);
-      case REGISTER_SCREEN:
-        return _routeEndPoint(const RegisterScreen(), settings);
-      case SPLASH_SCREEN:
-        return _routeEndPoint(const SplashScreen(), settings);
-      case PROMPT_MANAGEMENT_SCREEN:
-        return _routeEndPoint(const PromptManagement(), settings);
-      case REPORTED_POSTS_SCREEN:
-        return _routeEndPoint(const ReportedPostsManagement(), settings);
-      case COMMUNITY_VIEW_POST:
-        return _routeEndPoint(const CommunityViewPostDialoq(), settings);
-
-      default:
-        return _errorRoute(settings.name);
-    }
-  }
-
-  static Route<RouteSettings> _routeEndPoint(Widget builder, RouteSettings settings) {
-    return PageRouteBuilder(
-      settings: settings,
-      pageBuilder: (context, animation, secondaryAnimation) => builder,
-      transitionDuration: Duration.zero,
-      reverseTransitionDuration: Duration.zero,
-    );
-  }
-
-  static Route<RouteSettings> _errorRoute(route) {
-    return CupertinoPageRoute(
-      builder: (_) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Route Error'),
-          ),
-          body: Center(
-            child: Text("This path doesn't exist, please check the 'Navigation' class for available routes. The route is: $route"),
-          ),
-        );
-      },
-    );
-  }
+  static GoRouter get router => _router;
 }

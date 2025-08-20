@@ -6,6 +6,7 @@ import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/cubits/prompt/prompt_cubit.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
+import 'package:go_router/go_router.dart';
 import 'package:frameapp/ui/widgets/new_frame_modal.dart';
 import 'package:sp_utilities/utilities.dart';
 
@@ -301,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: IconButton(
                 icon: const Icon(Icons.person_outline_rounded, color: Colors.black54, size: 40),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/profile');
+                  context.pushNamed('profile');
                 },
               ),
             ),

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frameapp/constants/constants.dart';
+import 'package:frameapp/constants/routes.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/ui/widgets/community_post_card.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
+import 'package:go_router/go_router.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -67,7 +69,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     return GestureDetector(
                       onTap: () {
                         _postCubit.setSelectedPost(post);
-                        Navigator.pushNamed(context, '/community/view_post');
+                        context.pushNamed(COMMUNITY_VIEW_POST);
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0), // space between pages

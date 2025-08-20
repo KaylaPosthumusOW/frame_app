@@ -14,9 +14,8 @@ class FrameApp extends StatelessWidget {
           FocusManager.instance.primaryFocus!.unfocus();
         }
       },
-      child: MaterialApp(
-        home: const MainFrameAppScreen(),
-        onGenerateRoute: Navigation.generateRoute,
+      child: MaterialApp.router(
+        routerConfig: AppRouter.router,
         debugShowCheckedModeBanner: false,
         themeMode: kDefaultThemeMode,
         theme: FrameTheme.lightTheme(true),

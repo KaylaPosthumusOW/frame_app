@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frameapp/constants/routes.dart';
 import 'package:frameapp/constants/themes.dart';
+import 'package:go_router/go_router.dart';
 
 class FrameNavigation extends StatefulWidget {
   const FrameNavigation({super.key});
@@ -27,22 +28,21 @@ class _FrameNavigationState extends State<FrameNavigation> {
   }
 
   void _onItemTapped(int index) {
-    // Only navigate if we're not already on the selected screen
     final currentIndex = _getCurrentIndex();
     if (index == currentIndex) return;
 
     switch (index) {
       case 0:
-        Navigator.pushReplacementNamed(context, HOME_SCREEN);
+        context.pushNamed(HOME_SCREEN);
         break;
       case 1:
-        Navigator.pushReplacementNamed(context, GALLERY_SCREEN);
+        context.pushNamed(GALLERY_SCREEN);
         break;
       case 2:
-        Navigator.pushReplacementNamed(context, COMMUNITY_SCREEN);
+        context.pushNamed(COMMUNITY_SCREEN);
         break;
       case 3:
-        Navigator.pushReplacementNamed(context, PROFILE_SCREEN);
+        context.pushNamed(PROFILE_SCREEN);
         break;
     }
   }

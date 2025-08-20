@@ -1,3 +1,5 @@
+const MAIN_SCREEN = '/main';
+
 const HOME_SCREEN = '/';
 const GALLERY_SCREEN = '/gallery';
 const COMMUNITY_SCREEN = '/community';

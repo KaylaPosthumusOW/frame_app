@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:frameapp/constants/constants.dart';
+import 'package:frameapp/constants/routes.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/models/app_user_profile.dart';
 import 'package:frameapp/ui/widgets/frame_alert_dialoq.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -28,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           content: 'Are you sure you want to log out of this profile?',
           action: () {
             _authenticationCubit.loggedOut(clearPreferences: true);
-            Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+            context.pushNamed(LOGIN_SCREEN);
           },
         );
       },
@@ -95,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           leading: Icon(Icons.edit, color: AppColors.black),
                           title: Text('Edit Profile Data', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black)),
                           onTap: () {
-                            Navigator.pushNamed(context, '/profile/edit');
+                            context.pushNamed(EDIT_PROFILE_SCREEN);
                           }
                       ),
                       ListTile(
@@ -107,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           leading: Icon(Icons.settings, color: AppColors.black),
                           title: Text('Settings', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black)),
                           onTap: () {
-                            Navigator.pushNamed(context, '/settings');
+                            context.pushNamed(SETTINGS_SCREEN);
                           }
                       ),
                     ]
@@ -130,14 +132,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             leading: Icon(Icons.note_add, color: AppColors.black),
                             title: Text('Prompt Management', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black)),
                             onTap: () {
-                              Navigator.pushNamed(context, '/admin/prompt_management');
+                              context.pushNamed('prompt_management');
                             }
                         ),
                         ListTile(
                             leading: Icon(Icons.report, color: AppColors.black),
                             title: Text('Reported Posts', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black)),
                             onTap: () {
-                              Navigator.pushNamed(context, '/admin/reported_posts');
+                              context.pushNamed('reported_posts');
                             }
                         ),
                       ]
