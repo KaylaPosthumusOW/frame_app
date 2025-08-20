@@ -5,6 +5,7 @@ import 'package:frameapp/cubits/general/general_cubit.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/ui/screens/home_screen.dart';
 import 'package:frameapp/ui/screens/login/login_screen.dart';
+import 'package:frameapp/ui/screens/onboarding_screens.dart';
 import 'package:frameapp/ui/screens/splash_screen.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
 
@@ -22,6 +23,8 @@ class _MainFrameAppScreenState extends State<MainFrameAppScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool hasSeen = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.hasSeenOnboarding ?? false;
+
     return BlocBuilder<GeneralCubit, GeneralState>(
       bloc: _generalCubit,
       builder: (context, state) {
@@ -47,6 +50,9 @@ class _MainFrameAppScreenState extends State<MainFrameAppScreen> {
 
             if (state is Authenticated) {
               _appUserProfileCubit.loadProfile();
+              if (!hasSeen) {
+                return const OnboardingScreen();
+              }
               return const HomeScreen();
             }
 

@@ -156,4 +156,11 @@ class AppUserProfileCubit extends Cubit<AppUserProfileState> {
   clearSelectedProfile() {
     emit(ClearedSelectedProfile(state.mainAppUserProfileState.copyWithNull(selectedProfile: null, message: 'Loading all profile', errorMessage: '')));
   }
+
+  Future<void> setHasSeenOnboarding() async {
+    final profile = state.mainAppUserProfileState.appUserProfile;
+    if (profile == null) return;
+    final updatedProfile = profile.copyWith(hasSeenOnboarding: true);
+    await updateProfile(updatedProfile);
+  }
 }

@@ -41,7 +41,27 @@ class _HomeScreenState extends State<HomeScreen> {
     _postCubit.loadTodaysFrame();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _appUserProfileCubit.updateStreak();
+      _showOnboardingIfNeeded(context);
     });
+  }
+
+  void _showOnboardingIfNeeded(BuildContext context) async {
+    final profile = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile;
+    if (profile != null && profile.hasSeenOnboarding != true) {
+      await showGeneralDialog(
+        context: context,
+        barrierDismissible: false,
+        barrierLabel: 'Onboarding',
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return _OnboardingPage(
+            onFinish: () async {
+              await _appUserProfileCubit.setHasSeenOnboarding();
+              Navigator.of(context).pop();
+            },
+          );
+        },
+      );
+    }
   }
 
   Widget _dailyFrameContainer() {
@@ -298,6 +318,98 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             )),
         bottomNavigationBar: FrameNavigation(),
+      ),
+    );
+  }
+}
+
+class _OnboardingPage extends StatefulWidget {
+  final VoidCallback onFinish;
+  const _OnboardingPage({required this.onFinish});
+
+  @override
+  State<_OnboardingPage> createState() => _OnboardingPageState();
+}
+
+class _OnboardingPageState extends State<_OnboardingPage> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  final List<Map<String, String>> onboardingData = [
+    {
+      'title': 'Welcome to Frame!',
+      'desc': 'Capture and share your daily moments.'
+    },
+    {
+      'title': 'Track Your Streak',
+      'desc': 'Stay active and keep your streak going.'
+    },
+    {
+      'title': 'Join the Community',
+      'desc': 'See how others interpret today’s prompt.'
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.black.withOpacity(0.8),
+      child: Center(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 250,
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: onboardingData.length,
+                  onPageChanged: (i) => setState(() => _currentPage = i),
+                  itemBuilder: (context, index) {
+                    final data = onboardingData[index];
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(data['title'] ?? '', style: Theme.of(context).textTheme.headlineLarge),
+                        SizedBox(height: 16),
+                        Text(data['desc'] ?? '', style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.center),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  onboardingData.length,
+                  (i) => Container(
+                    width: 10,
+                    height: 10,
+                    margin: EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentPage == i ? AppColors.framePurple : Colors.grey,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _currentPage == onboardingData.length - 1
+                    ? widget.onFinish
+                    : () => _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut),
+                child: Text(_currentPage == onboardingData.length - 1 ? 'Get Started' : 'Next'),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
