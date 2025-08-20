@@ -43,44 +43,84 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
   }
 
   Widget _reportPostDialoq() {
-    return AlertDialog(
-      title: Text('Report Post', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.black)),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FrameTextField(
-            controller: _reportedReasonController,
-            maxLines: 3,
-            isLight: true,
-            label: 'Reason for Reporting',
+    return BlocConsumer(
+      bloc: _postCubit,
+      listener: (context, state) {
+        if (state is UpdatingPost) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Reporting...', style: TextStyle(color: Colors.white)),
+                  CircularProgressIndicator(color: Colors.white),
+                ],
+              ),
+              backgroundColor: Colors.black,
+            ),
+          );
+        }
+
+        if (state is UpdatedPost) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('The Post has been reported', style: TextStyle(color: Colors.black)),
+              backgroundColor: AppColors.limeGreen,
+            ),
+          );
+          Navigator.pop(context, true);
+        }
+      },
+      builder: (context, state) {
+        return AlertDialog(
+          title: Text('Report Post', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.black)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FrameTextField(
+                controller: _reportedReasonController,
+                maxLines: 3,
+                isLight: true,
+                label: 'Reason for Reporting',
+              ),
+            ],
           ),
-        ],
-      ),
-      actions: [
-        FrameButton(
-          type: ButtonType.outline,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          label: 'Cancel',
-        ),
-        FrameButton(
-          type: ButtonType.primary,
-          onPressed: () {
-            if (_reportedReasonController.text.isNotEmpty) {
-              _postCubit.updatePost(
-                _postCubit.state.mainPostState.selectedPost!.copyWith(
-                  isReportedReason: _reportedReasonController.text,
-                  isReportedBy: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
-                  isReported: true,
-                ),
-              );
-              Navigator.pop(context);
-            }
-          },
-          label: 'Report',
-        ),
-      ],
+          actions: [
+            FrameButton(
+              type: ButtonType.outline,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              label: 'Cancel',
+            ),
+            FrameButton(
+              type: ButtonType.primary,
+              onPressed: () {
+                if (_reportedReasonController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Please provide a reason for reporting', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.white)),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+                if (_reportedReasonController.text.isNotEmpty) {
+                  _postCubit.updatePost(
+                    _postCubit.state.mainPostState.selectedPost!.copyWith(
+                      isReportedReason: _reportedReasonController.text,
+                      isReportedBy: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
+                      isReported: true,
+                    ),
+                  );
+                  Navigator.pop(context);
+                }
+              },
+              label: 'Report',
+            ),
+          ],
+        );
+      }
     );
   }
 

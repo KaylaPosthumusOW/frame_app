@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frameapp/constants/constants.dart';
@@ -33,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// --- Daily Prompt UI
   Widget _dailyFrameContainer() {
     return BlocBuilder<PromptCubit, PromptState>(
       bloc: _promptCubit,
@@ -67,7 +65,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// --- Today's Frame (post or empty state)
   Widget _buildTodaysFrame() {
     return BlocBuilder<PostCubit, PostState>(
       bloc: _postCubit,
@@ -86,7 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
         }
 
         if (state.mainPostState.todaysFrame == null) {
-          // --- Empty state: let user capture a frame
           return GestureDetector(
             onTap: _takePictureFromCamera,
             child: Container(
@@ -122,17 +118,60 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
 
-        // --- If today's frame already exists
-        final todaysFrame = state.mainPostState.todaysFrame;
+        if (state.mainPostState.todaysFrame!.imageUrl != null) {
+          return GestureDetector(
+            onTap: _takePictureFromCamera,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              width: double.infinity,
+              height: 500,
+              decoration: BoxDecoration(
+                color: AppColors.black,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(height: 20),
+                  Column(
+                    children: [
+                      Text(
+                        'Today`s Frame',
+                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.white),
+                      ),
+                      const SizedBox(height: 15),
+                      Text(
+                        '"${_promptCubit.state.mainPromptState.currentPrompt?.promptText ?? ''}"',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.lightPink),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                  _captureButton(),
+                ],
+              ),
+            ),
+          );
+        }
+
         return Container(
+          padding: const EdgeInsets.all(16),
           width: double.infinity,
           height: 500,
           decoration: BoxDecoration(
+            color: AppColors.black,
             borderRadius: BorderRadius.circular(20),
-            image: DecorationImage(
-              image: NetworkImage(todaysFrame?.imageUrl ?? ''),
-              fit: BoxFit.cover,
-            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'No frame captured today',
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.white),
+              ),
+              const SizedBox(height: 20),
+              _captureButton(),
+            ],
           ),
         );
       },

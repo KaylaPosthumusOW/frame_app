@@ -47,11 +47,11 @@ class _ReportedPostCardState extends State<ReportedPostCard> {
                     type: ButtonType.primary,
                     label: 'Approve',
                     onPressed: () {
-                      _postCubit.updatePost(
-                        PostModel(
-                          isReported: false,
-                        ),
+                      PostModel updatedPost = widget.post!.copyWith(
+                        isArchived: false,
+                        isReported: false,
                       );
+                      _postCubit.updatePost(updatedPost);
                       Navigator.of(context).pop();
                     },
                   ),

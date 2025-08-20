@@ -121,6 +121,16 @@ class UpdatedPost extends PostState {
   const UpdatedPost(MainPostState mainPostState) : super(mainPostState);
 }
 
+class RemovingReportedPost extends PostState {
+  const RemovingReportedPost(MainPostState mainPostState) : super(mainPostState);
+}
+
+class ReportedPostRemoved extends PostState {
+  const ReportedPostRemoved(MainPostState mainPostState) : super(mainPostState);
+}
+
+
+
 
 class PostError extends PostState {
   final String? stackTrace;

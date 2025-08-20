@@ -9,6 +9,7 @@ abstract class PostStore {
   Future<void> deletePost(PostModel post);
   Future<List<PostModel>> loadPostsWithUsedPrompt();
   Future<List<PostModel>> loadPostsWithUsedPromptForUser({required String ownerUid});
-
+  Future<PostModel> removeReportedPost(PostModel post);
+  Future<PostModel> approveReportedPost(PostModel post);
   Future<PostModel?> loadTodaysFrame({required String ownerUid});
 }

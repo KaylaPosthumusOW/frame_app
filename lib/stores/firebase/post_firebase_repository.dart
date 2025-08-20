@@ -40,16 +40,17 @@ class PostFirebaseRepository implements PostStore {
 
   @override
   Future<PostModel?> loadTodaysFrame({required String ownerUid}) async {
-    final today = DateTime.now();
-    final startOfDay = DateTime(today.year, today.month, today.day);
-    final endOfDay = startOfDay.add(Duration(days: 1));
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    final endOfDay = startOfDay.add(const Duration(days: 1));
+
     QuerySnapshot<PostModel> query = await _postCollection
-      .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
-      .where('createdAt', isLessThan: Timestamp.fromDate(endOfDay))
-    .where('owner.id', isEqualTo: ownerUid)
-      .orderBy('createdAt', descending: false)
-      .limit(1)
-      .get();
+        .where('owner.uid', isEqualTo: ownerUid)
+        .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+        .where('createdAt', isLessThan: Timestamp.fromDate(endOfDay))
+        .limit(1)
+        .get();
+
     if (query.docs.isNotEmpty) {
       return query.docs.first.data();
     }
@@ -103,5 +104,17 @@ class PostFirebaseRepository implements PostStore {
       posts.add(doc.data());
     }
     return posts;
+  }
+
+  @override
+  Future<PostModel> approveReportedPost(PostModel post) {
+    post = post.copyWith(isArchived: true);
+    return updatePost(post);
+  }
+
+  @override
+  Future<PostModel> removeReportedPost(PostModel post) {
+    // TODO: implement removeReportedPost
+    throw UnimplementedError();
   }
 }

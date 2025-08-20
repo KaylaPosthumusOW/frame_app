@@ -3,6 +3,7 @@ import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/routes.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/models/app_user_profile.dart';
 import 'package:frameapp/ui/widgets/frame_alert_dialoq.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
@@ -23,8 +24,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
   final AuthenticationCubit _authenticationCubit = sl<AuthenticationCubit>();
   final SPFileUploaderCubit _imageUploaderCubit = sl<SPFileUploaderCubit>();
+  final PostCubit _postCubit = sl<PostCubit>();
 
   String? _downloadUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _postCubit.loadReportedPosts();
+  }
 
   _logOut() {
     showDialog(
@@ -228,15 +236,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         leading: const Icon(Icons.note_add, color: Colors.black),
                         title: Text('Prompt Management', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
                         onTap: () {
-                          context.pushNamed('prompt_management');
+                          context.pushNamed(PROMPT_MANAGEMENT_SCREEN);
                         },
                       ),
                       ListTile(
                         leading: const Icon(Icons.report, color: Colors.black),
                         title: Text('Reported Posts', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
                         onTap: () {
-                          context.pushNamed('reported_posts');
+                          context.pushNamed(REPORTED_POSTS_SCREEN);
                         },
+                        trailing: CircleAvatar(
+                          radius: 12,
+                          backgroundColor: Colors.white,
+                          child: Text(
+                            _postCubit.state.mainPostState.reportedPosts?.length.toString() ?? '0',
+                            style: const TextStyle(color: Colors.black, fontSize: 12),
+                          ),
+                        ),
                       ),
                     ],
                   ),
