@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frameapp/constants/constants.dart';
+import 'package:frameapp/constants/routes.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:frameapp/ui/widgets/post_card.dart';
+import 'package:go_router/go_router.dart';
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
@@ -52,11 +54,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
               itemCount: state.mainPostState.posts!.length,
               itemBuilder: (context, index) {
                 final post = state.mainPostState.posts![index];
-                return PostCard(
-                  post: post,
+                return GestureDetector(
                   onTap: () {
                     _postCubit.setSelectedPost(post);
+                    context.pushNamed(VIEW_USER_POSTS);
                   },
+                  child: PostCard(
+                    post: post,
+                  ),
                 );
               },
             );

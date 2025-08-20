@@ -11,10 +11,10 @@ class PostCubit extends Cubit<PostState> {
 
   PostCubit() : super(const PostInitial());
 
-  Future<void> loadTodaysFrame() async {
+  Future<void> loadTodaysFrame({required String ownerUid}) async {
     emit(LoadingTodaysFrame(state.mainPostState.copyWith(message: 'Loading today\'s frame')));
     try {
-      PostModel? todaysFrame = await _postFirebaseRepository.loadTodaysFrame();
+      PostModel? todaysFrame = await _postFirebaseRepository.loadTodaysFrame(ownerUid: ownerUid);
       emit(LoadedTodaysFrame(state.mainPostState.copyWith(todaysFrame: todaysFrame, message: 'Loaded today\'s frame')));
     } catch (error, stackTrace) {
       emit(PostError(state.mainPostState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));

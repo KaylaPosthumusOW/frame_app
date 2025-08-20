@@ -93,12 +93,23 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
           children: [
             CircleAvatar(
               radius: 20,
-              backgroundImage: _postCubit.state.mainPostState.selectedPost?.owner?.profilePicture != null ? NetworkImage(_postCubit.state.mainPostState.selectedPost?.owner!.profilePicture! ?? '') : const AssetImage('assets/pngs/blank_profile_image.png') as ImageProvider,
+              backgroundImage: _postCubit.state.mainPostState.selectedPost?.owner?.profilePicture != null
+                  ? NetworkImage(_postCubit.state.mainPostState.selectedPost?.owner!.profilePicture! ?? '')
+                  : const AssetImage('assets/pngs/blank_profile_image.png') as ImageProvider,
             ),
             const SizedBox(width: 10),
-            Text(
-              '${_postCubit.state.mainPostState.selectedPost?.owner?.name} ${_postCubit.state.mainPostState.selectedPost?.owner?.surname}',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.slateGrey),
+            Expanded( // 👈 this allows truncation
+              child: Text(
+                '${_postCubit.state.mainPostState.selectedPost?.owner?.name ?? ''} '
+                    '${_postCubit.state.mainPostState.selectedPost?.owner?.surname ?? ''}',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: AppColors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                softWrap: false,
+              ),
             ),
           ],
         ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frameapp/constants/routes.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/models/post_model.dart';
 import 'package:frameapp/ui/widgets/view_post_dialoq.dart';
+import 'package:go_router/go_router.dart';
 
 class PostCard extends StatefulWidget {
   final PostModel? post;
@@ -17,16 +19,6 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: widget.post != null
-          ? () {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (context) => ViewPostDialoq(post: widget.post!),
-        );
-      }
-          : null,
       borderRadius: BorderRadius.circular(10),
       child: Card(
         color: Colors.white,

@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
-import 'package:frameapp/models/app_user_profile.dart';
 import 'package:frameapp/ui/widgets/frame_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 

@@ -39,13 +39,14 @@ class PostFirebaseRepository implements PostStore {
   }
 
   @override
-  Future<PostModel?> loadTodaysFrame() async {
+  Future<PostModel?> loadTodaysFrame({required String ownerUid}) async {
     final today = DateTime.now();
     final startOfDay = DateTime(today.year, today.month, today.day);
     final endOfDay = startOfDay.add(Duration(days: 1));
     QuerySnapshot<PostModel> query = await _postCollection
       .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
       .where('createdAt', isLessThan: Timestamp.fromDate(endOfDay))
+    .where('owner.id', isEqualTo: ownerUid)
       .orderBy('createdAt', descending: false)
       .limit(1)
       .get();

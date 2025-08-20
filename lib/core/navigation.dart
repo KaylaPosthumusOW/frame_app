@@ -12,6 +12,7 @@ import 'package:frameapp/ui/screens/profile/profile_screen.dart';
 import 'package:frameapp/ui/screens/register/register_screen.dart';
 import 'package:frameapp/ui/screens/settings_screen.dart';
 import 'package:frameapp/ui/widgets/community_view_post_dialoq.dart';
+import 'package:frameapp/ui/widgets/view_post_dialoq.dart';
 import 'package:go_router/go_router.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -80,6 +81,11 @@ class AppRouter {
         path: REPORTED_POSTS_SCREEN,
         name: REPORTED_POSTS_SCREEN,
         builder: (BuildContext context, GoRouterState state) => ReportedPostsManagement(),
+      ),
+      GoRoute(
+        path: VIEW_USER_POSTS,
+        name: VIEW_USER_POSTS,
+        builder: (BuildContext context, GoRouterState state) => ViewPostDialoq(),
       ),
     ],
     redirect: (BuildContext context, GoRouterState state) async {

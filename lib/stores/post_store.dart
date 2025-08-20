@@ -10,5 +10,5 @@ abstract class PostStore {
   Future<List<PostModel>> loadPostsWithUsedPrompt();
   Future<List<PostModel>> loadPostsWithUsedPromptForUser({required String ownerUid});
 
-  Future<PostModel?> loadTodaysFrame();
+  Future<PostModel?> loadTodaysFrame({required String ownerUid});
 }

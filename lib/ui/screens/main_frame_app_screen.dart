@@ -23,7 +23,6 @@ class _MainFrameAppScreenState extends State<MainFrameAppScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool hasSeen = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.hasSeenOnboarding ?? false;
 
     return BlocBuilder<GeneralCubit, GeneralState>(
       bloc: _generalCubit,
@@ -50,6 +49,7 @@ class _MainFrameAppScreenState extends State<MainFrameAppScreen> {
 
             if (state is Authenticated) {
               _appUserProfileCubit.loadProfile();
+              final hasSeen = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.hasSeenOnboarding ?? false;
               if (!hasSeen) {
                 return const OnboardingScreen();
               }

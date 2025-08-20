@@ -7,6 +7,7 @@ const PROFILE_SCREEN = '/profile';
 const EDIT_PROFILE_SCREEN = '/profile/edit';
 const SETTINGS_SCREEN = '/settings';
 const COMMUNITY_VIEW_POST = '/community/view_post';
+const VIEW_USER_POSTS = '/profile/view_posts';
 
 // AUTH ROUTES
 const LOGIN_SCREEN = '/login';
