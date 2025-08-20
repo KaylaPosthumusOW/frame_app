@@ -43,7 +43,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  /// ================== Profile Picture ==================
   Widget _buildProfilePicture() {
     return BlocConsumer<SPFileUploaderCubit, SPFileUploaderState>(
       bloc: _imageUploaderCubit,
@@ -57,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           setState(() {});
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(const SnackBar(content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Profile Image Updated', style: TextStyle(color: Colors.white)), Icon(Icons.error, color: Colors.white)]), backgroundColor: Colors.green));
+            ..showSnackBar(const SnackBar(content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Profile Image Updated', style: TextStyle(color: Colors.white)), Icon(Icons.check, color: Colors.white)]), backgroundColor: Colors.green));
         }
         if (state is SPFileUploaderErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
