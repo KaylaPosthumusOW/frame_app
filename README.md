@@ -38,8 +38,10 @@
 - [Author](#author)
 - [Contact](#contact)
 
-## About Fram
+## About Frame
+<img src="assets/mock_ups/homepage.png" alt="Homepage - Today's Prompt & Frame" height="400">
 
+### Project Description
 Frame is a social creativity platform where users can share daily creative frames, interact with the community, and track their creative streaks. Built with Flutter and Dart, Frame leverages Firebase for authentication, Firestore for data storage, and Bloc for robust state management.
 
 ## Built With
@@ -82,31 +84,44 @@ Frame is a social creativity platform where users can share daily creative frame
   flutter run
   ```
 
-## Frame Features & Functionality
-- **Authentication**: Email/password, Google sign-in, secure onboarding
-- **Profile Management**: Edit profile, upload profile image, streak tracking
-- **Daily Frame**: View, upload, and share daily creative frames
-- **Community Gallery**: Browse, like, and comment on community frames
-- **Streaks**: Track daily creative streaks and progress
-- **Prompt Management**: Admin tools to set, archive, and manage daily prompts
-- **Reporting & Moderation**: Report posts, admin review and archive
-- **Comment System**: Real-time comments, profile images, and timestamps
-- **Notifications**: Push notifications (Firebase Messaging)
-- **Responsive UI**: Mobile-first, adaptive layouts
-- **Custom Frame Packages**: Includes sp_firebase, sp_user_repository, and more for advanced functionality
 
-## Screenshots
+## Frame Features & Functionality
+
+### Authentication
+- Email/password and Google sign-in for secure onboarding
+- Profile management: edit profile, upload profile image, track creative streaks
+
+### Sign In / Login
+- Simple, modern login screen
+- Real-time validation and error handling
+- Persistent sessions with Firebase Auth
+
+### Homepage
+- Track today's creative prompt
+- View and upload today's frame
+- Streak tracking and progress visualization
+- Quick access to community gallery and comments
+
+### Community & Engagement
+- Browse, like, and comment on community frames
+- Real-time comment system with profile images and timestamps
+- Reporting & moderation: report posts, admin review and archive
+
+### Admin
+- Admin tools to set, archive, and manage daily prompts
+- Admin pages for managing reported posts
+
+
+## Mockups
 <p align="center">
-  <img src="assets/svg/frame_logo.svg" alt="Fram Logo" height="60">
-  <br>
-  <img src="docs/screenshot_home.png" alt="Home Screen" height="400">
-  <img src="docs/screenshot_gallery.png" alt="Gallery Screen" height="400">
-  <img src="docs/screenshot_profile.png" alt="Profile Screen" height="400">
+  <img src="assets/mock_ups/authentication_pages.png" alt="Login Screen" height="400">
+  <img src="assets/mock_ups/features.png" alt="Community Gallery" height="400">
+    <img src="assets/mock_ups/features.png" alt="Admin Page" height="400">
 </p>
 
 ## Author
 - **Kayla Posthumus** - Developer & Designer
 
 ## Contact
-- **KaylaPosthumusOW** - [KaylaPosthumusOW@users.noreply.github.com](mailto:KaylaPosthumusOW@users.noreply.github.com)
-- **Project Link** - https://github.com/KaylaPosthumusOW/frame_app
+- **KaylaPosthumusOW** - [https://github.com/KaylaPosthumusOW]
+- **Project Link** - [https://github.com/KaylaPosthumusOW/frame_app]
