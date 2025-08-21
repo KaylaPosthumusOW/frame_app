@@ -4,7 +4,6 @@ import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/ui/widgets/reported_post_card.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class ReportedPostsManagement extends StatefulWidget {
   const ReportedPostsManagement({super.key});
@@ -25,6 +24,7 @@ class _ReportedPostsManagementState extends State<ReportedPostsManagement> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         automaticallyImplyLeading: true,
         centerTitle: true,
@@ -43,12 +43,9 @@ class _ReportedPostsManagementState extends State<ReportedPostsManagement> {
             );
           }
 
-          if (state is LoadedReportedPosts && state.mainPostState.reportedPosts != null && state.mainPostState.reportedPosts!.isNotEmpty) {
-            return MasonryGridView.count(
-              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-              crossAxisCount: 2,
-              mainAxisSpacing: 2.0,
-              crossAxisSpacing: 2.0,
+          if (state.mainPostState.reportedPosts != null && state.mainPostState.reportedPosts!.isNotEmpty) {
+            return ListView.builder(
+              padding: const EdgeInsets.all(10),
               itemCount: state.mainPostState.reportedPosts!.length,
               itemBuilder: (context, index) {
                 final post = state.mainPostState.reportedPosts![index];

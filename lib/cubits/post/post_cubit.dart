@@ -7,6 +7,7 @@ import 'package:frameapp/stores/firebase/post_firebase_repository.dart';
 part 'post_state.dart';
 
 class PostCubit extends Cubit<PostState> {
+  
   final PostFirebaseRepository _postFirebaseRepository = sl<PostFirebaseRepository>();
 
   PostCubit() : super(const PostInitial());
@@ -16,6 +17,45 @@ class PostCubit extends Cubit<PostState> {
     try {
       PostModel? todaysFrame = await _postFirebaseRepository.loadTodaysFrame(ownerUid: ownerUid);
       emit(LoadedTodaysFrame(state.mainPostState.copyWith(todaysFrame: todaysFrame, message: 'Loaded today\'s frame')));
+    } catch (error, stackTrace) {
+      emit(PostError(state.mainPostState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+    }
+  }
+
+  Future<void> reportPost(PostModel post) async {
+    emit(UpdatingPost(state.mainPostState.copyWith(message: 'Reporting post...')));
+    try {
+      PostModel reportedPost = await _postFirebaseRepository.updatePost(post.copyWith(isReported: true));
+      List<PostModel> communityPosts = List.from(state.mainPostState.communityPosts ?? []);
+      communityPosts.removeWhere((p) => p.uid == reportedPost.uid);
+      emit(UpdatedPost(state.mainPostState.copyWith(communityPosts: communityPosts, message: 'Post reported')));
+      await loadCommunityPosts();
+    } catch (error, stackTrace) {
+      emit(PostError(state.mainPostState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+    }
+  }
+
+  Future<void> approveReportedPost(PostModel post) async {
+    emit(UpdatingPost(state.mainPostState.copyWith(message: 'Approving reported post...')));
+    try {
+      PostModel approvedPost = await _postFirebaseRepository.updatePost(post.copyWith(isArchived: false, isReported: false));
+      List<PostModel> reportedPosts = List.from(state.mainPostState.reportedPosts ?? []);
+      reportedPosts.removeWhere((p) => p.uid == approvedPost.uid);
+      emit(UpdatedPost(state.mainPostState.copyWith(reportedPosts: reportedPosts, message: 'Reported post approved')));
+      await loadReportedPosts();
+    } catch (error, stackTrace) {
+      emit(PostError(state.mainPostState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+    }
+  }
+
+  Future<void> archiveReportedPost(PostModel post) async {
+    emit(UpdatingPost(state.mainPostState.copyWith(message: 'Archiving reported post...')));
+    try {
+      PostModel archivedPost = await _postFirebaseRepository.updatePost(post.copyWith(isArchived: true, isReported: false));
+      List<PostModel> reportedPosts = List.from(state.mainPostState.reportedPosts ?? []);
+      reportedPosts.removeWhere((p) => p.uid == archivedPost.uid);
+      emit(UpdatedPost(state.mainPostState.copyWith(reportedPosts: reportedPosts, message: 'Reported post archived')));
+      await loadReportedPosts();
     } catch (error, stackTrace) {
       emit(PostError(state.mainPostState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
     }
@@ -88,4 +128,15 @@ class PostCubit extends Cubit<PostState> {
     emit(LoadedPosts(state.mainPostState.copyWithNull(selectedPost: null, posts: state.mainPostState.posts)));
   }
 
+  Future<void> deletePost(PostModel post) async {
+    emit(DeletingPost(state.mainPostState.copyWith(message: 'Deleting prompt')));
+    try {
+      List<PostModel> posts = List.from(state.mainPostState.posts ?? []);
+      await _postFirebaseRepository.deletePost(post);
+      posts.removeWhere((p) => p.uid == post.uid);
+      emit(PostDeleted(state.mainPostState.copyWith(posts: posts, message: 'Prompt deleted')));
+    } catch (error, stackTrace) {
+      emit(PostError(state.mainPostState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+    }
+  }
 }

@@ -4,42 +4,47 @@ part of 'prompt_cubit.dart';
 class MainPromptState extends Equatable {
   final String? message;
   final String? errorMessage;
-  final List<PromptModel>? prompts;
+  final List<PromptModel>? availablePrompts;
   final PromptModel? selectedPrompt;
   final PromptModel? currentPrompt;
+  final List<PromptModel>? previousPrompts;
 
-  const MainPromptState({this.message, this.errorMessage, this.prompts, this.selectedPrompt, this.currentPrompt});
+  const MainPromptState({this.message, this.errorMessage, this.availablePrompts, this.selectedPrompt, this.currentPrompt, this.previousPrompts});
 
   @override
-  List<Object?> get props => [message, errorMessage, prompts, selectedPrompt, currentPrompt];
+  List<Object?> get props => [message, errorMessage, availablePrompts, selectedPrompt, currentPrompt, previousPrompts];
 
   MainPromptState copyWith({
     String? message,
     String? errorMessage,
-    List<PromptModel>? prompts,
+    List<PromptModel>? availablePrompts,
     PromptModel? selectedPrompt,
     PromptModel? currentPrompt,
+    List<PromptModel>? previousPrompts,
   }) {
     return MainPromptState(
       message: message ?? this.message,
       errorMessage: errorMessage ?? this.errorMessage,
-      prompts: prompts ?? this.prompts,
+      availablePrompts: availablePrompts ?? this.availablePrompts,
       selectedPrompt: selectedPrompt ?? this.selectedPrompt,
       currentPrompt: currentPrompt ?? this.currentPrompt,
+      previousPrompts: previousPrompts ?? this.previousPrompts,
     );
   }
 
   MainPromptState copyWithNull({
     String? message,
     String? errorMessage,
-    List<PromptModel>? prompts,
+    List<PromptModel>? availablePrompts,
     PromptModel? selectedPrompt,
+    PromptModel? currentPrompt,
   }) {
     return MainPromptState(
       message: message ?? this.message,
       errorMessage: errorMessage ?? this.errorMessage,
-      prompts: prompts ?? this.prompts,
+      availablePrompts: availablePrompts ?? this.availablePrompts,
       selectedPrompt: selectedPrompt,
+      previousPrompts: previousPrompts
     );
   }
 }
@@ -63,6 +68,14 @@ class PromptLoading extends PromptState {
 
 class PromptLoaded extends PromptState {
   const PromptLoaded(super.mainPromptState);
+}
+
+class LoadingPreviousPrompts extends PromptState {
+  const LoadingPreviousPrompts(super.mainPromptState);
+}
+
+class LoadedPreviousPrompts extends PromptState {
+  const LoadedPreviousPrompts(super.mainPromptState);
 }
 
 class CreatingPrompt extends PromptState {

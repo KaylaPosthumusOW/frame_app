@@ -47,11 +47,7 @@ class _ReportedPostCardState extends State<ReportedPostCard> {
                     type: ButtonType.primary,
                     label: 'Approve',
                     onPressed: () {
-                      PostModel updatedPost = widget.post!.copyWith(
-                        isArchived: false,
-                        isReported: false,
-                      );
-                      _postCubit.updatePost(updatedPost);
+                      _postCubit.approveReportedPost(widget.post!);
                       Navigator.of(context).pop();
                     },
                   ),
@@ -92,10 +88,7 @@ class _ReportedPostCardState extends State<ReportedPostCard> {
                     type: ButtonType.primary,
                     label: 'Remove',
                     onPressed: () {
-                      PostModel updatedPost = widget.post!.copyWith(
-                        isArchived: true,
-                      );
-                      _postCubit.updatePost(updatedPost);
+                      _postCubit.archiveReportedPost(widget.post!);
                       Navigator.of(context).pop();
                     },
                   ),
@@ -113,103 +106,115 @@ class _ReportedPostCardState extends State<ReportedPostCard> {
     return InkWell(
       borderRadius: BorderRadius.circular(20),
       child: Card(
-        color: Colors.white,
+        elevation: 4,
+        shadowColor: Colors.grey.withValues(alpha: 0.3),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (widget.post?.imageUrl != null)
-                Stack(children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      widget.post!.imageUrl!,
-                      fit: BoxFit.fitWidth,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: Container(
-                            alignment: Alignment.center,
-                            color: Colors.grey[300],
-                            child: CircularProgressIndicator(color: AppColors.framePurple),
-                          ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: Container(
-                            padding: const EdgeInsets.all(30),
-                            color: AppColors.white,
-                            child: const Icon(Icons.broken_image),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ])
-              else
-                AspectRatio(
-                  aspectRatio: 2 / 2,
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: widget.post?.imageUrl != null
+                    ? Image.network(
+                  widget.post!.imageUrl!,
+                  width: 120,
+                  height: 160,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      width: 120,
+                      height: 160,
                       color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      Icons.image,
-                      size: 40,
-                      color: Colors.grey[500],
-                    ),
-                  ),
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(color: AppColors.framePurple),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: 120,
+                      height: 160,
+                      color: Colors.grey[300],
+                      alignment: Alignment.center,
+                      child: const Icon(Icons.broken_image, size: 40),
+                    );
+                  },
+                )
+                    : Container(
+                  width: 120,
+                  height: 160,
+                  color: Colors.grey[300],
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.image, size: 40, color: Colors.grey),
                 ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: AppColors.limeGreen,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.check, color: AppColors.black),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => _approveReportedPost(),
-                          );
-                        },
+              ),
+
+              const SizedBox(width: 16),
+
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Reason for Reporting',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppColors.black,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: AppColors.lightPink,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.report_problem_outlined, color: AppColors.white),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => _removeReportedPost(),
-                          );
-                        },
-                      ),
+                    const SizedBox(height: 6),
+                    Text(
+                      widget.post?.isReportedReason ?? 'No reason provided',
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.limeGreen,
+                              foregroundColor: AppColors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => _approveReportedPost(),
+                              );
+                            },
+                            child: const Icon(Icons.check, size: 22),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.lightPink,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => _removeReportedPost(),
+                              );
+                            },
+                            child: const Icon(Icons.report_problem_outlined, size: 22),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

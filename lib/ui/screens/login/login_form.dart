@@ -20,50 +20,13 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _textFieldController = TextEditingController();
 
   final LoginCubit _loginCubit = sl<LoginCubit>();
   final MultifactorAuthenticationCubit _multifactorAuthenticationCubit = sl<MultifactorAuthenticationCubit>();
 
   bool get isPopulated => _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
-  String _hint = '';
-  FirebaseAuthMultiFactorException? _e;
   bool _passwordVisible = false;
-
-  bool isLoginButtonEnabled(LoginState state) {
-    return isPopulated && !state.isInProgress;
-  }
-
-  _showOTPInputPopup(String info, FirebaseAuthMultiFactorException? e) async {
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Enter OTP sent to $info'),
-          content: TextField(
-            controller: _textFieldController,
-            decoration: const InputDecoration(hintText: "OTP"),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('CANCEL'),
-              onPressed: () => Navigator.pop(context),
-            ),
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (_textFieldController.text.isNotEmpty) {
-      _multifactorAuthenticationCubit.mfaOTPSubmitted(otp: _textFieldController.text, signIn: true, e: e!);
-      _textFieldController.clear();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,28 +61,13 @@ class _LoginFormState extends State<LoginForm> {
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(const SnackBar(content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Logged in successfully', style: TextStyle(color: Colors.white)), Icon(Icons.error, color: Colors.white)]), backgroundColor: Colors.green));
-            }
-
-            if (state is LoginStatePasswordResetSuccess) {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(const SnackBar(content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Password reset email has been sent', style: TextStyle(color: Colors.white)), Icon(Icons.error)]), backgroundColor: Colors.green));
-            }
-
-            if (state is LoginRequiresMFA) {
-              _hint = state.hint.phoneNumber;
-              _e = state.error;
-              _multifactorAuthenticationCubit.signInMFA(state.session, state.hint);
+              // Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
             }
           },
         ),
         BlocListener<MultifactorAuthenticationCubit, MultifactorAuthenticationState>(
           bloc: _multifactorAuthenticationCubit,
-          listener: (context, state) {
-            if (state is MFAPhoneOTPRequired) {
-              _showOTPInputPopup(_hint, _e);
-            }
-          },
+          listener: (context, state) {},
         ),
       ],
       child: BlocBuilder<LoginCubit, LoginState>(
@@ -164,7 +112,7 @@ class _LoginFormState extends State<LoginForm> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        LoginButton(onPressed: isLoginButtonEnabled(state) ? _onFormSubmitted : () => print('Login button failed')),
+                        LoginButton(onPressed: isPopulated ? _onFormSubmitted : _onFormSubmitted),
                         SizedBox(height: 60),
                         Center(
                           child: Text(
@@ -206,9 +154,5 @@ class _LoginFormState extends State<LoginForm> {
       email: _emailController.text,
       password: _passwordController.text,
     );
-  }
-
-  void _onResetSubmitted() {
-    _loginCubit.sendPasswordResetEmail(_emailController.text);
   }
 }

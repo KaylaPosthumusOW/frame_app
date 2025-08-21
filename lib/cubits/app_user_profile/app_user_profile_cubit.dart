@@ -14,6 +14,12 @@ import 'package:sp_utilities/utilities.dart';
 part 'app_user_profile_state.dart';
 
 class AppUserProfileCubit extends Cubit<AppUserProfileState> {
+  final AppUserProfileFirebaseRepository _appUserProfileRepository = GetIt.instance<AppUserProfileFirebaseRepository>();
+  final FirebaseAnalytics _firebaseAnalytics = GetIt.instance<FirebaseAnalytics>();
+  final AuthenticationCubit _authenticationCubit = GetIt.instance<AuthenticationCubit>();
+
+  AppUserProfileCubit() : super(const ProfileInitial());
+
   Future<void> updateStreak() async {
     final profile = state.mainAppUserProfileState.appUserProfile;
     if (profile == null) return;
@@ -43,11 +49,6 @@ class AppUserProfileCubit extends Cubit<AppUserProfileState> {
     );
     await updateProfile(updatedProfile);
   }
-  final AppUserProfileFirebaseRepository _appUserProfileRepository = GetIt.instance<AppUserProfileFirebaseRepository>();
-  final FirebaseAnalytics _firebaseAnalytics = GetIt.instance<FirebaseAnalytics>();
-  final AuthenticationCubit _authenticationCubit = GetIt.instance<AuthenticationCubit>();
-
-  AppUserProfileCubit() : super(const ProfileInitial());
 
   loadProfile() async {
     try {
@@ -57,6 +58,10 @@ class AppUserProfileCubit extends Cubit<AppUserProfileState> {
       emit(ProfileInitialLoaded(state.mainAppUserProfileState.copyWith(appUserProfile: userProfile, message: 'Profile Initial Loaded', errorMessage: '')));
 
       _firebaseAnalytics.setUserId(id: userProfile.uid);
+
+      // Update streak after profile is loaded
+      await updateStreak();
+
       if (state.mainAppUserProfileState.registerDetails != null) {
         emit(ProfileLoadingFirstTime(state.mainAppUserProfileState.copyWith(message: 'Loading profile')));
         await Future.delayed(const Duration(seconds: 3));

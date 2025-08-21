@@ -10,8 +10,9 @@ import 'package:frameapp/ui/widgets/frame_text_field.dart';
 import 'package:sp_utilities/utilities.dart';
 
 class ViewPostDialoq extends StatefulWidget {
-  
-  const ViewPostDialoq({super.key,});
+  const ViewPostDialoq({
+    super.key,
+  });
 
   @override
   State<ViewPostDialoq> createState() => _ViewPostDialoqState();
@@ -44,6 +45,20 @@ class _ViewPostDialoqState extends State<ViewPostDialoq> {
         backgroundColor: AppColors.white,
         iconTheme: IconThemeData(color: AppColors.black),
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              if (_postCubit.state.mainPostState.selectedPost != null) {
+                showDialog(
+                  context: context,
+                  builder: (context) => _deletePost(),
+                );
+              }
+            },
+            tooltip: 'Delete Post',
+          ),
+        ],
       ),
       body: BlocConsumer(
         bloc: _postCubit,
@@ -130,22 +145,43 @@ class _ViewPostDialoqState extends State<ViewPostDialoq> {
                   ),
                   const SizedBox(height: 16.0),
                   Divider(color: Colors.grey[300]!, height: 32.0),
-                  Text(
-                    'Do you want to post this to the community?',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black),
+                  Offstage(
+                    offstage: _postCubit.state.mainPostState.selectedPost?.isReported == true,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Do you want to post this to the community?',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black),
+                        ),
+                        SizedBox(height: 10.0),
+                        FrameButton(
+                          type: ButtonType.secondary,
+                          label: isCommunityPost ? 'Posted to Community' : 'Post to Community',
+                          icon: isCommunityPost ? Icon(Icons.check, color: AppColors.framePurple, semanticLabel: 'Posted') : Icon(Icons.close, color: AppColors.slateGrey, semanticLabel: 'Not Posted'),
+                          onPressed: () {
+                            setState(() {
+                              isCommunityPost = !isCommunityPost;
+                            });
+                          },
+                        ),
+                        Divider(color: Colors.grey[300]!, height: 32.0),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 10.0),
-                  FrameButton(
-                    type: ButtonType.secondary,
-                    label: isCommunityPost ? 'Posted to Community' : 'Post to Community',
-                    icon: isCommunityPost ? Icon(Icons.check, color: AppColors.framePurple, semanticLabel: 'Posted') : Icon(Icons.close, color: AppColors.slateGrey, semanticLabel: 'Not Posted'),
-                    onPressed: () {
-                      setState(() {
-                        isCommunityPost = !isCommunityPost;
-                      });
-                    },
+                  Offstage(
+                    offstage: _postCubit.state.mainPostState.selectedPost?.isReported != true,
+                    child: Column(
+                      children: [
+                        Text(
+                          'This post has been reported and has therefore been removed from the community.',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                        Divider(color: Colors.grey[300]!, height: 32.0),
+                      ],
+                    ),
                   ),
-                  Divider(color: Colors.grey[300]!, height: 32.0),
                   Row(
                     children: [
                       Expanded(
@@ -172,13 +208,47 @@ class _ViewPostDialoqState extends State<ViewPostDialoq> {
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
           );
         },
-      )
+      ),
+    );
+  }
+
+  Widget _deletePost() {
+    return AlertDialog(
+      title: const Text('Delete Post'),
+      content: const Text('Are you sure you want to delete this post?'),
+      actions: [
+        Row(
+          children: [
+            Expanded(
+              child: FrameButton(
+                type: ButtonType.outline,
+                onPressed: () => Navigator.pop(context, false),
+                label: 'Cancel',
+              ),
+            ),
+            SizedBox(width: 10.0),
+            Expanded(
+              child: FrameButton(
+                buttonColor: Colors.red,
+                type: ButtonType.primary,
+                onPressed: () {
+                  _postCubit.deletePost(
+                    _postCubit.state.mainPostState.selectedPost!,
+                  );
+                  Navigator.pop(context, true);
+                },
+                label: 'Delete',
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

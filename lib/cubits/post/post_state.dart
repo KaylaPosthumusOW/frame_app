@@ -129,7 +129,13 @@ class ReportedPostRemoved extends PostState {
   const ReportedPostRemoved(MainPostState mainPostState) : super(mainPostState);
 }
 
+class DeletingPost extends PostState {
+  const DeletingPost(MainPostState mainPostState) : super(mainPostState);
+}
 
+class PostDeleted extends PostState {
+  const PostDeleted(MainPostState mainPostState) : super(mainPostState);
+}
 
 
 class PostError extends PostState {

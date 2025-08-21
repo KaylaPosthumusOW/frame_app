@@ -43,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           content: 'Are you sure you want to log out of this profile?',
           action: () {
             _authenticationCubit.loggedOut(clearPreferences: true);
-            context.pushNamed(LOGIN_SCREEN);
+            Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
           },
         );
       },

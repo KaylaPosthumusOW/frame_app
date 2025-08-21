@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/routes.dart';
 import 'package:frameapp/constants/themes.dart';
+import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/models/post_model.dart';
+import 'package:frameapp/ui/widgets/frame_button.dart';
 import 'package:frameapp/ui/widgets/view_post_dialoq.dart';
 import 'package:go_router/go_router.dart';
 
 class PostCard extends StatefulWidget {
   final PostModel? post;
-  final Function? onTap;
 
-  const PostCard({super.key, this.post, this.onTap});
+  const PostCard({super.key, this.post});
 
   @override
   State<PostCard> createState() => _PostCardState();
 }
 
 class _PostCardState extends State<PostCard> {
+  final PostCubit _postCubit = sl<PostCubit>();
+
   @override
   Widget build(BuildContext context) {
     return InkWell(

@@ -19,7 +19,7 @@ class MainFrameAppScreen extends StatefulWidget {
 class _MainFrameAppScreenState extends State<MainFrameAppScreen> {
   final AuthenticationCubit _authenticationCubit = sl<AuthenticationCubit>()..appStarted(verifyEmail: false);
   final GeneralCubit _generalCubit = sl<GeneralCubit>();
-  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>()..loadProfile();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,6 @@ class _MainFrameAppScreenState extends State<MainFrameAppScreen> {
           },
           builder: (context, state) {
             if (state is Uninitialized) {
-              _appUserProfileCubit.loadProfile();
               return const SplashScreen();
             }
 
@@ -48,11 +47,10 @@ class _MainFrameAppScreenState extends State<MainFrameAppScreen> {
             }
 
             if (state is Authenticated) {
-              _appUserProfileCubit.loadProfile();
               final hasSeen = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.hasSeenOnboarding ?? false;
-              if (!hasSeen) {
-                return const OnboardingScreen();
-              }
+              // if (!(hasSeen)) {
+              //   return const OnboardingScreen();
+              // }
               return const HomeScreen();
             }
 

@@ -106,7 +106,7 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
                   return;
                 }
                 if (_reportedReasonController.text.isNotEmpty) {
-                  _postCubit.updatePost(
+                  _postCubit.reportPost(
                     _postCubit.state.mainPostState.selectedPost!.copyWith(
                       isReportedReason: _reportedReasonController.text,
                       isReportedBy: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,

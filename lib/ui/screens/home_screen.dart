@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isFrameUpload = false;
 
   final PromptCubit _promptCubit = sl<PromptCubit>();
-  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>()..loadProfile();
   final SPFileUploaderCubit _imageUploaderCubit = sl<SPFileUploaderCubit>();
   final PostCubit _postCubit = sl<PostCubit>();
 

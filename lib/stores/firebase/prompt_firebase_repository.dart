@@ -20,10 +20,10 @@ class PromptFirebaseRepository implements PromptStore {
   }
 
   @override
-  Future<List<PromptModel>> loadPrompts({required String ownerUid}) async {
+  Future<List<PromptModel>> loadAvailablePrompts({required String ownerUid}) async {
     List<PromptModel> prompts = [];
     QuerySnapshot<PromptModel> query = await _promptCollection
-        .where('owner.uid', isEqualTo: ownerUid)
+        .where('isUsed', isEqualTo: false)
         .where('isArchived', isEqualTo: false)
         .orderBy('createdAt', descending: true)
         .get();
@@ -35,7 +35,7 @@ class PromptFirebaseRepository implements PromptStore {
 
   @override
   Future<PromptModel> getCurrentPrompt() async {
-    QuerySnapshot<PromptModel> querySnapshot = await _promptCollection.where('isUsed', isEqualTo: true).get();
+    QuerySnapshot<PromptModel> querySnapshot = await _promptCollection.where('currentPrompt', isEqualTo: true).get();
     if (querySnapshot.docs.isNotEmpty) {
       return querySnapshot.docs.first.data();
     } else {
@@ -51,6 +51,20 @@ class PromptFirebaseRepository implements PromptStore {
     } catch (e) {
       throw Exception('Failed to update client: $e');
     }
+  }
+
+  @override
+  Future<List<PromptModel>> loadAllPreviousPrompts() async {
+    List<PromptModel> previousPrompts = [];
+    QuerySnapshot<PromptModel> query = await _promptCollection
+        .where('isUsed', isEqualTo: true)
+        .where('isArchived', isEqualTo: true)
+        .orderBy('createdAt', descending: true)
+        .get();
+    for (var doc in query.docs) {
+      previousPrompts.add(doc.data());
+    }
+    return previousPrompts;
   }
 
 

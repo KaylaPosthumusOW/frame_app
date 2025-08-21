@@ -79,11 +79,9 @@ class PostFirebaseRepository implements PostStore {
 
   @override
   Future<void> deletePost(PostModel post) {
-    if (post.uid != null && post.uid != '') {
-      return _postCollection.doc(post.uid).delete();
-    } else {
-      throw Exception('Post UID is null or empty');
-    }
+    return _postCollection.doc(post.uid).delete().catchError((error) {
+      throw Exception('Failed to delete post: $error');
+    });
   }
 
   @override
