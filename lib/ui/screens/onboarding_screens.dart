@@ -66,17 +66,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Row(
                 children: [
-                  TextButton(
-                    child: Row(
-                      children: [
-                        Text('Back', style: Theme.of(context).primaryTextTheme.titleLarge?.copyWith(color: AppColors.slateGrey)),
-                      ],
-                    ),
-                    onPressed: () {
-                      if (_currentPage > 0) {
+                  Visibility(
+                    visible: _currentPage > 0, // <-- only show back if not on first page
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    child: TextButton(
+                      child: Row(
+                        children: [
+                          Text(
+                            'Back',
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .titleLarge
+                                ?.copyWith(color: AppColors.slateGrey),
+                          ),
+                        ],
+                      ),
+                      onPressed: () {
                         animateScroll(_currentPage.toInt() - 1);
-                      }
-                    },
+                      },
+                    ),
                   ),
                   Expanded(child: SizedBox()),
                   Visibility(
