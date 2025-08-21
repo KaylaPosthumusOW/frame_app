@@ -7,27 +7,61 @@ import 'package:frameapp/stores/firebase/prompt_firebase_repository.dart';
 part 'prompt_state.dart';
 
 class PromptCubit extends Cubit<PromptState> {
-  /// Remove previous currentPrompt and set a new one
+  final PromptFirebaseRepository _promptRepository = sl<PromptFirebaseRepository>();
+
+  PromptCubit() : super(const PromptInitial());
+
   Future<void> setCurrentPrompt(PromptModel newPrompt) async {
     emit(UpdatingPrompt(state.mainPromptState.copyWith(message: 'Setting new current prompt')));
     try {
-      // Remove previous current prompt (archive or mark as not current)
       final previous = state.mainPromptState.currentPrompt;
+      List<PromptModel> previousPrompts = List.from(state.mainPromptState.previousPrompts ?? []);
       if (previous != null) {
-        await _promptRepository.updatePrompt(previous.copyWith(isArchived: true));
+        final archivedPrevious = previous.copyWith(isArchived: true, isUsed: true, currentPrompt: false);
+        await _promptRepository.updatePrompt(archivedPrevious);
+        previousPrompts.add(archivedPrevious);
       }
-      // Set new current prompt
-      final updatedPrompt = await _promptRepository.updatePrompt(newPrompt.copyWith(isArchived: false));
-      emit(PromptUpdated(state.mainPromptState.copyWith(currentPrompt: updatedPrompt, message: 'Current prompt updated')));
+
+      // Set new current prompt and add to availablePrompts
+      final updatedPrompt = await _promptRepository.updatePrompt(newPrompt.copyWith(currentPrompt: true, isArchived: false));
+      List<PromptModel> availablePrompts = List.from(state.mainPromptState.availablePrompts ?? []);
+      final idx = availablePrompts.indexWhere((p) => p.uid == updatedPrompt.uid);
+      if (idx == -1) {
+        availablePrompts.add(updatedPrompt);
+      } else {
+        availablePrompts[idx] = updatedPrompt;
+      }
+
+      emit(PromptUpdated(state.mainPromptState.copyWith(
+        currentPrompt: updatedPrompt,
+        availablePrompts: availablePrompts,
+        previousPrompts: previousPrompts,
+        message: 'Current prompt updated',
+      )));
       await loadAllAvailablePrompts(ownerUid: newPrompt.owner?.uid ?? '');
+      await loadAllPreviousPrompts();
       await loadCurrentPrompt();
     } catch (error, stackTrace) {
       emit(PromptError(state.mainPromptState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
     }
   }
-  final PromptFirebaseRepository _promptRepository = sl<PromptFirebaseRepository>();
 
-  PromptCubit() : super(const PromptInitial());
+  Future<void> unArchivePrompt(PromptModel prompt) async {
+    emit(UpdatingPrompt(state.mainPromptState.copyWith(message: 'Unarchiving prompt')));
+    try {
+      final updatedPrompt = await _promptRepository.updatePrompt(prompt.copyWith(isArchived: false, isUsed: false));
+      List<PromptModel> availablePrompts = List.from(state.mainPromptState.availablePrompts ?? []);
+      int index = availablePrompts.indexWhere((p) => p.uid == updatedPrompt.uid);
+      if (index != -1) {
+        availablePrompts[index] = updatedPrompt;
+      } else {
+        availablePrompts.add(updatedPrompt);
+      }
+      emit(PromptUpdated(state.mainPromptState.copyWith(availablePrompts: availablePrompts, message: 'Prompt unarchived')));
+    } catch (error, stackTrace) {
+      emit(PromptError(state.mainPromptState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+    }
+  }
 
   Future<void> loadAllAvailablePrompts({required String ownerUid}) async {
     emit(PromptLoading(state.mainPromptState.copyWith(message: 'Loading prompts')));

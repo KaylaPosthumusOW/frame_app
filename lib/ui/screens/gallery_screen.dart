@@ -63,7 +63,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Text(
-                      'Week of ${weekStart.month}/${weekStart.day}/${weekStart.year}',
+                      'Week of ${weekStart.month}/${weekStart.day}/${weekStart.year} - ${weekStart.add(Duration(days: 6)).month}/${weekStart.add(Duration(days: 6)).day}/${weekStart.add(Duration(days: 6)).year}',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         color: AppColors.black,
                         fontWeight: FontWeight.bold,

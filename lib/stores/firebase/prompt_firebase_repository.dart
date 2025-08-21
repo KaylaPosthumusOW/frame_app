@@ -66,7 +66,4 @@ class PromptFirebaseRepository implements PromptStore {
     }
     return previousPrompts;
   }
-
-
-
 }

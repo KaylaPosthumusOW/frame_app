@@ -95,6 +95,8 @@ class _PromptManagementState extends State<PromptManagement> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 20),
+                    _displayCurrentPrompt(),
                     const SizedBox(height: 20),
                     _availablePromptList(),
                     const SizedBox(height: 20),
@@ -110,6 +112,52 @@ class _PromptManagementState extends State<PromptManagement> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _displayCurrentPrompt() {
+    return BlocBuilder<PromptCubit, PromptState>(
+      bloc: _promptCubit,
+      builder: (context, state) {
+        if (state is PromptLoading) {
+          return Center(child: CircularProgressIndicator(color: AppColors.framePurple));
+        }
+
+        final currentPrompt = state.mainPromptState.currentPrompt;
+        if (currentPrompt != null) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.lightPink,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 10,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  currentPrompt.promptText ?? '',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          );
+        }
+
+        return Center(
+          child: Text(
+            'No current prompt set. Click "Create Prompt" to add a new one.',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.black),
+          ),
+        );
+      },
     );
   }
 
@@ -132,6 +180,7 @@ class _PromptManagementState extends State<PromptManagement> {
             );
           }
           return ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: prompts.length,
             itemBuilder: (context, index) {
@@ -210,6 +259,7 @@ class _PromptManagementState extends State<PromptManagement> {
             );
           }
           return ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: prompts.length,
             itemBuilder: (context, index) {
@@ -222,6 +272,16 @@ class _PromptManagementState extends State<PromptManagement> {
                 ),
                 child: ListTile(
                   title: Text(prompt.promptText ?? '', style: Theme.of(context).textTheme.bodyLarge),
+                  trailing: IconButton(
+                    icon: Icon(Icons.restore, color: AppColors.framePurple),
+                    tooltip: 'Restore prompt',
+                    onPressed: () {
+                      _promptCubit.unArchivePrompt(prompt);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Prompt restored!'), backgroundColor: Colors.green),
+                      );
+                    },
+                  ),
                 ),
               );
             },
@@ -322,7 +382,10 @@ class _PromptManagementState extends State<PromptManagement> {
               label: 'Activate Prompt Now',
               onPressed: () {
                 if (selectedPrompt != null) {
-                  _promptCubit.updatePrompt(selectedPrompt.copyWith(isUsed: true));
+                  _promptCubit.setCurrentPrompt(selectedPrompt);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Current prompt updated!'), backgroundColor: Colors.green),
+                  );
                 } else {
                   _promptCubit.createNewPrompt(
                     PromptModel(

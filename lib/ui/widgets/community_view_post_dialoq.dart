@@ -241,51 +241,59 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: AppColors.black,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  cursorColor: AppColors.white,
-                  controller: _commentController,
-                  decoration: InputDecoration(
-                    hintText: 'Leave a comment here...',
-                    hintStyle: TextStyle(color: AppColors.white.withValues(alpha: 0.6)),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide(color: AppColors.white),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide(color: AppColors.framePurple),
+          color: AppColors.black,
+          child: AnimatedPadding(
+            duration: const Duration(milliseconds: 150),
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 12,
+              top: 12,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    cursorColor: AppColors.white,
+                    controller: _commentController,
+                    style: TextStyle(color: AppColors.white),
+                    decoration: InputDecoration(
+                      hintText: 'Leave a comment here...',
+                      hintStyle: TextStyle(color: AppColors.white.withOpacity(0.6)),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide(color: AppColors.white),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide(color: AppColors.framePurple),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.06,
-                margin: const EdgeInsets.only(left: 8.0),
-                decoration: BoxDecoration(
-                  color: AppColors.framePurple,
-                  shape: BoxShape.circle,
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  margin: const EdgeInsets.only(left: 8.0),
+                  decoration: BoxDecoration(
+                    color: AppColors.framePurple,
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    onPressed: () {
+                      _commentCubit.createNewComment(CommentModel(
+                        owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
+                        post: _postCubit.state.mainPostState.selectedPost,
+                        comment: _commentController.text,
+                        createdAt: Timestamp.now(),
+                      ));
+                      _commentController.clear();
+                      FocusScope.of(context).unfocus();
+                    },
+                    icon: Icon(Icons.send, color: AppColors.white),
+                  ),
                 ),
-                child: IconButton(
-                  onPressed: () {
-                    _commentCubit.createNewComment(CommentModel(
-                      owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
-                      post: _postCubit.state.mainPostState.selectedPost,
-                      comment: _commentController.text,
-                      createdAt: Timestamp.now(),
-                    ));
-                    _commentController.clear();
-                  },
-                  icon: Icon(Icons.send, color: AppColors.white),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -297,6 +305,7 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
       bloc: _commentCubit,
       listener: (context, state) {},
       builder: (context, state) {
+        final comments = state.mainCommentState.allCommentsForPost ?? [];
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -305,7 +314,7 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
               style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black),
             ),
             SizedBox(height: 16.0),
-            if (state.mainCommentState.allCommentsForPost!.isEmpty)
+            if (comments.isEmpty)
               Text(
                 'Be the first to comment!',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -316,20 +325,27 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: state.mainCommentState.allCommentsForPost?.length ?? 0,
+              itemCount: comments.length,
               itemBuilder: (context, index) {
-                final comment = state.mainCommentState.allCommentsForPost![index];
+                final comment = comments[index];
+                final owner = comment.owner;
+                final profilePicture = owner?.profilePicture;
+                final name = owner?.name ?? '';
+                final surname = owner?.surname ?? '';
+                final createdAt = comment.createdAt;
                 return Column(
                   children: [
                     ListTile(
                       leading: CircleAvatar(
                         radius: 25,
-                        backgroundImage: comment.owner?.profilePicture != null ? NetworkImage(comment.owner!.profilePicture!) : const AssetImage('assets/pngs/blank_profile_image.png') as ImageProvider,
+                        backgroundImage: profilePicture != null && profilePicture.isNotEmpty
+                          ? NetworkImage(profilePicture)
+                          : const AssetImage('assets/pngs/blank_profile_image.png') as ImageProvider,
                       ),
                       title: Text(comment.comment ?? '', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.slateGrey)),
-                      subtitle: Text('${comment.owner?.name} ${comment.owner?.surname}', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.black)),
+                      subtitle: Text('$name $surname', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.black)),
                       trailing: Text(
-                        comment.createdAt != null ? '${comment.createdAt!.toDate().hour}:${comment.createdAt!.toDate().minute}' : '',
+                        createdAt != null ? '${createdAt.toDate().hour}:${createdAt.toDate().minute}' : '',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.slateGrey),
                       ),
                     ),
