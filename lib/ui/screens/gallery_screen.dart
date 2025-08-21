@@ -91,29 +91,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
             }));
           }
 
-          if (communityPosts.isNotEmpty) {
-            children.add(Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Text(
-                'Community Posts',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: AppColors.limeGreen,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ));
-            children.add(MasonryGridView.count(
-              crossAxisCount: 3,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: communityPosts.length,
-              itemBuilder: (context, index) {
-                final post = communityPosts[index];
-                return CommunityPostCard(post: post);
-              },
-            ));
-          }
-
           if (children.isNotEmpty) {
             return ListView(
               padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
@@ -141,7 +118,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           );
         },
       ),
-      bottomNavigationBar: FrameNavigation(),
+      // bottomNavigationBar: FrameNavigation(),
     );
   }
 }

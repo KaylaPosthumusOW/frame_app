@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/ui/screens/login/apple_login_button.dart';
@@ -18,13 +19,15 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController(text: kDebugMode ? 'kaylaposthu@gmail.com' : '');
+  final TextEditingController _passwordController = TextEditingController(text: kDebugMode ? 'Kaylapos' : '');
 
   final LoginCubit _loginCubit = sl<LoginCubit>();
-  final MultifactorAuthenticationCubit _multifactorAuthenticationCubit = sl<MultifactorAuthenticationCubit>();
-
   bool get isPopulated => _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+
+  bool isLoginButtonEnabled(LoginState state) {
+    return isPopulated && !state.isInProgress;
+  }
 
   bool _passwordVisible = false;
 
@@ -61,13 +64,8 @@ class _LoginFormState extends State<LoginForm> {
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(const SnackBar(content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Logged in successfully', style: TextStyle(color: Colors.white)), Icon(Icons.error, color: Colors.white)]), backgroundColor: Colors.green));
-              // Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
             }
           },
-        ),
-        BlocListener<MultifactorAuthenticationCubit, MultifactorAuthenticationState>(
-          bloc: _multifactorAuthenticationCubit,
-          listener: (context, state) {},
         ),
       ],
       child: BlocBuilder<LoginCubit, LoginState>(
@@ -112,7 +110,9 @@ class _LoginFormState extends State<LoginForm> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        LoginButton(onPressed: isPopulated ? _onFormSubmitted : _onFormSubmitted),
+                        LoginButton(
+                          onPressed: isLoginButtonEnabled(state) ? _onFormSubmitted : () => debugPrint('Login button disabled'),
+                        ),
                         SizedBox(height: 60),
                         Center(
                           child: Text(

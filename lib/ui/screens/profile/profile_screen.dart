@@ -6,7 +6,6 @@ import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/models/app_user_profile.dart';
 import 'package:frameapp/ui/widgets/frame_alert_dialoq.dart';
-import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +20,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>()..loadProfile();
   final AuthenticationCubit _authenticationCubit = sl<AuthenticationCubit>();
   final SPFileUploaderCubit _imageUploaderCubit = sl<SPFileUploaderCubit>();
   final PostCubit _postCubit = sl<PostCubit>();
@@ -43,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           content: 'Are you sure you want to log out of this profile?',
           action: () {
             _authenticationCubit.loggedOut(clearPreferences: true);
-            Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
+            Navigator.of(context).pop();
           },
         );
       },
@@ -261,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: const FrameNavigation(),
+      // bottomNavigationBar: const FrameNavigation(),
     );
   }
 

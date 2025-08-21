@@ -6,7 +6,6 @@ import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/cubits/prompt/prompt_cubit.dart';
-import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:frameapp/ui/widgets/new_frame_modal.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sp_utilities/utilities.dart';
@@ -23,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isFrameUpload = false;
 
   final PromptCubit _promptCubit = sl<PromptCubit>();
-  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>()..loadProfile();
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
   final SPFileUploaderCubit _imageUploaderCubit = sl<SPFileUploaderCubit>();
   final PostCubit _postCubit = sl<PostCubit>();
 
@@ -268,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: const FrameNavigation(),
+        // bottomNavigationBar: const FrameNavigation(),
       ),
     );
   }

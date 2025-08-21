@@ -326,7 +326,7 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
                   children: [
                     ListTile(
                       leading: CircleAvatar(
-                        radius: 20,
+                        radius: 25,
                         backgroundImage: comment.owner?.profilePicture != null ? NetworkImage(comment.owner!.profilePicture!) : const AssetImage('assets/pngs/blank_profile_image.png') as ImageProvider,
                       ),
                       title: Text(comment.comment ?? '', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.slateGrey)),

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frameapp/constants/constants.dart';
-import 'package:frameapp/cubits/general/general_cubit.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:frameapp/ui/screens/home_screen.dart';
 import 'package:frameapp/ui/screens/login/login_screen.dart';
 import 'package:frameapp/ui/screens/onboarding_screens.dart';
+import 'package:frameapp/ui/screens/profile/profile_screen.dart';
 import 'package:frameapp/ui/screens/splash_screen.dart';
+import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
 
 class MainFrameAppScreen extends StatefulWidget {
@@ -18,45 +19,34 @@ class MainFrameAppScreen extends StatefulWidget {
 
 class _MainFrameAppScreenState extends State<MainFrameAppScreen> {
   final AuthenticationCubit _authenticationCubit = sl<AuthenticationCubit>()..appStarted(verifyEmail: false);
-  final GeneralCubit _generalCubit = sl<GeneralCubit>();
-  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>()..loadProfile();
 
   @override
   Widget build(BuildContext context) {
 
-    return BlocBuilder<GeneralCubit, GeneralState>(
-      bloc: _generalCubit,
+    return BlocConsumer<AuthenticationCubit, AuthenticationState>(
+      bloc: _authenticationCubit,
+      listener: (context, state) {
+        if (state is AuthenticationError) {
+          _authenticationCubit.reloadUserCache();
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(content: Row(children: [Expanded(child: Text(state.mainAuthenticationState.errorMessage ?? state.mainAuthenticationState.message ?? '', style: const TextStyle(color: Colors.white))), const Icon(Icons.error)]), backgroundColor: Colors.red));
+        }
+      },
       builder: (context, state) {
-        return BlocConsumer<AuthenticationCubit, AuthenticationState>(
-          bloc: _authenticationCubit,
-          listener: (context, state) {
-            if (state is AuthenticationError) {
-              _authenticationCubit.reloadUserCache();
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(SnackBar(content: Row(children: [Expanded(child: Text(state.mainAuthenticationState.errorMessage ?? state.mainAuthenticationState.message ?? '', style: const TextStyle(color: Colors.white))), const Icon(Icons.error)]), backgroundColor: Colors.red));
-            }
-          },
-          builder: (context, state) {
-            if (state is Uninitialized) {
-              return const SplashScreen();
-            }
+        if (state is Uninitialized) {
+          return const SplashScreen();
+        }
 
-            if (state is Unauthenticated) {
-              return const LoginScreen();
-            }
+        if (state is Unauthenticated) {
+          return const LoginScreen();
+        }
 
-            if (state is Authenticated) {
-              final hasSeen = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.hasSeenOnboarding ?? false;
-              // if (!(hasSeen)) {
-              //   return const OnboardingScreen();
-              // }
-              return const HomeScreen();
-            }
+        if (state is Authenticated) {
+          return const FrameNavigation();
+        }
 
-            return const Scaffold(body: Center(child: CircularProgressIndicator()));
-          },
-        );
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
       },
     );
   }

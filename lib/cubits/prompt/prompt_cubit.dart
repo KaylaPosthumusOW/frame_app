@@ -7,6 +7,24 @@ import 'package:frameapp/stores/firebase/prompt_firebase_repository.dart';
 part 'prompt_state.dart';
 
 class PromptCubit extends Cubit<PromptState> {
+  /// Remove previous currentPrompt and set a new one
+  Future<void> setCurrentPrompt(PromptModel newPrompt) async {
+    emit(UpdatingPrompt(state.mainPromptState.copyWith(message: 'Setting new current prompt')));
+    try {
+      // Remove previous current prompt (archive or mark as not current)
+      final previous = state.mainPromptState.currentPrompt;
+      if (previous != null) {
+        await _promptRepository.updatePrompt(previous.copyWith(isArchived: true));
+      }
+      // Set new current prompt
+      final updatedPrompt = await _promptRepository.updatePrompt(newPrompt.copyWith(isArchived: false));
+      emit(PromptUpdated(state.mainPromptState.copyWith(currentPrompt: updatedPrompt, message: 'Current prompt updated')));
+      await loadAllAvailablePrompts(ownerUid: newPrompt.owner?.uid ?? '');
+      await loadCurrentPrompt();
+    } catch (error, stackTrace) {
+      emit(PromptError(state.mainPromptState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+    }
+  }
   final PromptFirebaseRepository _promptRepository = sl<PromptFirebaseRepository>();
 
   PromptCubit() : super(const PromptInitial());

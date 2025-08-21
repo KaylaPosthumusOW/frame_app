@@ -145,16 +145,31 @@ class _PromptManagementState extends State<PromptManagement> {
                 ),
                 child: ListTile(
                   title: Text(prompt.promptText ?? '', style: Theme.of(context).textTheme.bodyLarge),
-                  trailing: IconButton(
-                    icon: Icon(Icons.edit, color: AppColors.lightPink),
-                    onPressed: () {
-                      _promptTextController.text = prompt.promptText ?? '';
-                      _promptCubit.setSelectedPrompt(prompt);
-                      showDialog(
-                        context: context,
-                        builder: (_) => _createEditPromptDialog(),
-                      );
-                    },
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit, color: AppColors.limeGreen),
+                        onPressed: () {
+                          _promptTextController.text = prompt.promptText ?? '';
+                          _promptCubit.setSelectedPrompt(prompt);
+                          showDialog(
+                            context: context,
+                            builder: (_) => _createEditPromptDialog(),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.check_circle, color: AppColors.framePurple),
+                        tooltip: 'Set as current prompt',
+                        onPressed: () async {
+                          await _promptCubit.setCurrentPrompt(prompt);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Current prompt updated!'), backgroundColor: Colors.green),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
               );

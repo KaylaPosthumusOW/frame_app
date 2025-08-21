@@ -140,9 +140,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               final profile = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile;
               if (profile != null) {
                 await _appUserProfileCubit.setHasSeenOnboarding();
-                if (context.mounted) {
-                  context.pushNamed(HOME_SCREEN);
-                }
               }
             },
           ),

@@ -101,7 +101,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
             );
           },
         ),
-      bottomNavigationBar: FrameNavigation(),
       );
   }
 }
