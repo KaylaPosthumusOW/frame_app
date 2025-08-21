@@ -58,10 +58,6 @@ class AppUserProfileCubit extends Cubit<AppUserProfileState> {
       emit(ProfileInitialLoaded(state.mainAppUserProfileState.copyWith(appUserProfile: userProfile, message: 'Profile Initial Loaded', errorMessage: '')));
 
       _firebaseAnalytics.setUserId(id: userProfile.uid);
-
-      // Update streak after profile is loaded
-      await updateStreak();
-
       if (state.mainAppUserProfileState.registerDetails != null) {
         emit(ProfileLoadingFirstTime(state.mainAppUserProfileState.copyWith(message: 'Loading profile')));
         await Future.delayed(const Duration(seconds: 3));

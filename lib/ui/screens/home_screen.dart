@@ -30,9 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _promptCubit.loadCurrentPrompt();
-    _postCubit.loadTodaysFrame(
-      ownerUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '',
-    );
+    _appUserProfileCubit.loadProfile();
   }
 
   Widget _dailyFrameContainer() {
@@ -86,7 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
           return _emptyFramePlaceholder();
         }
 
-        // Frame exists
         return GestureDetector(
           onTap: _takePictureFromCamera,
           child: Container(
@@ -221,6 +218,15 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
         ),
+        BlocListener<AppUserProfileCubit, AppUserProfileState>(
+          bloc: _appUserProfileCubit,
+          listener: (context, state) {
+            final uid = state.mainAppUserProfileState.appUserProfile?.uid;
+            if (uid != null && uid.isNotEmpty) {
+              _postCubit.loadTodaysFrame(ownerUid: uid);
+            }
+          },
+        ),
       ],
       child: Scaffold(
         appBar: AppBar(
@@ -233,8 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Hello, ${state.mainAppUserProfileState.appUserProfile?.name ?? 'User'}',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.black)),
+                  Text('Welcome ${state.mainAppUserProfileState.appUserProfile?.name ?? ''}', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.black)),
                   const SizedBox(height: 4),
                   Text('Streak: $streak days 🔥', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black)),
                 ],
@@ -267,7 +272,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        // bottomNavigationBar: const FrameNavigation(),
       ),
     );
   }

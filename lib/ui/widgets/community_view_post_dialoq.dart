@@ -243,8 +243,6 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: AppColors.white.withValues(alpha: 0.2), width: 1.0)),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(5.0)),
             color: AppColors.black,
           ),
           child: Row(
@@ -314,8 +312,7 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
                   color: Colors.grey,
                   fontStyle: FontStyle.italic,
                 ),
-              )
-            else
+              ),
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

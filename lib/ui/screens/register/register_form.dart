@@ -84,18 +84,6 @@ class _RegisterFormState extends State<RegisterForm> {
                 children: <Widget>[
                   SizedBox(height: 60),
                   Text('Create Your Account!', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: AppColors.black)),
-                  SizedBox(height: 20),
-                  FrameTextField(
-                    label: 'Name & Surname',
-                    controller: _nameController,
-                    keyboardType: TextInputType.text,
-                    onChanged: (value) {
-                      setState(() {
-                        _nameFieldTouched = true;
-                      });
-                    },
-                    isLight: true,
-                  ),
                   SizedBox(height: 10),
                   FrameTextField(
                     label: 'Email',

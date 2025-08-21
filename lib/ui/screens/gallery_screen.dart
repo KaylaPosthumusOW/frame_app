@@ -61,11 +61,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Text(
                       'Week of ${weekStart.month}/${weekStart.day}/${weekStart.year}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.framePurple,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: AppColors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
