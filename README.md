@@ -120,12 +120,6 @@ Admin interface for managing reported posts. View details of reported frames, in
 <img src="assets/page_mock_ups/iPhone 14 Pro-5.png" alt="Admin Page Mockup" height="350" align="right" style="margin-left:20px;">
 Admin interface for managing daily prompts. Create, edit, and delete prompts to keep the community engaged with fresh creative challenges.
 
-## Concept Process
-The Concept Process documents the initial planning, ideation, and design for Fram. This includes wireframes, user flows, and early sketches that shaped the app's features and UI.
-
-### Wireframes & Design
-You can add wireframes, mockups, and design documentation here to illustrate the evolution of Fram's interface and user experience.
-
 ## Highlights
 - Building my first mobile app using Flutter and Firebase
 - Learning to integrate Firebase Authentication, Firestore, and Storage
@@ -138,11 +132,10 @@ You can add wireframes, mockups, and design documentation here to illustrate the
 - Debugging state issues and ensuring smooth user experience
 
 ## Future Implementation
-- Expand Frame to include direct messaging between users
 - Add image editing and creative tools for frames
+- Implement push notifications for new prompts and community interactions
 - Implement advanced notification settings and scheduling
 - Introduce leaderboards and creative competitions
-- Explore web and desktop versions using Flutter multiplatform
 
 ## Final Outcome
 <p align="center">
