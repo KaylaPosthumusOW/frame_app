@@ -1,5 +1,4 @@
-
-<!-- Fram App Information & Links -->
+<!-- Frame App Information & Links -->
 <br />
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/KaylaPosthumusOW/frame_app?color=8e44ad)
@@ -13,7 +12,7 @@
 </br>
 <p align="center">
   <div align="center">
-   <img src="assets/svg/frame_logo.svg" alt="Fram Logo" height="70">
+   <img src="assets/svg/frame_logo.svg" alt="Frame Logo" height="70">
   </div>
   <h3 align="center">Frame</h3>
   <p align="center">
@@ -85,39 +84,97 @@ Frame is a social creativity platform where users can share daily creative frame
   ```
 
 
+
 ## Frame Features & Functionality
 
-### Authentication
-- Email/password and Google sign-in for secure onboarding
-- Profile management: edit profile, upload profile image, track creative streaks
+<div align="center">
+  <h2>✨ Frame Features & Functionality ✨</h2>
+</div>
 
-### Sign In / Login
-- Simple, modern login screen
-- Real-time validation and error handling
-- Persistent sessions with Firebase Auth
+---
 
-### Homepage
-- Track today's creative prompt
-- View and upload today's frame
-- Streak tracking and progress visualization
-- Quick access to community gallery and comments
+<details open>
+  <summary><strong>🔐 Authentication</strong></summary>
+  <img src="assets/page_mock_ups/authentication_pages.png" alt="Authentication Mockup" height="350" align="right" style="margin-left:20px;">
+  <ul>
+    <li>Seamless onboarding with email/password and Google sign-in</li>
+    <li>Profile management: edit details, upload profile image, track creative streaks</li>
+    <li>Secure authentication via Firebase</li>
+  </ul>
+</details>
 
-### Community & Engagement
-- Browse, like, and comment on community frames
-- Real-time comment system with profile images and timestamps
-- Reporting & moderation: report posts, admin review and archive
+<details open>
+  <summary><strong>🔑 Sign In / Login</strong></summary>
+  <img src="assets/page_mock_ups/authentication_pages.png" alt="Sign In Mockup" height="350" align="right" style="margin-left:20px;">
+  <ul>
+    <li>Modern login screen with real-time validation and error handling</li>
+    <li>Persistent sessions powered by Firebase Auth</li>
+  </ul>
+</details>
 
-### Admin
-- Admin tools to set, archive, and manage daily prompts
-- Admin pages for managing reported posts
+<details open>
+  <summary><strong>🏠 Homepage</strong></summary>
+  <img src="assets/page_mock_ups/homepage.png" alt="Homepage Mockup" height="350" align="right" style="margin-left:20px;">
+  <ul>
+    <li>Track today's creative prompt and your daily frame</li>
+    <li>View, upload, and share your frame</li>
+    <li>Streak tracking and progress visualization</li>
+    <li>Quick access to community gallery and comments</li>
+  </ul>
+</details>
 
+<details open>
+  <summary><strong>🌐 Community & Engagement</strong></summary>
+  <img src="assets/page_mock_ups/features.png" alt="Community Gallery Mockup" height="350" align="right" style="margin-left:20px;">
+  <ul>
+    <li>Browse, like, and comment on community frames</li>
+    <li>Real-time comment system with profile images and timestamps</li>
+    <li>Reporting & moderation: report posts for admin review and archiving</li>
+  </ul>
+</details>
 
-## Mockups
+<details open>
+  <summary><strong>🛠️ Admin</strong></summary>
+  <img src="assets/page_mock_ups/mockup_1.png" alt="Admin Page Mockup" height="350" align="right" style="margin-left:20px;">
+  <ul>
+    <li>Set, archive, and manage daily prompts</li>
+    <li>Admin pages for managing reported posts and prompt moderation</li>
+  </ul>
+</details>
+
+---
+
+## Concept Process
+The Concept Process documents the initial planning, ideation, and design for Fram. This includes wireframes, user flows, and early sketches that shaped the app's features and UI.
+
+### Wireframes & Design
+You can add wireframes, mockups, and design documentation here to illustrate the evolution of Fram's interface and user experience.
+
+## Highlights
+- Building my first mobile app using Flutter and Firebase
+- Learning to integrate Firebase Authentication, Firestore, and Storage
+- Designing a modern, responsive UI for both Android and iOS
+- Implementing robust state management with Bloc and Cubits
+
+## Challenges
+- Adapting to Flutter's navigation and routing, especially managing page stacks
+- Understanding and correctly using Bloc states and Cubits for reactive UI
+- Debugging state issues and ensuring smooth user experience
+
+## Future Implementation
+- Expand Frame to include direct messaging between users
+- Add image editing and creative tools for frames
+- Implement advanced notification settings and scheduling
+- Introduce leaderboards and creative competitions
+- Explore web and desktop versions using Flutter multiplatform
+
+## Final Outcome
 <p align="center">
+  <img src="assets/mock_ups/mockup_1.png" alt="Admin Page" height="400">
   <img src="assets/mock_ups/authentication_pages.png" alt="Login Screen" height="400">
   <img src="assets/mock_ups/features.png" alt="Community Gallery" height="400">
-    <img src="assets/mock_ups/features.png" alt="Admin Page" height="400">
 </p>
+
 
 ## Author
 - **Kayla Posthumus** - Developer & Designer
