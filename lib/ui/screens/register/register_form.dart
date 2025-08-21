@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
@@ -17,6 +18,7 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
@@ -26,7 +28,6 @@ class _RegisterFormState extends State<RegisterForm> {
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
 
   bool _passwordVisible = false;
-  bool _nameFieldTouched = false;
 
   bool get isPopulated => _nameController.text.isNotEmpty && _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty && _confirmPasswordController.text.isNotEmpty;
 
@@ -38,7 +39,7 @@ class _RegisterFormState extends State<RegisterForm> {
   Widget build(BuildContext context) {
     return BlocListener<RegisterCubit, RegisterState>(
       bloc: _registerCubit,
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state.isInProgress) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -46,16 +47,20 @@ class _RegisterFormState extends State<RegisterForm> {
         }
 
         if (state.isSuccess) {
-          // Save the name to the app user profile state
-          _appUserProfileCubit.saveAppUserProfileDetailsToState(
-            appUserProfile: AppUserProfile(
+          final user = _authenticationCubit.state.mainAuthenticationState.user;
+          if (user != null && user.uid != null) {
+            final profile = AppUserProfile(
+              uid: user.uid,
               name: _nameController.text.trim(),
+              surname: _surnameController.text.trim(),
+              email: user.email,
               role: UserRole.user,
-            ),
-          );
-
-          _authenticationCubit.sendVerificationEmail();
-          Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
+              createdAt: Timestamp.now(),
+            );
+            await _appUserProfileCubit.updateProfile(profile);
+            await _appUserProfileCubit.loadProfile();
+          }
+          Navigator.of(context).pop();
         }
 
         if (state.isFailure) {
@@ -84,6 +89,22 @@ class _RegisterFormState extends State<RegisterForm> {
                 children: <Widget>[
                   SizedBox(height: 60),
                   Text('Create Your Account!', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: AppColors.black)),
+                  SizedBox(height: 10),
+                  FrameTextField(
+                    label: 'Name',
+                    controller: _nameController,
+                    keyboardType: TextInputType.name,
+                    onChanged: (value) {},
+                    isLight: true,
+                  ),
+                  SizedBox(height: 10),
+                  FrameTextField(
+                    label: 'Surname',
+                    controller: _surnameController,
+                    keyboardType: TextInputType.name,
+                    onChanged: (value) {},
+                    isLight: true,
+                  ),
                   SizedBox(height: 10),
                   FrameTextField(
                     label: 'Email',
@@ -169,7 +190,8 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   void dispose() {
-    _nameController.dispose();
+  _nameController.dispose();
+  _surnameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();

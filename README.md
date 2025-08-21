@@ -1,122 +1,112 @@
-# Frame App
 
-Frame App is a Flutter-based social platform for sharing daily photo frames, tracking streaks, and engaging with a community. It features robust onboarding, profile management, image upload flows, prompt management, and admin tools for moderation.
+<!-- Fram App Information & Links -->
+<br />
+
+![GitHub repo size](https://img.shields.io/github/repo-size/KaylaPosthumusOW/frame_app?color=8e44ad)
+![GitHub watchers](https://img.shields.io/github/watchers/KaylaPosthumusOW/frame_app?color=8e44ad)
+![GitHub language count](https://img.shields.io/github/languages/count/KaylaPosthumusOW/frame_app?color=8e44ad)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/KaylaPosthumusOW/frame_app?color=8e44ad)
+
+<!-- HEADER SECTION -->
+<h5 align="center">Kayla Posthumus - 231096</h5>
+<h6 align="center">Interactive Development 300 • 2025</h6>
+</br>
+<p align="center">
+  <div align="center">
+   <img src="assets/svg/frame_logo.svg" alt="Fram Logo" height="70">
+  </div>
+  <h3 align="center">Frame</h3>
+  <p align="center">
+   Embrace your creativity. Frame is a social creativity platform built with Flutter, Firebase, and Bloc.<br>
+   <a href="#getting-started"><strong>Explore the docs »</strong></a>
+   <br />
+   <br />
+   <a href="#demo">View Demo</a>
+   ·
+   <a href="https://github.com/KaylaPosthumusOW/frame_app/issues">Report Bug</a>
+   ·
+   <a href="https://github.com/KaylaPosthumusOW/frame_app/issues">Request Feature</a>
+  </p>
+</p>
 
 ## Table of Contents
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Setup & Installation](#setup--installation)
-- [Environment Variables](#environment-variables)
-- [Running the App](#running-the-app)
-- [Testing](#testing)
-- [Key Workflows](#key-workflows)
-- [Admin Tools](#admin-tools)
-- [Contributing](#contributing)
-- [License](#license)
+- [About Frame](#about-fram)
+- [Built With](#built-with)
+- [Getting Started](#getting-started)
+- [Frame Features & Functionality](#fram-features--functionality)
+- [Screenshots](#screenshots)
+- [Author](#author)
+- [Contact](#contact)
 
-## Features
-- **Onboarding:** Only shown to new users.
-- **Profile Management:** Edit profile, upload profile photo, view streaks.
-- **Daily Frame Upload:** Capture and upload a daily frame, with captions and community sharing.
-- **Prompt System:** Daily prompts for frame inspiration, managed by admins.
-- **Streak Tracker:** Track active days and streaks.
-- **Community Feed:** View and interact with community frames.
-- **Admin Tools:** Manage prompts, review and moderate reported posts.
-- **Robust Navigation:** Stackless, error-free navigation using GoRouter.
-- **Error Handling:** Snackbars and UI feedback for all major actions.
+## About Fram
 
-## Tech Stack
-- **Flutter** (Dart)
-- **Firebase** (Firestore, Storage, Auth)
-- **Bloc** (State Management)
-- **GoRouter** (Navigation)
-- **MasonryGridView** (Community feed)
-- **File Picker** (Image selection)
+Frame is a social creativity platform where users can share daily creative frames, interact with the community, and track their creative streaks. Built with Flutter and Dart, Frame leverages Firebase for authentication, Firestore for data storage, and Bloc for robust state management.
 
-## Project Structure
-```
-lib/
-  constants/         # App-wide constants and themes
-  core/              # Core utilities and helpers
-  cubits/            # Bloc cubits for state management
-  models/            # Data models (User, Post, Prompt)
-  stores/            # Firestore repositories
-  ui/
-    screens/         # Main screens (Home, Profile, Admin, etc.)
-    widgets/         # Reusable widgets (Buttons, Modals, etc.)
-assets/
-  pngs/              # PNG images
-  svg/               # SVG images
-android/ios/         # Native platform code
-```
+## Built With
+- **Flutter**: UI toolkit for building natively compiled applications
+- **Dart**: Programming language for Flutter
+- **Firebase**: Authentication, Firestore, Storage
+- **Bloc**: State management
+- **GoRouter**: Navigation
+- **CachedNetworkImage**: Image caching
+- **Google Fonts**: Typography
+- **FontAwesome**: Icon library
+- **Frame Packages**: Custom packages for Frame functionality (see `pubspec.yaml`)
 
-## Setup & Installation
-1. **Clone the repository:**
-   ```sh
-   git clone https://github.com/KaylaPosthumusOW/frame_app.git
-   cd frame_app
-   ```
-2. **Install dependencies:**
-   ```sh
-   flutter pub get
-   ```
-3. **Configure Firebase:**
-   - Add your `google-services.json` (Android) and `GoogleService-Info.plist` (iOS) to the respective folders.
-   - Set up Firestore, Storage, and Auth in the Firebase console.
-4. **Update environment variables:**
-   - See `.env.example` for required keys (if applicable).
+## Getting Started
 
-## Environment Variables
-- Firebase API keys and project config
-- Any other secrets required for third-party integrations
+### Prerequisites
+- [Flutter SDK](https://docs.flutter.dev/get-started/install)
+- [Dart SDK](https://dart.dev/get-dart)
+- [Firebase Project](https://console.firebase.google.com/)
+- [Android Studio](https://developer.android.com/studio) or [VS Code](https://code.visualstudio.com/)
 
-## Running the App
-- **Android/iOS:**
+### Installation
+1. **Clone Repository**
+  ```sh
+  git clone https://github.com/KaylaPosthumusOW/frame_app.git
+  ```
+2. **Navigate to Project Directory**
+  ```sh
+  cd frame_app
+  ```
+3. **Install Dependencies**
+  ```sh
+  flutter pub get
+  ```
+4. **Firebase Setup**
+  - Add your `google-services.json` (Android) and `GoogleService-Info.plist` (iOS) to the respective folders.
+  - Configure Firestore, Auth, and Storage in the Firebase Console.
+5. **Run the App**
   ```sh
   flutter run
   ```
-- **Web:**
-  ```sh
-  flutter run -d chrome
-  ```
 
-## Testing
-- Run unit and widget tests:
-  ```sh
-  flutter test
-  ```
+## Frame Features & Functionality
+- **Authentication**: Email/password, Google sign-in, secure onboarding
+- **Profile Management**: Edit profile, upload profile image, streak tracking
+- **Daily Frame**: View, upload, and share daily creative frames
+- **Community Gallery**: Browse, like, and comment on community frames
+- **Streaks**: Track daily creative streaks and progress
+- **Prompt Management**: Admin tools to set, archive, and manage daily prompts
+- **Reporting & Moderation**: Report posts, admin review and archive
+- **Comment System**: Real-time comments, profile images, and timestamps
+- **Notifications**: Push notifications (Firebase Messaging)
+- **Responsive UI**: Mobile-first, adaptive layouts
+- **Custom Frame Packages**: Includes sp_firebase, sp_user_repository, and more for advanced functionality
 
-## Key Workflows
-### Daily Frame Upload
-- Tap the capture button on the home screen.
-- Take/select a photo, add a caption, and upload.
-- Frame is saved to Firebase Storage and Firestore.
+## Screenshots
+<p align="center">
+  <img src="assets/svg/frame_logo.svg" alt="Fram Logo" height="60">
+  <br>
+  <img src="docs/screenshot_home.png" alt="Home Screen" height="400">
+  <img src="docs/screenshot_gallery.png" alt="Gallery Screen" height="400">
+  <img src="docs/screenshot_profile.png" alt="Profile Screen" height="400">
+</p>
 
-### Profile Photo Upload
-- Edit profile and tap the photo to upload a new image.
-- Image is uploaded and profile updated in Firestore.
+## Author
+- **Kayla Posthumus** - Developer & Designer
 
-### Prompt Management (Admin)
-- Admins can create, edit, and set prompts as current.
-- Only one prompt can be current at a time.
-- Used prompts are displayed in the admin panel.
-
-### Reported Posts (Admin)
-- Admins can review, approve, or archive reported posts.
-- Snackbars provide feedback for moderation actions.
-
-## Admin Tools
-- Accessible only to users with `UserRole.admin`.
-- Prompt management and reported posts moderation.
-
-## Contributing
-1. Fork the repo and create your branch.
-2. Make changes and commit with clear messages.
-3. Open a pull request.
-
-## License
-This project is licensed under the MIT License.
-
----
-For questions or support, contact the repository owner or open an issue on GitHub.
+## Contact
+- **KaylaPosthumusOW** - [KaylaPosthumusOW@users.noreply.github.com](mailto:KaylaPosthumusOW@users.noreply.github.com)
+- **Project Link** - https://github.com/KaylaPosthumusOW/frame_app

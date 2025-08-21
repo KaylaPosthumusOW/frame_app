@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:frameapp/constants/constants.dart';
 import 'package:frameapp/constants/themes.dart';
+import 'package:frameapp/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/ui/screens/login/apple_login_button.dart';
 import 'package:frameapp/ui/screens/login/create_account_button.dart';
 import 'package:frameapp/ui/screens/login/google_login_button.dart';
@@ -61,6 +63,8 @@ class _LoginFormState extends State<LoginForm> {
             }
 
             if (state.isSuccess) {
+              sl<AppUserProfileCubit>().clearState();
+              sl<PostCubit>().emit(const PostInitial());
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(const SnackBar(content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Logged in successfully', style: TextStyle(color: Colors.white)), Icon(Icons.error, color: Colors.white)]), backgroundColor: Colors.green));
