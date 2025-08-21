@@ -60,9 +60,9 @@ class _FrameNavigationState extends State<FrameNavigation> {
       ),
       child: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.black,
         selectedItemColor: AppColors.framePurple,
-        unselectedItemColor: Colors.grey[600],
+        unselectedItemColor: Colors.grey[500],
         selectedFontSize: 14,
         selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
         unselectedFontSize: 14,

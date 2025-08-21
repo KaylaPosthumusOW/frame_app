@@ -8,6 +8,7 @@ import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:frameapp/ui/widgets/post_card.dart';
+import 'package:frameapp/ui/widgets/community_post_card.dart';
 import 'package:go_router/go_router.dart';
 
 class GalleryScreen extends StatefulWidget {
@@ -47,23 +48,76 @@ class _GalleryScreenState extends State<GalleryScreen> {
             );
           }
 
-          if (state.mainPostState.posts != null && state.mainPostState.posts!.isNotEmpty) {
-            return MasonryGridView.count(
-              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-              crossAxisCount: 3,
-              itemCount: state.mainPostState.posts!.length,
-              itemBuilder: (context, index) {
-                final post = state.mainPostState.posts![index];
-                return GestureDetector(
-                  onTap: () {
-                    _postCubit.setSelectedPost(post);
-                    context.pushNamed(VIEW_USER_POSTS);
-                  },
-                  child: PostCard(
-                    post: post,
+          final posts = state.mainPostState.posts ?? [];
+          final communityPosts = state.mainPostState.communityPosts ?? [];
+          List<Widget> children = [];
+
+          if (posts.isNotEmpty) {
+            final weekMap = _postCubit.groupPostsByWeek(posts);
+            children.addAll(weekMap.entries.map((entry) {
+              final weekStart = entry.key;
+              final weekPosts = entry.value;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Text(
+                      'Week of ${weekStart.month}/${weekStart.day}/${weekStart.year}',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppColors.framePurple,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                );
+                  MasonryGridView.count(
+                    crossAxisCount: 3,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: weekPosts.length,
+                    itemBuilder: (context, index) {
+                      final post = weekPosts[index];
+                      return GestureDetector(
+                        onTap: () {
+                          _postCubit.setSelectedPost(post);
+                          context.pushNamed(VIEW_USER_POSTS);
+                        },
+                        child: PostCard(post: post),
+                      );
+                    },
+                  ),
+                ],
+              );
+            }));
+          }
+
+          if (communityPosts.isNotEmpty) {
+            children.add(Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(
+                'Community Posts',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: AppColors.limeGreen,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ));
+            children.add(MasonryGridView.count(
+              crossAxisCount: 3,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: communityPosts.length,
+              itemBuilder: (context, index) {
+                final post = communityPosts[index];
+                return CommunityPostCard(post: post);
               },
+            ));
+          }
+
+          if (children.isNotEmpty) {
+            return ListView(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+              children: children,
             );
           }
 

@@ -12,6 +12,19 @@ class PostCubit extends Cubit<PostState> {
 
   PostCubit() : super(const PostInitial());
 
+  Map<DateTime, List<PostModel>> groupPostsByWeek(List<PostModel> posts) {
+    Map<DateTime, List<PostModel>> weekMap = {};
+    for (var post in posts) {
+      if (post.createdAt == null) continue;
+      final date = post.createdAt!.toDate();
+      final weekStart = DateTime(date.year, date.month, date.day - (date.weekday - 1));
+      final normalizedWeekStart = DateTime(weekStart.year, weekStart.month, weekStart.day);
+      weekMap.putIfAbsent(normalizedWeekStart, () => []);
+      weekMap[normalizedWeekStart]!.add(post);
+    }
+    return weekMap;
+  }
+
   Future<void> loadTodaysFrame({required String ownerUid}) async {
     emit(LoadingTodaysFrame(state.mainPostState.copyWith(message: 'Loading today\'s frame')));
     try {
