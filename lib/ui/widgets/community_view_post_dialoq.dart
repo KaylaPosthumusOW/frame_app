@@ -44,108 +44,106 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
 
   Widget _reportPostDialoq() {
     return BlocConsumer(
-      bloc: _postCubit,
-      listener: (context, state) {
-        if (state is UpdatingPost) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Reporting...', style: TextStyle(color: Colors.white)),
-                  CircularProgressIndicator(color: Colors.white),
-                ],
+        bloc: _postCubit,
+        listener: (context, state) {
+          if (state is UpdatingPost) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Reporting...', style: TextStyle(color: Colors.white)),
+                    CircularProgressIndicator(color: Colors.white),
+                  ],
+                ),
+                backgroundColor: Colors.black,
               ),
-              backgroundColor: Colors.black,
-            ),
-          );
-        }
+            );
+          }
 
-        if (state is UpdatedPost) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('The Post has been reported', style: TextStyle(color: Colors.black)),
-              backgroundColor: AppColors.limeGreen,
+          if (state is UpdatedPost) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('The Post has been reported', style: TextStyle(color: Colors.black)),
+                backgroundColor: AppColors.limeGreen,
+              ),
+            );
+            Navigator.pop(context, true);
+          }
+        },
+        builder: (context, state) {
+          return AlertDialog(
+            title: Text('Report Post', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.black)),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FrameTextField(
+                  controller: _reportedReasonController,
+                  maxLines: 3,
+                  isLight: true,
+                  label: 'Reason for Reporting',
+                ),
+              ],
             ),
-          );
-          Navigator.pop(context, true);
-        }
-      },
-      builder: (context, state) {
-        return AlertDialog(
-          title: Text('Report Post', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.black)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FrameTextField(
-                controller: _reportedReasonController,
-                maxLines: 3,
-                isLight: true,
-                label: 'Reason for Reporting',
+            actions: [
+              FrameButton(
+                type: ButtonType.outline,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                label: 'Cancel',
+              ),
+              FrameButton(
+                type: ButtonType.primary,
+                onPressed: () {
+                  if (_reportedReasonController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please provide a reason for reporting', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.white)),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  }
+                  if (_reportedReasonController.text.isNotEmpty) {
+                    _postCubit.reportPost(
+                      _postCubit.state.mainPostState.selectedPost!.copyWith(
+                        isReportedReason: _reportedReasonController.text,
+                        isReportedBy: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
+                        isReported: true,
+                      ),
+                    );
+                    Navigator.pop(context);
+                  }
+                },
+                label: 'Report',
               ),
             ],
-          ),
-          actions: [
-            FrameButton(
-              type: ButtonType.outline,
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              label: 'Cancel',
-            ),
-            FrameButton(
-              type: ButtonType.primary,
-              onPressed: () {
-                if (_reportedReasonController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Please provide a reason for reporting', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.white)),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  return;
-                }
-                if (_reportedReasonController.text.isNotEmpty) {
-                  _postCubit.reportPost(
-                    _postCubit.state.mainPostState.selectedPost!.copyWith(
-                      isReportedReason: _reportedReasonController.text,
-                      isReportedBy: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
-                      isReported: true,
-                    ),
-                  );
-                  Navigator.pop(context);
-                }
-              },
-              label: 'Report',
-            ),
-          ],
-        );
-      }
-    );
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         centerTitle: false,
         title: Row(
           children: [
             CircleAvatar(
               radius: 20,
-              backgroundImage: _postCubit.state.mainPostState.selectedPost?.owner?.profilePicture != null
-                  ? NetworkImage(_postCubit.state.mainPostState.selectedPost?.owner!.profilePicture! ?? '')
-                  : const AssetImage('assets/pngs/blank_profile_image.png') as ImageProvider,
+              backgroundImage: _postCubit.state.mainPostState.selectedPost?.owner?.profilePicture != null ? NetworkImage(_postCubit.state.mainPostState.selectedPost?.owner!.profilePicture! ?? '') : const AssetImage('assets/pngs/blank_profile_image.png') as ImageProvider,
             ),
             const SizedBox(width: 10),
-            Expanded( // 👈 this allows truncation
+            Expanded(
               child: Text(
                 '${_postCubit.state.mainPostState.selectedPost?.owner?.name ?? ''} '
-                    '${_postCubit.state.mainPostState.selectedPost?.owner?.surname ?? ''}',
+                '${_postCubit.state.mainPostState.selectedPost?.owner?.surname ?? ''}',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: AppColors.black,
-                  fontWeight: FontWeight.bold,
-                ),
+                      color: AppColors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 softWrap: false,
@@ -241,6 +239,58 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
           return Container(child: Text('No post selected', style: Theme.of(context).textTheme.bodyLarge));
         },
       ),
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: AppColors.white.withValues(alpha: 0.2), width: 1.0)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(5.0)),
+            color: AppColors.black,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  cursorColor: AppColors.white,
+                  controller: _commentController,
+                  decoration: InputDecoration(
+                    hintText: 'Leave a comment here...',
+                    hintStyle: TextStyle(color: AppColors.white.withValues(alpha: 0.6)),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(color: AppColors.white),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(color: AppColors.framePurple),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.06,
+                margin: const EdgeInsets.only(left: 8.0),
+                decoration: BoxDecoration(
+                  color: AppColors.framePurple,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    _commentCubit.createNewComment(CommentModel(
+                      owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
+                      post: _postCubit.state.mainPostState.selectedPost,
+                      comment: _commentController.text,
+                      createdAt: Timestamp.now(),
+                    ));
+                    _commentController.clear();
+                  },
+                  icon: Icon(Icons.send, color: AppColors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -253,44 +303,19 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Comments',
+              'Comments for Post',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.black),
             ),
-            const SizedBox(height: 8.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: FrameTextField(
-                    controller: _commentController,
-                    label: 'Add a comment',
-                    isLight: true,
-                  ),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  margin: const EdgeInsets.only(left: 8.0),
-                  decoration: BoxDecoration(
-                    color: AppColors.framePurple,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      _commentCubit.createNewComment(CommentModel(
-                        owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
-                        post: _postCubit.state.mainPostState.selectedPost,
-                        comment: _commentController.text,
-                        createdAt: Timestamp.now(),
-                      ));
-                      _commentController.clear();
-                    },
-                    icon: Icon(Icons.send, color: AppColors.white),
-                  ),
-                ),
-              ],
-            ),
             SizedBox(height: 16.0),
+            if (state.mainCommentState.allCommentsForPost!.isEmpty)
+              Text(
+                'Be the first to comment!',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey,
+                  fontStyle: FontStyle.italic,
+                ),
+              )
+            else
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -321,7 +346,7 @@ class _CommunityViewPostDialoqState extends State<CommunityViewPostDialoq> {
             ),
           ],
         );
-      }
+      },
     );
   }
 }
