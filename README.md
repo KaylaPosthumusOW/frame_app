@@ -20,7 +20,7 @@
    <a href="#getting-started"><strong>Explore the docs »</strong></a>
    <br />
    <br />
-   <a href="#demo">View Demo</a>
+   <a href="https://drive.google.com/drive/folders/1XwCTKuCkLniLhOSJbFpcelUqbM4tKs9w?usp=sharing">View Demo</a>
    ·
    <a href="https://github.com/KaylaPosthumusOW/frame_app/issues">Report Bug</a>
    ·
@@ -171,6 +171,19 @@ Frame is a social creativity platform where users can share daily creative frame
 </details>
 
 <details open>
+  <summary><strong>Notifications Page</strong></summary>
+  <div style="display: flex; align-items: center;">
+    <img src="assets/page_mock_ups/Notifications.png" alt="Community Gallery Mockup" height="220" style="margin-right:24px;">
+    <div>
+      <ul>
+        <li>View the posts that have been reported by users</li>
+        <li>Be able to see the reason why it was reported</li>
+      </ul>
+    </div>
+  </div>
+</details>
+
+<details open>
   <summary><strong>Admin - Prompt Management</strong></summary>
   <div style="display: flex; align-items: center;">
     <img src="assets/page_mock_ups/iPhone 14 Pro-5.png" alt="Admin Page Mockup" height="220" style="margin-right:24px;">
@@ -227,3 +240,8 @@ Frame is a social creativity platform where users can share daily creative frame
 ## Contact
 - **KaylaPosthumusOW** - [https://github.com/KaylaPosthumusOW]
 - **Project Link** - [https://github.com/KaylaPosthumusOW/frame_app]
+
+## Acknowledgements
+- [Flutter Documentation](https://flutter.dev/docs)
+- [Firebase Documentation](https://firebase.google.com/docs)
+- [Spaza! Tech] - My mentor and support throughout the project
