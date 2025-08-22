@@ -37,7 +37,7 @@
 - [Contact](#contact)
 
 ## About Frame
-<img src="assets/mock_ups/homepage.png" alt="Homepage - Today's Prompt & Frame" height="400">
+<img src="assets/mock_ups/homepage.png" alt="Homepage - Today's Prompt & Frame" height="400" align="center">
 
 ### Project Description
 Frame is a social creativity platform where users can share daily creative frames, interact with the community, and track their creative streaks. Built with Flutter and Dart, Frame leverages Firebase for authentication, Firestore for data storage, and Bloc for robust state management.
@@ -103,7 +103,7 @@ Frame is a social creativity platform where users can share daily creative frame
 <details open>
   <summary><strong>Onboarding</strong></summary>
   <div style="display: flex; align-items: center;">
-    <img src="assets/mock_ups/onboarding_pages.png" alt="Onboarding Mockup" height="150" style="margin-right:24px;">
+    <img src="assets/mock_ups/onboarding_pages.png" alt="Onboarding Mockup" height="200" style="margin-right:24px;">
     <div>
       <ul>
         <li>Guided onboarding screens introduce Frame's features and community</li>
