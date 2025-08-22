@@ -115,4 +115,21 @@ class PostFirebaseRepository implements PostStore {
     // TODO: implement removeReportedPost
     throw UnimplementedError();
   }
+
+  @override
+  Future<List<PostModel>> loadUsersReportedPosts({required String ownerUid}) {
+    List<PostModel> reportedPosts = [];
+    return _postCollection
+        .where('owner.uid', isEqualTo: ownerUid)
+        .where('isReported', isEqualTo: true)
+        .orderBy('createdAt', descending: true)
+        .get()
+        .then((query) {
+          for (var doc in query.docs) {
+            reportedPosts.add(doc.data());
+          }
+          return reportedPosts;
+        },
+    );
+  }
 }

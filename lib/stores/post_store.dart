@@ -12,4 +12,5 @@ abstract class PostStore {
   Future<PostModel> removeReportedPost(PostModel post);
   Future<PostModel> approveReportedPost(PostModel post);
   Future<PostModel?> loadTodaysFrame({required String ownerUid});
+  Future<List<PostModel>> loadUsersReportedPosts({required String ownerUid});
 }

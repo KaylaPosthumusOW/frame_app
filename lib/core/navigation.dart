@@ -8,6 +8,7 @@ import 'package:frameapp/ui/screens/home_screen.dart';
 import 'package:frameapp/ui/screens/login/login_screen.dart';
 import 'package:frameapp/ui/screens/main_frame_app_screen.dart';
 import 'package:frameapp/ui/screens/profile/edit_profile_screen.dart';
+import 'package:frameapp/ui/screens/profile/notifications_screen.dart';
 import 'package:frameapp/ui/screens/profile/profile_screen.dart';
 import 'package:frameapp/ui/screens/register/register_screen.dart';
 import 'package:frameapp/ui/screens/settings_screen.dart';
@@ -86,6 +87,11 @@ class AppRouter {
         path: VIEW_USER_POSTS,
         name: VIEW_USER_POSTS,
         builder: (BuildContext context, GoRouterState state) => ViewPostDialoq(),
+      ),
+      GoRoute(
+        path: NOTIFICATIONS_SCREEN,
+        name: NOTIFICATIONS_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => NotificationsScreen(),
       ),
     ],
     redirect: (BuildContext context, GoRouterState state) async {

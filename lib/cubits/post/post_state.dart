@@ -9,11 +9,12 @@ class MainPostState extends Equatable {
   final List<PostModel>? reportedPosts;
   final List<PostModel>? communityPosts;
   final PostModel? todaysFrame;
+  final List<PostModel>? reportedPostsForUser;
 
-  const MainPostState({this.message, this.errorMessage, this.posts, this.selectedPost, this.reportedPosts, this.communityPosts, this.todaysFrame});
+  const MainPostState({this.message, this.errorMessage, this.posts, this.selectedPost, this.reportedPosts, this.communityPosts, this.todaysFrame, this.reportedPostsForUser});
 
   @override
-  List<Object?> get props => [message, errorMessage, posts, selectedPost, reportedPosts, communityPosts, todaysFrame];
+  List<Object?> get props => [message, errorMessage, posts, selectedPost, reportedPosts, communityPosts, todaysFrame, reportedPostsForUser];
 
   MainPostState copyWith({
     String? message,
@@ -23,6 +24,7 @@ class MainPostState extends Equatable {
     List<PostModel>? reportedPosts,
     List<PostModel>? communityPosts,
     PostModel? todaysFrame,
+    List<PostModel>? reportedPostsForUser,
   }) {
     return MainPostState(
       message: message ?? this.message,
@@ -32,6 +34,7 @@ class MainPostState extends Equatable {
       reportedPosts: reportedPosts ?? this.reportedPosts,
       communityPosts: communityPosts ?? this.communityPosts,
       todaysFrame: todaysFrame ?? this.todaysFrame,
+      reportedPostsForUser: reportedPostsForUser ?? this.reportedPostsForUser,
     );
   }
 
@@ -127,6 +130,14 @@ class RemovingReportedPost extends PostState {
 
 class ReportedPostRemoved extends PostState {
   const ReportedPostRemoved(MainPostState mainPostState) : super(mainPostState);
+}
+
+class LoadingReportedPostsForUser extends PostState {
+  const LoadingReportedPostsForUser(MainPostState mainPostState) : super(mainPostState);
+}
+
+class LoadedReportedPostsForUser extends PostState {
+  const LoadedReportedPostsForUser(MainPostState mainPostState) : super(mainPostState);
 }
 
 class DeletingPost extends PostState {

@@ -30,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   initState() {
     super.initState();
     _postCubit.loadReportedPosts();
+    _postCubit.loadUsersReportedPosts(ownerUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
   }
 
   _logOut() {
@@ -210,7 +211,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ListTile(
                     leading: const Icon(Icons.notifications, color: Colors.black),
                     title: Text('Notifications', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black)),
-                    onTap: () {},
+                    trailing: Offstage(
+                      offstage: _postCubit.state.mainPostState.reportedPostsForUser == null || _postCubit.state.mainPostState.reportedPostsForUser!.isEmpty,
+                      child: CircleAvatar(
+                        radius: 12,
+                        backgroundColor: Colors.white,
+                        child: _displayUsersReportedPostAmount(),
+                      ),
+                    ),
+                    onTap: () {
+                      context.pushNamed(NOTIFICATIONS_SCREEN);
+                    },
                   ),
                   ListTile(
                     leading: const Icon(Icons.settings, color: Colors.black),
@@ -260,7 +271,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-      // bottomNavigationBar: const FrameNavigation(),
     );
   }
 
@@ -269,6 +279,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
       bloc: _postCubit,
       builder: (context, state) {
         final int reportedPostsCount = state.mainPostState.reportedPosts?.length ?? 0;
+        return CircleAvatar(
+          radius: 15,
+          backgroundColor: Colors.white,
+          child: Text(
+            reportedPostsCount.toString(),
+            style: const TextStyle(color: Colors.black, fontSize: 14),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _displayUsersReportedPostAmount() {
+    return BlocBuilder<PostCubit, PostState>(
+      bloc: _postCubit,
+      builder: (context, state) {
+        final int reportedPostsCount = state.mainPostState.reportedPostsForUser?.length ?? 0;
         return CircleAvatar(
           radius: 15,
           backgroundColor: Colors.white,

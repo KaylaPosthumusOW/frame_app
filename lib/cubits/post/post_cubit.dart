@@ -141,6 +141,18 @@ class PostCubit extends Cubit<PostState> {
     emit(LoadedPosts(state.mainPostState.copyWithNull(selectedPost: null, posts: state.mainPostState.posts)));
   }
 
+  Future<List<PostModel>> loadUsersReportedPosts({required String ownerUid}) async {
+    emit(LoadingPosts(state.mainPostState.copyWith(message: 'Loading your reported prompts')));
+    try {
+      List<PostModel> posts = await _postFirebaseRepository.loadUsersReportedPosts(ownerUid: ownerUid);
+      emit(LoadedPosts(state.mainPostState.copyWith(reportedPostsForUser: posts, message: 'Loaded ${posts.length} reported prompts')));
+      return posts;
+    } catch (error, stackTrace) {
+      emit(PostError(state.mainPostState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+      return [];
+    }
+  }
+
   Future<void> deletePost(PostModel post) async {
     emit(DeletingPost(state.mainPostState.copyWith(message: 'Deleting prompt')));
     try {

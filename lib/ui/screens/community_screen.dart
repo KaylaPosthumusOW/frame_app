@@ -5,7 +5,6 @@ import 'package:frameapp/constants/routes.dart';
 import 'package:frameapp/constants/themes.dart';
 import 'package:frameapp/cubits/post/post_cubit.dart';
 import 'package:frameapp/ui/widgets/community_post_card.dart';
-import 'package:frameapp/ui/widgets/frame_navigation.dart';
 import 'package:go_router/go_router.dart';
 
 class CommunityScreen extends StatefulWidget {
