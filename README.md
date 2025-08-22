@@ -26,7 +26,6 @@
    ·
    <a href="https://github.com/KaylaPosthumusOW/frame_app/issues">Request Feature</a>
   </p>
-</p>
 
 ## Table of Contents
 - [About Frame](#about-fram)
@@ -87,38 +86,116 @@ Frame is a social creativity platform where users can share daily creative frame
 
 ## Frame Features & Functionality
 
+<details open>
+  <summary><strong>🔑 Sign In / Login</strong></summary>
+  <div style="display: flex; align-items: center;">
+    <img src="assets/page_mock_ups/iPhone 14 Pro-1.png" alt="Sign In Mockup" height="220" style="margin-right:24px;">
+    <img src="assets/page_mock_ups/iPhone 14 Pro.png" alt="Sign In Mockup" height="220" style="margin-right:24px;">
+    <div>
+      <ul>
+        <li>Modern login screen with real-time validation and error handling</li>
+        <li>Persistent sessions powered by Firebase Auth</li>
+      </ul>
+    </div>
+  </div>
+</details>
 
-### Authentication
-<img src="assets/page_mock_ups/iPhone 14 Pro.png" alt="Authentication Mockup" height="350" align="right" style="margin-left:20px;">
-Seamless onboarding with email/password and Google sign-in. Profile management lets you edit your details, upload a profile image, and track your creative streaks. All authentication is handled securely via Firebase.
+<details open>
+  <summary><strong>Onboarding</strong></summary>
+  <div style="display: flex; align-items: center;">
+    <img src="assets/mock_ups/onboarding_pages.png" alt="Onboarding Mockup" height="150" style="margin-right:24px;">
+    <div>
+      <ul>
+        <li>Guided onboarding screens introduce Frame's features and community</li>
+        <li>Onboarding is only shown the first time you log in, ensuring a smooth start for new users</li>
+        <li>After onboarding, users are taken directly to the homepage on future logins</li>
+      </ul>
+    </div>
+  </div>
+</details>
 
+<details open>
+  <summary><strong>Homepage</strong></summary>
+  <div style="display: flex; align-items: center;">
+    <img src="assets/page_mock_ups/iPhone 14 Pro-3.png" alt="Homepage Mockup" height="220" style="margin-right:24px;">
+    <div>
+      <ul>
+        <li>Track today's creative prompt and your daily frame</li>
+        <li>View, upload, and share your frame</li>
+        <li>Streak tracking and progress visualization</li>
+        <li>Quick access to community gallery and comments</li>
+      </ul>
+    </div>
+  </div>
+</details>
 
-### Sign In / Login
-<img src="assets/page_mock_ups/iPhone 14 Pro-1.png" alt="Sign In Mockup" height="350" align="right" style="margin-left:20px;">
-Modern login screen with real-time validation and error handling. Persistent sessions ensure you stay logged in, powered by Firebase Auth.
+<details open>
+  <summary><strong>Your Gallery</strong></summary>
+  <div style="display: flex; align-items: center;">
+    <img src="assets/page_mock_ups/iPhone 14 Pro-8.png" alt="Homepage Mockup" height="220" style="margin-right:24px;">
+    <div>
+      <ul>
+        <li>View your uploaded frames</li>
+        <li>Track your creative progress through the weeks</li>
+      </ul>
+    </div>
+  </div>
+</details>
 
+<details open>
+  <summary><strong>Community & Engagement</strong></summary>
+  <div style="display: flex; align-items: center;">
+    <img src="assets/page_mock_ups/iPhone 14 Pro-2.png" alt="Community Gallery Mockup" height="220" style="margin-right:24px;">
+    <div>
+      <ul>
+        <li>Browse, and comment on community frames</li>
+        <li>Real-time comment system with profile images and timestamps</li>
+        <li>Reporting & moderation: report posts for admin review and archiving</li>
+      </ul>
+    </div>
+  </div>
+</details>
 
-### Homepage
-<img src="assets/page_mock_ups/iPhone 14 Pro-3.png" alt="Homepage Mockup" height="350" align="right" style="margin-left:20px;">
-The homepage tracks today's creative prompt and your daily frame. Easily view, upload, and share your frame, while tracking your creative streak and progress. Quick access to the community gallery and comments keeps you engaged.
+<details open>
+  <summary><strong>Profile Page - With Admin Functions</strong></summary>
+  <div style="display: flex; align-items: center;">
+    <img src="assets/page_mock_ups/iPhone 14 Pro-4.png" alt="Community Gallery Mockup" height="220" style="margin-right:24px;">
+    <div>
+      <ul>
+        <li>View and edit your profile</li>
+        <li>Upload your profile image</li>
+        <li>Admin Has access to the functions for managing prompts and reported posts</li>
+      </ul>
+    </div>
+  </div>
+</details>
 
-### Your Gallery
-<img src="assets/page_mock_ups/iPhone 14 Pro-8.png" alt="Community Gallery Mockup" height="350" align="right" style="margin-left:20px;">
-View and manage your personal gallery of frames. The gallery displays your frames with timestamps, allowing you to revisit and share your creative journey. Easily delete or edit frames as needed.
+<details open>
+  <summary><strong>Admin - Prompt Management</strong></summary>
+  <div style="display: flex; align-items: center;">
+    <img src="assets/page_mock_ups/iPhone 14 Pro-5.png" alt="Admin Page Mockup" height="220" style="margin-right:24px;">
+    <div>
+      <ul>
+        <li>Create, edit, and delete daily prompts</li>
+        <li>Archive prompts to keep the community engaged with fresh content</li>
+      </ul>
+    </div>
+  </div>
+</details>
 
-
-### Community & Engagement
-<img src="assets/page_mock_ups/iPhone 14 Pro-2.png" alt="Community Gallery Mockup" height="350" align="right" style="margin-left:20px;">
-Browse, like, and comment on community frames. The real-time comment system displays profile images and timestamps. Reporting and moderation tools allow users to report posts for admin review and archiving.
-
-### -----------------------------------------------
-### Admin - Reported Post Management
-<img src="assets/page_mock_ups/iPhone 14 Pro-6.png" alt="Admin Page Mockup" height="350" align="right" style="margin-left:20px;">
-Admin interface for managing reported posts. View details of reported frames, including user information and timestamps.
-
-### Admin - Prompt Management
-<img src="assets/page_mock_ups/iPhone 14 Pro-5.png" alt="Admin Page Mockup" height="350" align="right" style="margin-left:20px;">
-Admin interface for managing daily prompts. Create, edit, and delete prompts to keep the community engaged with fresh creative challenges.
+<details open>
+  <summary><strong>Admin - Reported Posts Management</strong></summary>
+  <div style="display: flex; align-items: center;">
+    <img src="assets/page_mock_ups/iPhone 14 Pro-6.png" alt="Admin Page Mockup" height="220" style="margin-right:24px;">
+    <div>
+      <ul>
+        <li>View and manage reported posts</li>
+        <li>Archive posts that violate community guidelines</li>
+        <li>Ensure a safe and respectful community environment</li>
+      </ul>
+    </div>
+  </div>
+</details>
 
 ## Highlights
 - Building my first mobile app using Flutter and Firebase
@@ -140,7 +217,6 @@ Admin interface for managing daily prompts. Create, edit, and delete prompts to 
 ## Final Outcome
 <p align="center">
   <img src="assets/mock_ups/mockup_1.png" alt="Admin Page" height="400">
-  <img src="assets/mock_ups/authentication_pages.png" alt="Login Screen" height="400">
   <img src="assets/mock_ups/features.png" alt="Community Gallery" height="400">
 </p>
 
