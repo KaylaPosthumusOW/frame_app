@@ -21,8 +21,8 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final TextEditingController _emailController = TextEditingController(text: kDebugMode ? 'kaylaposthu@gmail.com' : '');
-  final TextEditingController _passwordController = TextEditingController(text: kDebugMode ? 'Kaylapos' : '');
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   final LoginCubit _loginCubit = sl<LoginCubit>();
   bool get isPopulated => _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;

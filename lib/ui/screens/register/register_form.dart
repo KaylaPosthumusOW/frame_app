@@ -17,19 +17,20 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+  TextEditingController();
 
   final RegisterCubit _registerCubit = sl<RegisterCubit>();
-  final AuthenticationCubit _authenticationCubit = sl<AuthenticationCubit>();
-  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
 
   bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
 
-  bool get isPopulated => _nameController.text.isNotEmpty && _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty && _confirmPasswordController.text.isNotEmpty;
+  bool get isPopulated =>
+      _emailController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty &&
+          _confirmPasswordController.text.isNotEmpty;
 
   bool isRegisterButtonEnabled(RegisterState state) {
     return isPopulated && !state.isInProgress;
@@ -43,40 +44,68 @@ class _RegisterFormState extends State<RegisterForm> {
         if (state.isInProgress) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(const SnackBar(content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Registering...', style: TextStyle(color: Colors.white)), CircularProgressIndicator(color: Colors.white)])));
+            ..showSnackBar(
+              const SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Registering...', style: TextStyle(color: Colors.white)),
+                    CircularProgressIndicator(color: Colors.white)
+                  ],
+                ),
+              ),
+            );
         }
 
         if (state.isSuccess) {
-          final user = _authenticationCubit.state.mainAuthenticationState.user;
-          if (user != null && user.uid != null) {
-            final profile = AppUserProfile(
-              uid: user.uid,
-              name: _nameController.text.trim(),
-              surname: _surnameController.text.trim(),
-              email: user.email,
-              role: UserRole.user,
-              createdAt: Timestamp.now(),
-            );
-            await _appUserProfileCubit.updateProfile(profile);
-            await _appUserProfileCubit.loadProfile();
-          }
           Navigator.of(context).pop();
         }
 
         if (state.isFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Expanded(child: Text('Registration Failure\n${state.errorMessage ?? state.message ?? ''}', style: const TextStyle(color: Colors.white))), const Icon(Icons.error)]), backgroundColor: Colors.red));
+            ..showSnackBar(
+              SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Registration Failure\n${state.errorMessage ?? state.message ?? ''}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    const Icon(Icons.error, color: Colors.white),
+                  ],
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
         }
 
         if (state is RegisterStatePasswordResetSuccess) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(const SnackBar(content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Password reset email has been sent', style: TextStyle(color: Colors.white)), Icon(Icons.error)]), backgroundColor: Colors.green));
+            ..showSnackBar(
+              const SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Password reset email has been sent',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Icon(Icons.check_circle, color: Colors.white),
+                  ],
+                ),
+                backgroundColor: Colors.green,
+              ),
+            );
         }
 
         if (state is RegisterStateEmailAlreadyExists) {
-          _registerCubit.signInFromRegistration(_emailController.text, _passwordController.text);
+          _registerCubit.signInFromRegistration(
+              _emailController.text, _passwordController.text);
         }
       },
       child: BlocBuilder<RegisterCubit, RegisterState>(
@@ -87,25 +116,15 @@ class _RegisterFormState extends State<RegisterForm> {
             child: Form(
               child: ListView(
                 children: <Widget>[
-                  SizedBox(height: 60),
-                  Text('Create Your Account!', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: AppColors.black)),
-                  SizedBox(height: 10),
-                  FrameTextField(
-                    label: 'Name',
-                    controller: _nameController,
-                    keyboardType: TextInputType.name,
-                    onChanged: (value) {},
-                    isLight: true,
+                  const SizedBox(height: 60),
+                  Text(
+                    'Create Your Account!',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineLarge
+                        ?.copyWith(color: AppColors.black),
                   ),
-                  SizedBox(height: 10),
-                  FrameTextField(
-                    label: 'Surname',
-                    controller: _surnameController,
-                    keyboardType: TextInputType.name,
-                    onChanged: (value) {},
-                    isLight: true,
-                  ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   FrameTextField(
                     label: 'Email',
                     controller: _emailController,
@@ -113,7 +132,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     onChanged: (value) => _registerCubit.emailChanged(value),
                     isLight: true,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   FrameTextField(
                     label: 'Password',
                     controller: _passwordController,
@@ -124,7 +143,9 @@ class _RegisterFormState extends State<RegisterForm> {
                         });
                       },
                       child: Icon(
-                        _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                        _passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                         color: Colors.grey,
                       ),
                     ),
@@ -132,23 +153,26 @@ class _RegisterFormState extends State<RegisterForm> {
                     onChanged: (value) => _registerCubit.passwordChanged(value),
                     isLight: true,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   FrameTextField(
                     label: 'Confirm Password',
                     controller: _confirmPasswordController,
                     suffixIcon: GestureDetector(
                       onTap: () {
                         setState(() {
-                          _passwordVisible = !_passwordVisible;
+                          _confirmPasswordVisible = !_confirmPasswordVisible;
                         });
                       },
                       child: Icon(
-                        _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                        _confirmPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                         color: Colors.grey,
                       ),
                     ),
-                    obscureText: !_passwordVisible,
-                    onChanged: (value) => _registerCubit.confirmPasswordChanged(value),
+                    obscureText: !_confirmPasswordVisible,
+                    onChanged: (value) =>
+                        _registerCubit.confirmPasswordChanged(value),
                     isLight: true,
                   ),
                   Padding(
@@ -156,21 +180,32 @@ class _RegisterFormState extends State<RegisterForm> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        RegisterButton(onPressed: isRegisterButtonEnabled(state) ? _onFormSubmitted : () {}),
-                        SizedBox(height: 20),
+                        RegisterButton(
+                          onPressed: isRegisterButtonEnabled(state)
+                              ? _onFormSubmitted
+                              : () {},
+                        ),
+                        const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('Already Have an Account?'),
-                            ButtonTheme(
-                              minWidth: 220.0,
-                              child: TextButton(
-                                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text('Login',
-                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.black,),
+                            const Text('Already Have an Account?'),
+                            TextButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'Login',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                  color: AppColors.black,
                                 ),
                               ),
                             ),
@@ -190,8 +225,6 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   void dispose() {
-  _nameController.dispose();
-  _surnameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -199,6 +232,13 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   void _onFormSubmitted() {
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match')),
+      );
+      return;
+    }
+
     _registerCubit.registerSubmitted(
       email: _emailController.text,
       password: _passwordController.text,

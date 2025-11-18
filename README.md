@@ -16,7 +16,7 @@
   </div>
   <h3 align="center">Frame</h3>
   <p align="center">
-   Embrace your creativity. Frame is a social creativity platform built with Flutter, Firebase, and Bloc.<br>
+   A social creativity platform that fosters daily creative expression through prompts, frames, and community engagement. Track your creative streak, share your work, and connect with fellow creators.<br>
    <a href="#getting-started"><strong>Explore the docs »</strong></a>
    <br />
    <br />
@@ -25,6 +25,9 @@
    <a href="https://github.com/KaylaPosthumusOW/frame_app/issues">Report Bug</a>
    ·
    <a href="https://github.com/KaylaPosthumusOW/frame_app/issues">Request Feature</a>
+  </p>
+  <p align="center">
+   <strong>Tech:</strong> Flutter • Dart • Firebase • BLoC • GoRouter • pub.dev packages
   </p>
 
 ## Table of Contents
@@ -40,7 +43,7 @@
 <img src="assets/mock_ups/homepage.png" alt="Homepage - Today's Prompt & Frame" height="400" align="center">
 
 ### Project Description
-Frame is a social creativity platform where users can share daily creative frames, interact with the community, and track their creative streaks. Built with Flutter and Dart, Frame leverages Firebase for authentication, Firestore for data storage, and Bloc for robust state management.
+Frame is a social creativity platform that fosters daily creative expression through prompts, frames, and community engagement. Users can track their creative streaks, share their work, upload daily frames, and connect with fellow creators. Built with Flutter and Dart, Frame leverages Firebase for authentication, Firestore for data storage, and BLoC for robust state management.
 
 ## Built With
 - **Flutter**: UI toolkit for building natively compiled applications
